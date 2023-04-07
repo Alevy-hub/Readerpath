@@ -18,5 +18,53 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 60px;
+    background-color: #f7f3ec;
+    color: #1b4c4b;
+}
+
+#typingEffect {
+
+    font-size:2vw;
+}
+
+
+/* --- Changes in bootstrap --- */
+
+.btn-primary {
+    background-color: #c64a16;
+    border-color: #c64a16;
+}
+
+    .btn-primary:hover {
+        background-color: #b53905;
+        border-color: #b53905;
+    }
+
+    .btn-primary:focus {
+        background-color: #b53905;
+        border-color: #b53905;
+    }
+
+
+
+/* --- End changes in bootstrap --- */
+
+#loginPageAnimation {
+    opacity: 0;
+    animation-name: opacityChange;
+    animation-duration: 2s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes opacityChange {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 100;
+    }
 }

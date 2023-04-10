@@ -56,8 +56,7 @@ namespace Readerpath.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Names = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
                     isAccepted = table.Column<bool>(type: "bit", nullable: false)
@@ -68,7 +67,7 @@ namespace Readerpath.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bingo",
+                name: "Bingos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -79,11 +78,11 @@ namespace Readerpath.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bingo", x => x.Id);
+                    table.PrimaryKey("PK_Bingos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Genre",
+                name: "Genres",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -94,11 +93,27 @@ namespace Readerpath.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Genre", x => x.Id);
+                    table.PrimaryKey("PK_Genres", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "YearChallenge",
+                name: "Publisher",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    isAccepted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Publisher", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "YearChallenges",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -109,7 +124,7 @@ namespace Readerpath.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_YearChallenge", x => x.Id);
+                    table.PrimaryKey("PK_YearChallenges", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,7 +234,7 @@ namespace Readerpath.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Book",
+                name: "Books",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -233,23 +248,23 @@ namespace Readerpath.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Book", x => x.Id);
+                    table.PrimaryKey("PK_Books", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Book_Authors_AuthorId",
+                        name: "FK_Books_Authors_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "Authors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Book_Genre_GenreId",
+                        name: "FK_Books_Genres_GenreId",
                         column: x => x.GenreId,
-                        principalTable: "Genre",
+                        principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Edition",
+                name: "Editions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -258,23 +273,30 @@ namespace Readerpath.Migrations
                     Type = table.Column<int>(type: "int", nullable: false),
                     Pages = table.Column<int>(type: "int", nullable: true),
                     Duration = table.Column<int>(type: "int", nullable: true),
+                    PublisherId = table.Column<int>(type: "int", nullable: true),
                     AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
                     isAccepted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Edition", x => x.Id);
+                    table.PrimaryKey("PK_Editions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Edition_Book_BookId",
+                        name: "FK_Editions_Books_BookId",
                         column: x => x.BookId,
-                        principalTable: "Book",
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Editions_Publisher_PublisherId",
+                        column: x => x.PublisherId,
+                        principalTable: "Publisher",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MonthBook",
+                name: "MonthBooks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -287,23 +309,23 @@ namespace Readerpath.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MonthBook", x => x.Id);
+                    table.PrimaryKey("PK_MonthBooks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MonthBook_Book_BestBookId",
+                        name: "FK_MonthBooks_Books_BestBookId",
                         column: x => x.BestBookId,
-                        principalTable: "Book",
+                        principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MonthBook_Book_WorstBookId",
+                        name: "FK_MonthBooks_Books_WorstBookId",
                         column: x => x.WorstBookId,
-                        principalTable: "Book",
+                        principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TBR",
+                name: "TBRs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -315,17 +337,17 @@ namespace Readerpath.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TBR", x => x.Id);
+                    table.PrimaryKey("PK_TBRs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TBR_Book_BookId",
+                        name: "FK_TBRs_Books_BookId",
                         column: x => x.BookId,
-                        principalTable: "Book",
+                        principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "YearBook",
+                name: "YearBooks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -337,23 +359,23 @@ namespace Readerpath.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_YearBook", x => x.Id);
+                    table.PrimaryKey("PK_YearBooks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_YearBook_Book_BestBookId",
+                        name: "FK_YearBooks_Books_BestBookId",
                         column: x => x.BestBookId,
-                        principalTable: "Book",
+                        principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_YearBook_Book_WorstBookId",
+                        name: "FK_YearBooks_Books_WorstBookId",
                         column: x => x.WorstBookId,
-                        principalTable: "Book",
+                        principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookAction",
+                name: "BookActions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -368,17 +390,17 @@ namespace Readerpath.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookAction", x => x.Id);
+                    table.PrimaryKey("PK_BookActions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BookAction_Edition_EditionId",
+                        name: "FK_BookActions_Editions_EditionId",
                         column: x => x.EditionId,
-                        principalTable: "Edition",
+                        principalTable: "Editions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BingoField",
+                name: "BingoFields",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -389,17 +411,17 @@ namespace Readerpath.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BingoField", x => x.Id);
+                    table.PrimaryKey("PK_BingoFields", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BingoField_Bingo_BingoId",
+                        name: "FK_BingoFields_Bingos_BingoId",
                         column: x => x.BingoId,
-                        principalTable: "Bingo",
+                        principalTable: "Bingos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_BingoField_BookAction_BookActionId",
+                        name: "FK_BingoFields_BookActions_BookActionId",
                         column: x => x.BookActionId,
-                        principalTable: "BookAction",
+                        principalTable: "BookActions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -444,58 +466,63 @@ namespace Readerpath.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BingoField_BingoId",
-                table: "BingoField",
+                name: "IX_BingoFields_BingoId",
+                table: "BingoFields",
                 column: "BingoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BingoField_BookActionId",
-                table: "BingoField",
+                name: "IX_BingoFields_BookActionId",
+                table: "BingoFields",
                 column: "BookActionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Book_AuthorId",
-                table: "Book",
-                column: "AuthorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Book_GenreId",
-                table: "Book",
-                column: "GenreId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BookAction_EditionId",
-                table: "BookAction",
+                name: "IX_BookActions_EditionId",
+                table: "BookActions",
                 column: "EditionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Edition_BookId",
-                table: "Edition",
+                name: "IX_Books_AuthorId",
+                table: "Books",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Books_GenreId",
+                table: "Books",
+                column: "GenreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Editions_BookId",
+                table: "Editions",
                 column: "BookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MonthBook_BestBookId",
-                table: "MonthBook",
+                name: "IX_Editions_PublisherId",
+                table: "Editions",
+                column: "PublisherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MonthBooks_BestBookId",
+                table: "MonthBooks",
                 column: "BestBookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MonthBook_WorstBookId",
-                table: "MonthBook",
+                name: "IX_MonthBooks_WorstBookId",
+                table: "MonthBooks",
                 column: "WorstBookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TBR_BookId",
-                table: "TBR",
+                name: "IX_TBRs_BookId",
+                table: "TBRs",
                 column: "BookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_YearBook_BestBookId",
-                table: "YearBook",
+                name: "IX_YearBooks_BestBookId",
+                table: "YearBooks",
                 column: "BestBookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_YearBook_WorstBookId",
-                table: "YearBook",
+                name: "IX_YearBooks_WorstBookId",
+                table: "YearBooks",
                 column: "WorstBookId");
         }
 
@@ -518,19 +545,19 @@ namespace Readerpath.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BingoField");
+                name: "BingoFields");
 
             migrationBuilder.DropTable(
-                name: "MonthBook");
+                name: "MonthBooks");
 
             migrationBuilder.DropTable(
-                name: "TBR");
+                name: "TBRs");
 
             migrationBuilder.DropTable(
-                name: "YearBook");
+                name: "YearBooks");
 
             migrationBuilder.DropTable(
-                name: "YearChallenge");
+                name: "YearChallenges");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -539,22 +566,25 @@ namespace Readerpath.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Bingo");
+                name: "Bingos");
 
             migrationBuilder.DropTable(
-                name: "BookAction");
+                name: "BookActions");
 
             migrationBuilder.DropTable(
-                name: "Edition");
+                name: "Editions");
 
             migrationBuilder.DropTable(
-                name: "Book");
+                name: "Books");
+
+            migrationBuilder.DropTable(
+                name: "Publisher");
 
             migrationBuilder.DropTable(
                 name: "Authors");
 
             migrationBuilder.DropTable(
-                name: "Genre");
+                name: "Genres");
         }
     }
 }

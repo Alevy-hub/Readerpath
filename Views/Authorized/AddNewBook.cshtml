@@ -2,7 +2,9 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+
 }
+@model AddNewBookToViewModel
 
 
 
@@ -20,14 +22,20 @@
 			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
 				<label class="control-label control-label-text" for="Author"><b>Autor</b></label>
 				<datalist id="authors">
-					<option>test</option>
+					@foreach(var author in Model.AuthorList)
+					{
+						<option>@author.Name</option>
+					}
 				</datalist>
 				<input class="form-control form-text-input" autocomplete="on" list="authors" type="text" id="Author" name="Author" />
 			</div>
 			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
 				<label class="control-label control-label-text" for="Genre"><b>Gatunek</b></label>
 				<datalist id="genres">
-					<option>test</option>
+					@foreach(var genre in Model.GenreList)
+					{
+						<option>@genre.Name</option>
+					}
 				</datalist>
 				<input class="form-control form-text-input" autocomplete="on" list="genres" type="text" id="Genre" name="Genre" />
 			</div>
@@ -44,6 +52,17 @@
 				</select>
 			</div>
 
+			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="Publisher"><b>Wydawnictwo</b></label>
+				<datalist id="publisher">
+					@foreach(var publisher in Model.PublisherList)
+					{
+						<option>@publisher.Name</option>
+					}
+				</datalist>
+				<input class="form-control form-text-input" autocomplete="on" list="publisher" type="text" id="Publisher" name="Publisher" />
+			</div>
+
 			<div id="pages" class="form-group mb-3">
 				<label for="Pages"><b>Ilość stron</b></label>
 				<input class="form-control" type="text" id="Pages" name="Pages">
@@ -54,8 +73,8 @@
 				<input class="form-control" type="text" id="Duration" name="Duration">
 			</div>
 
-			<input type="submit" value="Utwórz" class="btn btn-top" />
-			<a href="./Index" class="btn btn-top">Anuluj</a>
+			<input type="submit" value="Utwórz" class="btn btn-primary" />
+			<a href="./Index" class="btn btn-primary">Anuluj</a>
 		</form>
 	</div>
 </div>

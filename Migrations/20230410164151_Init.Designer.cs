@@ -12,7 +12,7 @@ using Readerpath.Data;
 namespace Readerpath.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230406204153_Init")]
+    [Migration("20230410164151_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Readerpath.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -242,11 +242,7 @@ namespace Readerpath.Migrations
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Names")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -279,7 +275,7 @@ namespace Readerpath.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bingo");
+                    b.ToTable("Bingos");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.BingoField", b =>
@@ -306,7 +302,7 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("BookActionId");
 
-                    b.ToTable("BingoField");
+                    b.ToTable("BingoFields");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.Book", b =>
@@ -343,7 +339,7 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Book");
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.BookAction", b =>
@@ -380,7 +376,7 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("EditionId");
 
-                    b.ToTable("BookAction");
+                    b.ToTable("BookActions");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.Edition", b =>
@@ -407,6 +403,9 @@ namespace Readerpath.Migrations
                     b.Property<int?>("Pages")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PublisherId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
@@ -417,7 +416,9 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Edition");
+                    b.HasIndex("PublisherId");
+
+                    b.ToTable("Editions");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.Genre", b =>
@@ -441,7 +442,7 @@ namespace Readerpath.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genre");
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.MonthBook", b =>
@@ -474,7 +475,34 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("WorstBookId");
 
-                    b.ToTable("MonthBook");
+                    b.ToTable("MonthBooks");
+                });
+
+            modelBuilder.Entity("Readerpath.Entities.Publisher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AddedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isAccepted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Publisher");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.TBR", b =>
@@ -502,7 +530,7 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("TBR");
+                    b.ToTable("TBRs");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.YearBook", b =>
@@ -532,7 +560,7 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("WorstBookId");
 
-                    b.ToTable("YearBook");
+                    b.ToTable("YearBooks");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.YearChallenge", b =>
@@ -555,7 +583,7 @@ namespace Readerpath.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("YearChallenge");
+                    b.ToTable("YearChallenges");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -665,7 +693,14 @@ namespace Readerpath.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Readerpath.Entities.Publisher", "Publisher")
+                        .WithMany()
+                        .HasForeignKey("PublisherId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Book");
+
+                    b.Navigation("Publisher");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.MonthBook", b =>

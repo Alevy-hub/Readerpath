@@ -88,3 +88,7 @@ body {
 .navTest:hover {
     color: #c64a16;
 }
+
+.textMutedSearch{
+    color: lightgrey;
+}

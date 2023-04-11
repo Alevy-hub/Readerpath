@@ -34,29 +34,83 @@ namespace Readerpath.Controllers
         [HttpGet]
         public IActionResult Search(string query)
         {
-            //using (var context = new ApplicationDbContext(_options))
-            //{
-            //    List<Book> model = context.Books.Where(b => b.Title.Contains(query)).ToList();
-            //    return View(model);
-            //}
-
             using (var context = new ApplicationDbContext(_options))
             {
-                List<Book> books = context.Books.Where(b => b.Title.Contains(query)).ToList();
+                List<Book> books = context.Books
+                    .Include(b => b.Author)
+                    .Include(b => b.Genre)
+                    .Where(b => b.Title.Contains(query))
+                    .ToList();
                 List<SearchModel> modelList = new List<SearchModel>();
 
                 foreach(Book book in books)
                 {
+                    bool paper = false;
+                    bool audiobook = false;
+                    bool ebook = false;
+
+                    List<Edition> editions = context.Editions
+                        .Where(e => e.Book == book)
+                        .ToList();
+                    foreach(Edition edition in editions)
+                    {
+                        if(edition.Type == Entities.Type.PaperBook)
+                        {
+                            paper = true;
+                        }
+                        else if(edition.Type == Entities.Type.Audiobook)
+                        {
+                            audiobook = true;
+                        }
+                        else if(edition.Type == Entities.Type.Ebook)
+                        {
+                            ebook = true;
+                        }
+                    }
                     SearchModel model = new SearchModel();
+                    model.Id = book.Id;
                     model.Title = book.Title;
                     model.Author = book.Author.Name;
                     model.Genre = book.Genre.Name;
+                    model.Paper = paper;
+                    model.Audiobook = audiobook;
+                    model.Ebook = ebook;
+
                     modelList.Add(model);
                 }
 
                 return View(modelList);
             }
 
+        }
+
+        [Route("{id}/BookDetails")]
+        public async Task<IActionResult> BookDetails(int id)
+        {
+            using(var context = new ApplicationDbContext(_options))
+            {
+                Book? book = context.Books
+                    .Include(b => b.Author)
+                    .Include(b => b.Genre)
+                    .Where(b => b.Id == id)
+                    .FirstOrDefault();
+
+                BookDetailsModel model = new BookDetailsModel();
+                model.Title = book.Title;
+                model.Author = book.Author.Name;
+                model.Genre = book.Genre.Name;
+                model.Editions = context.Editions
+                    .Include(e => e.Publisher)
+                    .Where(e => e.Book == book)
+                    .Select(e => new EditionModel
+                    {
+                        Name = e.Publisher.Name,
+                        Pages = e.Pages,
+                        Duration = e.Duration
+                    })
+                    .ToList();
+                return View(model);
+            }
         }
 
         public IActionResult AddNewBook()
@@ -136,6 +190,7 @@ namespace Readerpath.Controllers
                     NewEdition.Duration = model.Duration;
                 }
                 NewEdition.AddedBy = user.Id;
+                NewEdition.Publisher = publisher;
                 context.Add(NewEdition);
 
 

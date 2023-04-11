@@ -1,0 +1,32 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<SearchModel>
+
+<h1>Wyniki wyszukiwania</h1>
+
+
+
+<div class="container">
+    <div class="row">
+        @foreach (SearchModel book in Model){
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">@book.Title</h3>
+                        <p class="card-text">@book.Author <small class="text-muted d-block">@book.Genre</small></p>
+                        <div class="d-flex justify-content-end">
+                            <span class="mr-3">Książka papierowa</span>
+                            <span class="mx-3">Ebook</span>
+                            <span class="ml-3">Audiobook</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+

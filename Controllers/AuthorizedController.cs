@@ -31,6 +31,34 @@ namespace Readerpath.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public IActionResult Search(string query)
+        {
+            //using (var context = new ApplicationDbContext(_options))
+            //{
+            //    List<Book> model = context.Books.Where(b => b.Title.Contains(query)).ToList();
+            //    return View(model);
+            //}
+
+            using (var context = new ApplicationDbContext(_options))
+            {
+                List<Book> books = context.Books.Where(b => b.Title.Contains(query)).ToList();
+                List<SearchModel> modelList = new List<SearchModel>();
+
+                foreach(Book book in books)
+                {
+                    SearchModel model = new SearchModel();
+                    model.Title = book.Title;
+                    model.Author = book.Author.Name;
+                    model.Genre = book.Genre.Name;
+                    modelList.Add(model);
+                }
+
+                return View(modelList);
+            }
+
+        }
+
         public IActionResult AddNewBook()
         {
             AddNewBookToViewModel model = new AddNewBookToViewModel();

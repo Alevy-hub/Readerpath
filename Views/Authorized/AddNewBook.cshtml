@@ -4,7 +4,7 @@
 @{
 
 }
-@model AddNewBookToViewModel
+@model AddNewBookModel
 
 
 
@@ -16,28 +16,31 @@
 
 		<form action="/Authorized/AddNewBook" method="post">
 			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
-				<label class="control-label control-label-text" for="Title"><b>Tytuł</b></label>
-				<input class="form-control form-text-input" type="text" id="Title" name="Title" />
+				<label class="control-label control-label-text" asp-for="Title"><b>Tytuł</b></label>
+				<input class="form-control form-text-input" type="text" asp-for="Title" />
+				<span asp-validation-for="Title" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
-				<label class="control-label control-label-text" for="Author"><b>Autor</b></label>
+				<label class="control-label control-label-text" asp-for="Author"><b>Autor</b></label>
 				<datalist id="authors">
 					@foreach(var author in Model.AuthorList)
 					{
 						<option>@author.Name</option>
 					}
 				</datalist>
-				<input class="form-control form-text-input" autocomplete="on" list="authors" type="text" id="Author" name="Author" />
+				<input class="form-control form-text-input" autocomplete="on" list="authors" asp-for="Author" name="Author" />
+				<span asp-validation-for="Author" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
-				<label class="control-label control-label-text" for="Genre"><b>Gatunek</b></label>
+				<label class="control-label control-label-text" asp-for="Genre"><b>Gatunek</b></label>
 				<datalist id="genres">
 					@foreach(var genre in Model.GenreList)
 					{
 						<option>@genre.Name</option>
 					}
 				</datalist>
-				<input class="form-control form-text-input" autocomplete="on" list="genres" type="text" id="Genre" name="Genre" />
+				<input class="form-control form-text-input" autocomplete="on" list="genres" type="text" asp-for="Genre" />
+				<span asp-validation-for="Genre" class="text-danger"></span>
 			</div>
 
 			<h3>Wydanie</h3>
@@ -79,22 +82,28 @@
 	</div>
 </div>
 
-<script>
-	const typeSelect = document.getElementById("Type");
-	const pagesDiv = document.getElementById("pages");
-	const durationDiv = document.getElementById("duration");
+@section Scripts {
+	@{
+		<script>
+			const typeSelect = document.getElementById("Type");
+			const pagesDiv = document.getElementById("pages");
+			const durationDiv = document.getElementById("duration");
 
-	typeSelect.addEventListener("change", function() {
-	  if (typeSelect.value === "Książka papierowa" || typeSelect.value === "Ebook") {
-		pagesDiv.classList.remove("d-none");
-	  } else {
-		pagesDiv.classList.add("d-none");
-	  }
+			typeSelect.addEventListener("change", function() {
+			if (typeSelect.value === "Książka papierowa" || typeSelect.value === "Ebook") {
+			pagesDiv.classList.remove("d-none");
+			} else {
+			pagesDiv.classList.add("d-none");
+			}
 
-	  if (typeSelect.value === "Audiobook"){
-		  durationDiv.classList.remove("d-none");
-	  } else{
-		  durationDiv.classList.add("d-none");
-	  }
-	});
-</script>
+			if (typeSelect.value === "Audiobook"){
+			durationDiv.classList.remove("d-none");
+			} else{
+			durationDiv.classList.add("d-none");
+			}
+			});
+		</script>
+
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

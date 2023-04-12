@@ -92,3 +92,21 @@ body {
 .textMutedSearch{
     color: lightgrey;
 }
+
+.title-line-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title-line {
+    flex-grow: 1;
+    height: 2px;
+    margin: 0 10px;
+    background-color: #c64a16;
+}
+
+h1 {
+    padding: 0 10px;
+}
+

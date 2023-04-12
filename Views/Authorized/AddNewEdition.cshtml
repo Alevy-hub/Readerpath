@@ -1,0 +1,71 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model AddNewBookModel
+
+<div class="row form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+	<div class="col-md-4">
+		<form action="/Authorized/AddNewEdition" method="post">
+			<h3>Nowe wydanie dla - </h3>
+
+			<div class="form-group mb-3">
+				<label for="Type"><b>Rodzaj</b></label>
+				<select class="form-control" id="Type" name="Type">
+					<option>Książka papierowa</option>
+					<option>Ebook</option>
+					<option>Audiobook</option>
+				</select>
+			</div>
+
+			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="Publisher"><b>Wydawnictwo</b></label>
+				<datalist id="publisher">
+					@foreach (var publisher in Model.PublisherList)
+					{
+						<option>@publisher.Name</option>
+					}
+				</datalist>
+				<input class="form-control form-text-input" autocomplete="on" list="publisher" type="text" id="Publisher" name="Publisher" />
+			</div>
+
+			<div id="pages" class="form-group mb-3">
+				<label for="Pages"><b>Ilość stron</b></label>
+				<input class="form-control" type="text" id="Pages" name="Pages">
+			</div>
+
+			<div id="duration" class="form-group mb-3 d-none">
+				<label for="Duration"><b>Czas trwania</b></label>
+				<input class="form-control" type="text" id="Duration" name="Duration">
+			</div>
+
+			<input type="hidden" name="BookId" value="@Model.BookId">
+
+			<input type="submit" value="Utwórz" class="btn btn-primary" />
+			<a href="./LoggedIndex" class="btn btn-primary">Anuluj</a>
+		</form>
+	</div>
+</div>
+
+
+<script>
+	const typeSelect = document.getElementById("Type");
+	const pagesDiv = document.getElementById("pages");
+	const durationDiv = document.getElementById("duration");
+
+	typeSelect.addEventListener("change", function () {
+		if (typeSelect.value === "Książka papierowa" || typeSelect.value === "Ebook") {
+			pagesDiv.classList.remove("d-none");
+		} else {
+			pagesDiv.classList.add("d-none");
+		}
+
+		if (typeSelect.value === "Audiobook") {
+			durationDiv.classList.remove("d-none");
+		} else {
+			durationDiv.classList.add("d-none");
+		}
+	});
+</script>

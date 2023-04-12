@@ -6,6 +6,8 @@ using Readerpath.Data;
 using Readerpath.Entities;
 
 using Readerpath.Models;
+using System.Security.Policy;
+using Publisher = Readerpath.Entities.Publisher;
 
 namespace Readerpath.Controllers
 {
@@ -96,6 +98,7 @@ namespace Readerpath.Controllers
                     .FirstOrDefault();
 
                 BookDetailsModel model = new BookDetailsModel();
+                model.Id = book.Id;
                 model.Title = book.Title;
                 model.Author = book.Author.Name;
                 model.Genre = book.Genre.Name;
@@ -106,7 +109,8 @@ namespace Readerpath.Controllers
                     {
                         Name = e.Publisher.Name,
                         Pages = e.Pages,
-                        Duration = e.Duration
+                        Duration = e.Duration,
+                        Type = e.Type
                     })
                     .ToList();
                 return View(model);
@@ -115,20 +119,41 @@ namespace Readerpath.Controllers
 
         public IActionResult AddNewBook()
         {
-            AddNewBookToViewModel model = new AddNewBookToViewModel();
+            //AddNewBookToViewModel model = new AddNewBookToViewModel();
+            //using (var context = new ApplicationDbContext(_options))
+            //{
+            //    model.AuthorList = context.Authors.ToList();
+            //    model.GenreList = context.Genres.ToList();
+            //    model.PublisherList = context.Publishers.ToList();
+            //    return View(model);
+            //}
+
+            AddNewBookModel model = new AddNewBookModel();
             using (var context = new ApplicationDbContext(_options))
             {
                 model.AuthorList = context.Authors.ToList();
                 model.GenreList = context.Genres.ToList();
                 model.PublisherList = context.Publishers.ToList();
+                return View(model);
             }
-            return View(model);
         }
 
 
         [HttpPost]
         public async Task<IActionResult> AddNewBook(AddNewBookModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                AddNewBookToViewModel invalidModel = new AddNewBookToViewModel();
+                using (var context = new ApplicationDbContext(_options))
+                {
+                    model.AuthorList = context.Authors.ToList();
+                    model.GenreList = context.Genres.ToList();
+                    model.PublisherList = context.Publishers.ToList();
+                    return View(model);
+                }
+            }
+
             using (var context = new ApplicationDbContext(_options))
             {
 
@@ -196,6 +221,66 @@ namespace Readerpath.Controllers
 
 				await context.SaveChangesAsync();
 				return RedirectToAction(nameof(LoggedIndex));
+            }
+        }
+
+		[Route("{id}/AddNewEdition")]
+		public IActionResult AddNewEdition(int id)
+        {
+			AddNewBookModel model = new AddNewBookModel();
+			using (var context = new ApplicationDbContext(_options))
+			{
+				model.PublisherList = context.Publishers.ToList();
+                model.BookId = id;
+				return View(model);
+			}
+        }
+
+		[Route("{id}/AddNewEdition")]
+        [HttpPost]
+        public async Task<IActionResult> AddNewEdition(AddNewEditionModel model)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            using (var context = new ApplicationDbContext(_options))
+            {
+                Publisher publisher = context.Publishers.FirstOrDefault(p => p.Name == model.Publisher);
+                if (publisher == null)
+                {
+                    Entities.Publisher newPublisher = new Publisher();
+                    newPublisher.Name = model.Publisher;
+                    newPublisher.AddedBy = user.Id;
+                    context.Add(newPublisher);
+                    publisher = newPublisher;
+                }
+
+                Book book = context.Books.Find(model.BookId);
+
+                Edition NewEdition = new Edition();
+                NewEdition.Book = book;
+                if (model.Type == "Książka papierowa")
+                {
+                    NewEdition.Type = Entities.Type.PaperBook;
+                    NewEdition.Pages = model.Pages;
+                }
+                else if (model.Type == "Ebook")
+                {
+                    NewEdition.Type = Entities.Type.Ebook;
+                    NewEdition.Pages = model.Pages;
+                }
+                else if (model.Type == "Audiobook")
+                {
+                    NewEdition.Type = Entities.Type.Audiobook;
+                    NewEdition.Duration = model.Duration;
+                }
+                NewEdition.AddedBy = user.Id;
+                NewEdition.Publisher = publisher;
+                context.Add(NewEdition);
+
+                await context.SaveChangesAsync();
+                return RedirectToAction(nameof(LoggedIndex));
+
+
             }
         }
     }

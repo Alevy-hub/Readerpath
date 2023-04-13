@@ -278,7 +278,9 @@ namespace Readerpath.Controllers
                 context.Add(NewEdition);
 
                 await context.SaveChangesAsync();
-                return RedirectToAction(nameof(LoggedIndex));
+
+                
+                return RedirectToAction("BookDetails", new {id = model.BookId});
 
 
             }

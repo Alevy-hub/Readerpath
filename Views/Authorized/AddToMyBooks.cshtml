@@ -1,0 +1,99 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model AddToMyBooksModel
+
+<div class="row form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+	<div class="col-md-4">
+
+		<h3>Dodaj "@Model.book.Title" do moich książek</h3>
+
+		<form action="/Authorized/AddToMyBooks" method="post">
+			<div class="form-group mb-3">
+				<label for="Status"><b>Status książki</b></label>
+				<select class="form-control" id="Status" name="Status">
+					<option>Czytam</option>
+					<option>Przeczytano</option>
+					<option>Do przeczytania</option>
+				</select>
+			</div>
+
+			<div id="startDateDiv" class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="startDate"><b>Data rozpoczęcia</b></label>
+				
+				<input class="form-control" type="date" id="startDate" name="startDate"
+					   value="@DateTime.Now.ToString("yyyy-MM-dd")"
+					   max="@DateTime.Now.ToString("yyyy-MM-dd")">
+			</div>
+
+			<div id="finishDateDiv" class="d-none form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="finishDate"><b>Data zakończenia</b></label>
+				
+				<input class="form-control" type="date" id="finishDate" name="finishDate"
+					   value="@DateTime.Now.ToString("yyyy-MM-dd")"
+					   max="@DateTime.Now.ToString("yyyy-MM-dd")">
+			</div>
+
+			<div id="ratingDiv" class="d-none form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="rating"><b>Ocena</b></label>
+				<input class="form-control" value="1" type="number" step="0.1" id="rating">
+			</div>
+
+			<div id="commentDiv" class="d-none form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="opinion"><b>Komentarz</b></label>
+				<textarea class="form-control" id="opinion" rows="3"></textarea>
+			</div>
+			<input type="hidden" name="editionId" value="@Model.editionId">
+
+			<input type="submit" value="Utwórz" class="btn btn-primary" />
+			<a asp-action="BookDetails" asp-route-id="@Model.book.Id" class="btn btn-primary">Anuluj</a>
+		</form>
+
+	</div>
+</div>
+
+
+<script>
+	const startDateInput = document.getElementById('startDate');
+	const finishDateInput = document.getElementById('finishDate');
+
+	startDateInput.addEventListener('change', function () {
+		finishDateInput.min = this.value;
+	});
+</script>
+
+<script>
+	const statusSelect = document.getElementById("Status");
+	const startDiv = document.getElementById("startDateDiv");
+	const finishDiv = document.getElementById("finishDateDiv");
+	const ratingDiv = document.getElementById("ratingDiv");
+	const commentDiv = document.getElementById("commentDiv");
+
+	statusSelect.addEventListener("change", function () {
+		if (statusSelect.value === "Czytam") {
+			startDiv.classList.remove("d-none");
+			finishDiv.classList.add("d-none");
+			ratingDiv.classList.add("d-none");
+			commentDiv.classList.add("d-none");
+		}
+
+		if (statusSelect.value === "Przeczytano") {
+			startDiv.classList.remove("d-none");
+			finishDiv.classList.remove("d-none");
+			ratingDiv.classList.remove("d-none");
+			commentDiv.classList.remove("d-none");
+		}		
+		
+		if (statusSelect.value === "Do przeczytania") {
+			startDiv.classList.add("d-none");
+			finishDiv.classList.add("d-none");
+			ratingDiv.classList.add("d-none");
+			commentDiv.classList.add("d-none");
+		}
+
+
+	});
+</script>

@@ -30,12 +30,40 @@ namespace Readerpath.Controllers
             LoggedIndexModel model = new LoggedIndexModel();
             model.UserName = user.UserName;
 
-            return View(model);
+            using(var context = new ApplicationDbContext(_options))
+            {
+				model.NowReadingBooks = context.BookActions
+					.Include(ba => ba.Edition)
+                    .Include(ba => ba.Edition.Book)
+                    .Include(ba => ba.Edition.Book.Genre)
+                    .Include(ba => ba.Edition.Book.Author)
+                    .Where(ba => ba.User == user.Id && ba.DateFinished == null)
+					.Select(ba => new NowReadingBook
+					{
+						Title = ba.Edition.Book.Title,
+                        Author = ba.Edition.Book.Author.Name,
+                        Genre = ba.Edition.Book.Genre.Name,
+                        Type = ba.Edition.Type.ToString(),
+                        startDate = ba.DateStarted,
+                        Pages = ba.Edition.Pages,
+                        Duration = ba.Edition.Duration
+
+					})
+					.ToList();
+
+
+                return View(model);
+			}
+
         }
 
         [HttpGet]
         public IActionResult Search(string query)
         {
+            if(query == null)
+            {
+                return RedirectToAction("LoggedIndex");
+            }
             using (var context = new ApplicationDbContext(_options))
             {
                 List<Book> books = context.Books
@@ -107,6 +135,7 @@ namespace Readerpath.Controllers
                     .Where(e => e.Book == book)
                     .Select(e => new EditionModel
                     {
+                        Id = e.Id,
                         Name = e.Publisher.Name,
                         Pages = e.Pages,
                         Duration = e.Duration,
@@ -119,15 +148,6 @@ namespace Readerpath.Controllers
 
         public IActionResult AddNewBook()
         {
-            //AddNewBookToViewModel model = new AddNewBookToViewModel();
-            //using (var context = new ApplicationDbContext(_options))
-            //{
-            //    model.AuthorList = context.Authors.ToList();
-            //    model.GenreList = context.Genres.ToList();
-            //    model.PublisherList = context.Publishers.ToList();
-            //    return View(model);
-            //}
-
             AddNewBookModel model = new AddNewBookModel();
             using (var context = new ApplicationDbContext(_options))
             {
@@ -232,6 +252,7 @@ namespace Readerpath.Controllers
 			{
 				model.PublisherList = context.Publishers.ToList();
                 model.BookId = id;
+                model.Title = context.Books.Find(id).Title;
 				return View(model);
 			}
         }
@@ -278,11 +299,53 @@ namespace Readerpath.Controllers
                 context.Add(NewEdition);
 
                 await context.SaveChangesAsync();
-
-                
+            
                 return RedirectToAction("BookDetails", new {id = model.BookId});
+            }
+        }
+
+		[Route("{bookId}/{editionId}/AddNewEdition")]
+		public IActionResult AddToMyBooks(int bookId, int editionId)
+        {
+            using (var context = new ApplicationDbContext(_options))
+            {
+                AddToMyBooksModel model = new AddToMyBooksModel();
+                model.book = context.Books.Find(bookId);
+                model.bookId = bookId;
+                model.editionId = editionId;
+
+				return View(model);
+            }
+        }
+
+		//[Route("{bookId}/{editionId}/AddNewEdition")]
+        [HttpPost]
+		public async Task<IActionResult> AddToMyBooks(AddToMyBooksModel model)
+        {
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+            using (var context = new ApplicationDbContext(_options))
+            {
+				Edition edition = context.Editions.Find(model.editionId);
+                BookAction bookAction = new BookAction();
+                bookAction.Edition = edition;
+                bookAction.User = user.Id;
+                if(model.status == "Czytam" ||  model.status == "Przeczytano")
+                {
+                    bookAction.DateStarted = model.startDate.Date;
+                }
 
 
+
+				if (model.status == "Przeczytano")
+                {
+                    bookAction.DateFinished = model.finishDate.Date;
+                    bookAction.Rating = model.rating;
+                    bookAction.Opinion = model.comment;
+                }
+                context.Add(bookAction);
+                await context.SaveChangesAsync();
+
+				return RedirectToAction("LoggedIndex");
             }
         }
     }

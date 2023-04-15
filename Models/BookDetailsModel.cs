@@ -13,6 +13,7 @@ namespace Readerpath.Models
 
     public class EditionModel
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public Readerpath.Entities.Type Type { get; set; }
         public int? Pages { get; set; }

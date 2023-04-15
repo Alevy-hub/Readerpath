@@ -1,15 +1,10 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
+﻿
 @model AddNewBookModel
 
 <div class="row form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
 	<div class="col-md-4">
 		<form action="/Authorized/AddNewEdition" method="post">
-			<h3>Nowe wydanie dla - </h3>
+			<h3>@Model.Title - nowe wydanie</h3>
 
 			<div class="form-group mb-3">
 				<label for="Type"><b>Rodzaj</b></label>
@@ -44,7 +39,7 @@
 			<input type="hidden" name="BookId" value="@Model.BookId">
 
 			<input type="submit" value="Utwórz" class="btn btn-primary" />
-			<a href="./LoggedIndex" class="btn btn-primary">Anuluj</a>
+			<a asp-action="BookDetails" asp-route-id="@Model.BookId" class="btn btn-primary">Anuluj</a>
 		</form>
 	</div>
 </div>

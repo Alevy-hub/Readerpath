@@ -1,6 +1,6 @@
 ﻿using Readerpath.Entities;
 
-namespace Readerpath.Controllers
+namespace Readerpath.Models
 {
     public class AddNewEditionModel
     {

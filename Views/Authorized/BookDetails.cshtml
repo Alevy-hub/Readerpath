@@ -68,7 +68,7 @@
 
                     </ul>
                     <div class="card-body text-center">
-                        <a href="#" class="btn btn-primary w-100">Dodaj do moich książek</a>
+                        <a class="btn btn-primary w-100" asp-action="AddToMyBooks" asp-route-bookId="@Model.Id" asp-route-editionId="@edition.Id">Dodaj do moich książek</a>
                     </div>
                 </div>
             </div>

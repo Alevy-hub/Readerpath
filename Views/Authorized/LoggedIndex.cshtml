@@ -1,13 +1,14 @@
-﻿@page
+﻿@*@page
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject UserManager<IdentityUser> UserManager*@
 @model LoggedIndexModel
 @{
-    
+    var type = new Dictionary<string, string> { { "PaperBook", "Książka papierowa" }, { "Ebook", "Ebook" }, { "Audiobook", "Audiobook" } };
 }
 
-<h2 class="d-flex justify-content-center align-items-center">Cześć, @User.Identity.Name!</h2>
+
+<h2 class="d-flex justify-content-center align-items-center">Cześć, @Model.UserName!</h2>
 <h3 class="d-flex justify-content-center align-items-center">Tutaj znajdziesz wszystko co najpotrzebniejsze!</h3>
 <div class="d-flex justify-content-center align-items-center">
     <form method="get" action="/Authorized/Search" class="d-flex" style="min-width: 500px;">
@@ -23,20 +24,56 @@
     <a class="btn btn-primary btn-lg w-25 py-3 mt-2" asp-action="AddNewBook">Dodaj książkę</a>
 </div>
 
-<div class="card" style="width: 18rem;">
-    <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+<div class="d-flex justify-content-center align-items-center mt-4">
+    <h2>Aktualnie czytane książki</h2>
+</div>
 
-    </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Cras justo odio</li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
-        <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
-    <div class="card-body">
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
-    </div>
+<style>
+    .card {
+        border-color: #c64a16;
+    }
+
+    .list-group-item {
+        border-color: #c64a16;
+    }
+</style>
+
+<div class="d-flex justify-content-center flex-wrap">
+    @if (Model.NowReadingBooks != null && Model.NowReadingBooks.Any())
+    {
+        @foreach (NowReadingBook nowReadingBook in Model.NowReadingBooks)
+        {
+            DateTime startDate = (DateTime)nowReadingBook.startDate;
+            string startDateString = startDate.ToString("dd.MM.yyyy");
+
+            <div class="card col-md-3 my-3 mx-1" style="max-width: 18rem;">
+                <div class="card-body text-center">
+                    <h4 class="card-title">@nowReadingBook.Title</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">@nowReadingBook.Author</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">@nowReadingBook.Genre</h6>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Data rozpoczęcia: @startDateString</li>
+                    <li class="list-group-item">Typ: @type[nowReadingBook.Type]</li>
+                    @if(nowReadingBook.Type == "Audiobook")
+                    {
+                        <li class="list-group-item">Czas trwania: @nowReadingBook.Duration</li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item">Ilość stron: @nowReadingBook.Pages</li>                                                
+                    }
+                </ul>
+                <div class="card-body text-center">
+                    <a class="btn btn-primary">Ukończono</a>
+                    <a class="btn btn-primary">Usuń</a>
+
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Aktualnie nie czytasz żadnych ksiażek :)</p>
+    }
 </div>

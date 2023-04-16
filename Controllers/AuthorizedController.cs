@@ -6,6 +6,7 @@ using Readerpath.Data;
 using Readerpath.Entities;
 
 using Readerpath.Models;
+using System.Globalization;
 using System.Security.Policy;
 using Publisher = Readerpath.Entities.Publisher;
 
@@ -40,6 +41,7 @@ namespace Readerpath.Controllers
                     .Where(ba => ba.User == user.Id && ba.DateFinished == null)
 					.Select(ba => new NowReadingBook
 					{
+                        ActionId = ba.Id,
 						Title = ba.Edition.Book.Title,
                         Author = ba.Edition.Book.Author.Name,
                         Genre = ba.Edition.Book.Genre.Name,
@@ -348,5 +350,52 @@ namespace Readerpath.Controllers
 				return RedirectToAction("LoggedIndex");
             }
         }
-    }
+
+        public async Task<IActionResult> DeleteFromMyBooks(int id)
+        {
+            using (var context = new ApplicationDbContext(_options))
+            {
+                BookAction actionToDelete = context.BookActions.Find(id);
+                context.BookActions.Remove(actionToDelete);
+                await context.SaveChangesAsync();
+                return RedirectToAction("LoggedIndex");
+            }
+        }
+
+		[Route("{actionId}/FinishBook")]
+		public IActionResult FinishBook(int actionId)
+        {
+            using (var context = new ApplicationDbContext(_options))
+            {
+                FinishBookViewModel model = new FinishBookViewModel();
+                model.Id = actionId;
+                var bookAction = context.BookActions
+                    .Include(ba => ba.Edition.Book)
+                    .FirstOrDefault(ba => ba.Id == actionId);
+
+                model.Title = bookAction.Edition.Book.Title;
+                model.StartDate = (DateTime)bookAction.DateStarted;
+
+				return View(model);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FinishBook(FinishBookModel finishBook)
+        {
+			using (var context = new ApplicationDbContext(_options))
+            {
+                BookAction bookAction = context.BookActions.Find(finishBook.Id);
+
+                bookAction.DateStarted = finishBook.StartDate;
+                bookAction.DateFinished = finishBook.FinishDate;
+                bookAction.Rating = float.Parse(finishBook.Rating, CultureInfo.InvariantCulture);
+                bookAction.Opinion = finishBook.Comment;
+
+                context.Update(bookAction);
+                await context.SaveChangesAsync();
+                return RedirectToAction("LoggedIndex");
+            }
+		}
+	}
 }

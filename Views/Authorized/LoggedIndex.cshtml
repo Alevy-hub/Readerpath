@@ -41,6 +41,7 @@
 <div class="d-flex justify-content-center flex-wrap">
     @if (Model.NowReadingBooks != null && Model.NowReadingBooks.Any())
     {
+        Model.NowReadingBooks = Model.NowReadingBooks.OrderBy(nb => nb.startDate).ToList();
         @foreach (NowReadingBook nowReadingBook in Model.NowReadingBooks)
         {
             DateTime startDate = (DateTime)nowReadingBook.startDate;
@@ -57,7 +58,17 @@
                     <li class="list-group-item">Typ: @type[nowReadingBook.Type]</li>
                     @if(nowReadingBook.Type == "Audiobook")
                     {
-                        <li class="list-group-item">Czas trwania: @nowReadingBook.Duration</li>
+                        if (nowReadingBook.Duration != null || nowReadingBook.Duration != 0)
+                        {
+                            int startTime = (int)nowReadingBook.Duration;
+                            string minutes = (startTime % 60).ToString().PadLeft(2, '0');
+                            int hours = startTime / 60;
+                            <li class="list-group-item">Czas trwania: @hours:@minutes</li>
+                        }
+                        else
+                        {
+                            <li class="list-group-item">Czas trwania: nie podano</li>                            
+                        }
                     }
                     else
                     {
@@ -65,8 +76,9 @@
                     }
                 </ul>
                 <div class="card-body text-center">
-                    <a class="btn btn-primary">Ukończono</a>
-                    <a class="btn btn-primary">Usuń</a>
+                    <a asp-action="FinishBook" asp-route-actionId="@nowReadingBook.ActionId" class="btn btn-primary">Ukończono</a>
+                    <a asp-action="DeleteFromMyBooks" asp-route-id="@nowReadingBook.ActionId" class="btn btn-primary">Usuń</a>
+
 
                 </div>
             </div>
@@ -77,3 +89,4 @@
         <p>Aktualnie nie czytasz żadnych ksiażek :)</p>
     }
 </div>
+

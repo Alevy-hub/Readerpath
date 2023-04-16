@@ -63,7 +63,10 @@
                         }
                         else
                         {
-                            <li class="list-group-item">Czas trwania: @edition.Duration</li>
+                            int startTime = (int)edition.Duration;
+                            string minutes = (startTime % 60).ToString().PadLeft(2, '0');
+                            int hours = startTime / 60;
+                            <li class="list-group-item">Czas trwania: @hours:@minutes</li>
                         }
 
                     </ul>

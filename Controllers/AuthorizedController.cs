@@ -397,5 +397,27 @@ namespace Readerpath.Controllers
                 return RedirectToAction("LoggedIndex");
             }
 		}
+
+        public async Task<IActionResult> AllReadBooks()
+        {
+            using (var context = new ApplicationDbContext(_options))
+            {
+                List<AllReadBooksModel> model = context.BookActions
+                    .Include(ba => ba.Edition.Book)
+                    .Include(ba => ba.Edition.Book.Author)
+                    .Include(ba => ba.Edition.Book.Genre)
+                    .Select(ba => new AllReadBooksModel
+                    {
+                        Id = ba.Id,
+                        Title = ba.Edition.Book.Title,
+                        Author = ba.Edition.Book.Author.Name,
+                        Genre = ba.Edition.Book.Genre.Name,
+                        StartDate = (DateTime)ba.DateStarted,
+                        FinishDate = ba.DateFinished
+                    })
+                    .ToList();
+				return View(model);
+            }
+        }
 	}
 }

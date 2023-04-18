@@ -9,6 +9,7 @@ namespace Readerpath.Models
         public string Author { get; set; }
         public string Genre { get; set; }
         public List<EditionModel> Editions { get; set; }
+        public List<ActionModel> Actions { get; set; }
     }
 
     public class EditionModel
@@ -18,5 +19,13 @@ namespace Readerpath.Models
         public Readerpath.Entities.Type Type { get; set; }
         public int? Pages { get; set; }
         public int? Duration { get; set; }
+    }
+
+    public class ActionModel
+    {
+        public int Id { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime? FinishDate { get; set; }
+        public float? Rating { get; set; }
     }
 }

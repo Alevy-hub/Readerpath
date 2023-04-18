@@ -144,6 +144,18 @@ namespace Readerpath.Controllers
                         Type = e.Type
                     })
                     .ToList();
+
+                model.Actions = context.BookActions
+                    .Where(a => a.Edition.Book == book)
+                    .Select(a => new ActionModel
+                    {
+                        Id = a.Id,
+                        StartDate = (DateTime)a.DateStarted,
+                        FinishDate = a.DateFinished,
+                        Rating = a.Rating
+                    })
+                    .ToList();
+
                 return View(model);
             }
         }
@@ -409,9 +421,11 @@ namespace Readerpath.Controllers
                     .Select(ba => new AllReadBooksModel
                     {
                         Id = ba.Id,
+                        BookId = ba.Edition.Book.Id,
                         Title = ba.Edition.Book.Title,
                         Author = ba.Edition.Book.Author.Name,
                         Genre = ba.Edition.Book.Genre.Name,
+                        Rating = ba.Rating,
                         StartDate = (DateTime)ba.DateStarted,
                         FinishDate = ba.DateFinished
                     })

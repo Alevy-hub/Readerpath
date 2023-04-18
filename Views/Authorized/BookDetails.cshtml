@@ -2,6 +2,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    int row = 1;
 }
 @model BookDetailsModel
 
@@ -78,3 +79,40 @@
         }
     </div>
 </div>
+
+<div class="text-center">
+    <h2>Przeczytano</h2>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Rozpoczęto</th>
+            <th scope="col">Ukończono</th>
+            <th scope="col">Ocena</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(ActionModel item in Model.Actions)
+        {
+            DateTime startDate = (DateTime)item.StartDate;
+            string finishDateString = "";
+            if (item.FinishDate != null)
+            {
+                DateTime finishDate = (DateTime)item.FinishDate;
+                finishDateString = finishDate.ToString("dd.MM.yyyy");
+            }
+
+            <tr>
+                <th scope="row">@row</th>
+                <td>@startDate.ToString("dd.MM.yyyy")</td>
+                <td>@finishDateString</td>
+                <td>@item.Rating</td>
+            </tr>
+            row++;           
+        }
+    </tbody>
+</table>
+
+                      

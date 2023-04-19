@@ -146,10 +146,13 @@ namespace Readerpath.Controllers
                     .ToList();
 
                 model.Actions = context.BookActions
+                    .Include(a => a.Edition.Publisher)
                     .Where(a => a.Edition.Book == book)
                     .Select(a => new ActionModel
                     {
                         Id = a.Id,
+                        Type = a.Edition.Type.ToString(),
+                        Publisher = a.Edition.Publisher.Name,
                         StartDate = (DateTime)a.DateStarted,
                         FinishDate = a.DateFinished,
                         Rating = a.Rating
@@ -418,6 +421,7 @@ namespace Readerpath.Controllers
                     .Include(ba => ba.Edition.Book)
                     .Include(ba => ba.Edition.Book.Author)
                     .Include(ba => ba.Edition.Book.Genre)
+                    .Include(ba => ba.Edition.Publisher)
                     .Select(ba => new AllReadBooksModel
                     {
                         Id = ba.Id,
@@ -431,6 +435,36 @@ namespace Readerpath.Controllers
                     })
                     .ToList();
 				return View(model);
+            }
+        }
+
+        [Route("{actionId}/ActionDetails")]
+        public IActionResult BookActionDetails(int actionId)
+        {
+            using(var context = new ApplicationDbContext(_options))
+            {
+                BookActionDetailsModel model = context.BookActions
+                    .Include(ba => ba.Edition.Book)
+                    .Include(ba => ba.Edition.Book.Author)
+                    .Include(ba => ba.Edition.Book.Genre)
+                    .Include(ba => ba.Edition.Publisher)
+                    .Where(ba => ba.Id == actionId)
+                    .Select(ba => new BookActionDetailsModel
+                    {
+                        Title = ba.Edition.Book.Title,
+                        Author = ba.Edition.Book.Author.Name,
+                        Genre = ba.Edition.Book.Genre.Name,
+                        Publisher = ba.Edition.Publisher.Name,
+                        Type = ba.Edition.Type.ToString(),
+                        Pages = ba.Edition.Pages,
+                        Duration = ba.Edition.Duration,
+                        StartDate = (DateTime)ba.DateStarted,
+                        FinishDate = ba.DateFinished,
+                        Comment = ba.Opinion,
+                        Rating = ba.Rating
+                    })
+                    .FirstOrDefault();                
+                return View(model);
             }
         }
 	}

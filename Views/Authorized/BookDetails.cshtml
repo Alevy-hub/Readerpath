@@ -88,6 +88,8 @@
     <thead>
         <tr>
             <th scope="col">#</th>
+            <th scope="col">Forma</th>
+            <th scope="col">Wydawnictwo</th>
             <th scope="col">Rozpoczęto</th>
             <th scope="col">Ukończono</th>
             <th scope="col">Ocena</th>
@@ -98,14 +100,36 @@
         {
             DateTime startDate = (DateTime)item.StartDate;
             string finishDateString = "";
+            string type = "";
+            string publisher = "";
             if (item.FinishDate != null)
             {
                 DateTime finishDate = (DateTime)item.FinishDate;
                 finishDateString = finishDate.ToString("dd.MM.yyyy");
             }
 
+            if(item.Type == "PaperBook")
+            {
+                type = "Książka papierowa";   
+            }
+            else
+            {
+                type = item.Type;
+            }
+
+            if(item.Publisher == null)
+            {
+                publisher = "Nie podano";
+            }
+            else
+            {
+                publisher = item.Publisher;
+            }
+
             <tr>
                 <th scope="row">@row</th>
+                <td>@type</td>
+                <td>@publisher</td>
                 <td>@startDate.ToString("dd.MM.yyyy")</td>
                 <td>@finishDateString</td>
                 <td>@item.Rating</td>

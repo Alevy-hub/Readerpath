@@ -24,6 +24,8 @@ namespace Readerpath.Models
     public class ActionModel
     {
         public int Id { get; set; }
+        public string Type { get; set; }
+        public string Publisher { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? FinishDate { get; set; }
         public float? Rating { get; set; }

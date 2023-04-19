@@ -38,7 +38,7 @@
                 <td>@item.Rating</td>
                 <td>@startDate.ToString("dd.MM.yyyy")</td>
                 <td>@finishDateString</td>
-                <td><a asp-controller="Authorized" asp-action="BookDetails" asp-route-id="@item.BookId" class="btn btn-primary btn-sm">Szczegóły</a></td>
+                <td><a asp-controller="Authorized" asp-action="BookActionDetails" asp-route-actionId="@item.Id" class="btn btn-primary btn-sm">Szczegóły</a></td>
             </tr>
             row++;
         }

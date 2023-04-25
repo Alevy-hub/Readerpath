@@ -33,6 +33,8 @@ namespace Readerpath.Data
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.UseCollation("utf8mb4_unicode_ci");
+            modelBuilder.HasDefaultSchema("ReaderPathDb");
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;

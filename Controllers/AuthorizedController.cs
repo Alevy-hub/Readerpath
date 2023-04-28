@@ -351,12 +351,10 @@ namespace Readerpath.Controllers
                     bookAction.DateStarted = model.startDate.Date;
                 }
 
-
-
 				if (model.status == "Przeczytano")
                 {
                     bookAction.DateFinished = model.finishDate.Date;
-                    bookAction.Rating = model.rating;
+                    bookAction.Rating = float.Parse(model.rating, CultureInfo.InvariantCulture);
                     bookAction.Opinion = model.comment;
                 }
                 context.Add(bookAction);

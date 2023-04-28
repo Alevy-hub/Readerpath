@@ -9,7 +9,7 @@
 		public string status { get; set; }
 		public DateTime startDate { get; set; }
 		public DateTime finishDate { get; set; }
-		public float rating { get; set; }
+		public string rating { get; set; }
 		public string comment { get; set; }
 	}
 }

@@ -27,7 +27,7 @@
                             <a class="nav-link navText" asp-area="" asp-controller="Home" asp-action="Index">Centrum</a>
                         </li>
                         <li class="nav-item btn navBtn">
-                            <a class="nav-link navText" asp-area="" asp-controller="Home" asp-action="Index">Challenge</a>
+                            <a class="nav-link navText" asp-area="" asp-controller="Authorized" asp-action="Challenge" asp-route-year="@DateTime.Now.Year.ToString()">Challenge</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link d-none d-md-block mx-3" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Images/logo-inline400x49.webp" /></a>

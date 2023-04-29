@@ -1,5 +1,29 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿
+@model Readerpath.Entities.YearChallenge
+
+<script src="https://kit.fontawesome.com/af2a249344.js" crossorigin="anonymous"></script>
+
+<div style="display: flex; align-items: center; justify-content: center;">
+	<a style="margin-right: 10px; color: #c64a16;" asp-controller="Authorized" asp-action="Challenge" asp-route-year="@(Model.Year-1)"><i class="fa-solid fa-arrow-left fa-xl"></i></a>
+	<h1 style="margin: 0;">@Model.Year</h1>
+	<a style="margin-left: 10px; color: #c64a16;" asp-controller="Authorized" asp-action="Challenge" asp-route-year="@(Model.Year+1)"><i class="fa-solid fa-arrow-right fa-xl"></i></a>
+</div>
+
+@if(Model.Id == 0)
+{
+	<div class="text-center mt-3">
+		<a class="btn btn-primary" asp-controller="Authorized" asp-action="AddChallenge" asp-route-year="@Model.Year">Ustaw Challenge</a>
+	</div>
+
 }
+
+<div class="d-flex justify-content-center flex-wrap">
+	@for (int i = 1; i < Model.Count+1; i++)
+	{
+		<div class="p-3 m-2 rounded border border-dark text-center" style="width: 80px; height: 80px;">
+			<span class="d-flex justify-content-center align-items-center" style="font-size: 24px; height: 100%;">@i</span>
+		</div>
+	}
+</div>
+
+

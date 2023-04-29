@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Security.Certificates;
 using Readerpath.Data;
 using Readerpath.Entities;
 
@@ -465,5 +466,48 @@ namespace Readerpath.Controllers
                 return View(model);
             }
         }
+
+        [Route("Challenge/{year}")]
+        public async Task<IActionResult> Challenge(string year)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            using (var context = new ApplicationDbContext(_options))
+            {
+                YearChallenge model = context.YearChallenges
+                    .Where(yc => yc.User == user.Id && yc.Year.ToString() == year)
+                    .FirstOrDefault();
+
+                if(model == null)
+                {
+                    model = new YearChallenge();
+                    model.Year = int.Parse(year);
+                }
+                return View("Challenge", model);
+            }
+        }
+
+        [Route("AddChallenge/{year}")]
+        public IActionResult AddChallenge(string year)
+        {
+            return View("AddChallenge", year);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddChallenge(YearChallenge model)
+        {
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+			YearChallenge challenge = new YearChallenge();
+            challenge.Year = model.Year;
+            challenge.Count = model.Count;
+            challenge.User = user.Id;
+
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.Add(challenge);
+                await context.SaveChangesAsync();
+            }
+
+			return RedirectToAction("Challenge", new { year = model.Year });
+		}
 	}
 }

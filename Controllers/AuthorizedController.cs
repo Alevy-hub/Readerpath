@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Security.Certificates;
 using Readerpath.Data;
 using Readerpath.Entities;
@@ -473,16 +474,34 @@ namespace Readerpath.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             using (var context = new ApplicationDbContext(_options))
             {
-                YearChallenge model = context.YearChallenges
+                ChallengeModel model = new ChallengeModel();
+                model.YearChallenge = context.YearChallenges
                     .Where(yc => yc.User == user.Id && yc.Year.ToString() == year)
                     .FirstOrDefault();
 
-                if(model == null)
-                {
-                    model = new YearChallenge();
-                    model.Year = int.Parse(year);
-                }
-                return View("Challenge", model);
+                model.BooksInChallenge = context.BookActions
+                    .Where(ba => ba.User == user.Id && ((DateTime)ba.DateFinished).Year.ToString() == year)
+                    .Select(ba => new BookInChallenge
+                    {
+                        BookActionId = ba.Id,
+                        Rating = (float)ba.Rating,
+                        FinishDate = (DateTime)ba.DateFinished
+                    })
+                    .ToList();
+
+
+				if (model.YearChallenge == null)
+				{
+					model.YearChallenge = new YearChallenge();
+					model.YearChallenge.User = user.Id;
+					model.YearChallenge.Year = int.Parse(year);
+				}
+
+                model.ChallengeColors = context.ChallengeColors
+                    .Where(cc => cc.UserId == user.Id)
+                    .FirstOrDefault();
+
+				return View("Challenge", model);
             }
         }
 
@@ -508,6 +527,26 @@ namespace Readerpath.Controllers
             }
 
 			return RedirectToAction("Challenge", new { year = model.Year });
+		}
+
+        public IActionResult SetChallengeColors()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetChallengeColors(ChallengeColors model)
+        {
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+			ChallengeColors challengeColors = model;
+            challengeColors.UserId = user.Id;
+
+			using (var context = new ApplicationDbContext(_options))
+			{
+				context.Add(challengeColors);
+				await context.SaveChangesAsync();
+			}
+            return RedirectToAction("Index");
 		}
 	}
 }

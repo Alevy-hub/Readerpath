@@ -20,6 +20,7 @@ namespace Readerpath.Data
         public DbSet<YearBook> YearBooks { get; set; }
         public DbSet<YearChallenge> YearChallenges { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<ChallengeColors> ChallengeColors { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

@@ -1,25 +1,103 @@
 ﻿
-@model Readerpath.Entities.YearChallenge
+@model ChallengeModel
+@{
+	bool colored = false;
+}
 
 <script src="https://kit.fontawesome.com/af2a249344.js" crossorigin="anonymous"></script>
 
 <div style="display: flex; align-items: center; justify-content: center;">
-	<a style="margin-right: 10px; color: #c64a16;" asp-controller="Authorized" asp-action="Challenge" asp-route-year="@(Model.Year-1)"><i class="fa-solid fa-arrow-left fa-xl"></i></a>
-	<h1 style="margin: 0;">@Model.Year</h1>
-	<a style="margin-left: 10px; color: #c64a16;" asp-controller="Authorized" asp-action="Challenge" asp-route-year="@(Model.Year+1)"><i class="fa-solid fa-arrow-right fa-xl"></i></a>
+	<a style="margin-right: 10px; color: #c64a16;" asp-controller="Authorized" asp-action="Challenge" asp-route-year="@(Model.YearChallenge.Year-1)"><i class="fa-solid fa-arrow-left fa-xl"></i></a>
+	<h1 style="margin: 0;">@Model.YearChallenge.Year</h1>
+	<a style="margin-left: 10px; color: #c64a16;" asp-controller="Authorized" asp-action="Challenge" asp-route-year="@(Model.YearChallenge.Year+1)"><i class="fa-solid fa-arrow-right fa-xl"></i></a>
 </div>
 
-@if(Model.Id == 0)
+@if(Model.YearChallenge.Id == 0)
 {
 	<div class="text-center mt-3">
-		<a class="btn btn-primary" asp-controller="Authorized" asp-action="AddChallenge" asp-route-year="@Model.Year">Ustaw Challenge</a>
+		<a class="btn btn-primary btn-lg" asp-controller="Authorized" asp-action="AddChallenge" asp-route-year="@Model.YearChallenge.Year">Ustaw Challenge</a>
 	</div>
-
 }
 
-<div class="d-flex justify-content-center flex-wrap">
-	@for (int i = 1; i < Model.Count+1; i++)
+<div class="text-center mt-3">
+	<a class="btn btn-primary" asp-controller="Authorized" asp-action="SetChallengeColors">Zmień kolory</a>
+	@if(Model.YearChallenge.Id != 0)
 	{
+		<a class="btn btn-primary">Edytuj challenge</a>
+	}
+</div>
+
+<div class="d-flex justify-content-center flex-wrap">
+	@for (int i = 1; i < Model.YearChallenge.Count+1; i++)
+	{
+		if (!colored)
+		{
+			foreach(var item in Model.BooksInChallenge)
+			{
+				string color;
+				if(Model.ChallengeColors != null)
+				{
+					if(item.Rating >= 1 && item.Rating < 2)
+					{
+						color = Model.ChallengeColors.ColorForOne;
+					}
+					else if(item.Rating >= 2 && item.Rating < 3)
+					{
+						color = Model.ChallengeColors.ColorForTwo;
+					}
+					else if(item.Rating >= 3 && item.Rating < 4)
+					{
+						color = Model.ChallengeColors.ColorForThree;
+					}
+					else if(item.Rating >= 4 && item.Rating < 5)
+					{
+						color = Model.ChallengeColors.ColorForFour;
+					}
+					else if(item.Rating == 5)
+					{
+						color = Model.ChallengeColors.ColorForFive;
+					}
+					else
+					{
+						color = Model.ChallengeColors.ColorForNoRating;
+					}					
+				}
+				else
+				{
+					if (item.Rating >= 1 && item.Rating < 2)
+					{
+						color = "#FF5733";
+					}
+					else if (item.Rating >= 2 && item.Rating < 3)
+					{
+						color = "#FFC300";
+					}
+					else if (item.Rating >= 3 && item.Rating < 4)
+					{
+						color = "#DAF7A6";
+					}
+					else if (item.Rating >= 4 && item.Rating < 5)
+					{
+						color = "#9ACD32";
+					}
+					else if (item.Rating == 5)
+					{
+						color = "228B22";
+					}
+					else
+					{
+						color = "#BFBFBF";
+					}
+				}
+
+				<div class="p-3 m-2 rounded border border-dark text-center" style="width: 80px; height: 80px; background-color:@color">
+					<span class="d-flex justify-content-center align-items-center" style="font-size: 24px; height: 100%;">@i</span>
+				</div>
+				i++;
+				colored = true;
+			}			
+		}
+
 		<div class="p-3 m-2 rounded border border-dark text-center" style="width: 80px; height: 80px;">
 			<span class="d-flex justify-content-center align-items-center" style="font-size: 24px; height: 100%;">@i</span>
 		</div>

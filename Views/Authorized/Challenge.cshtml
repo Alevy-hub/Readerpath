@@ -6,6 +6,10 @@
 
 <script src="https://kit.fontawesome.com/af2a249344.js" crossorigin="anonymous"></script>
 
+<div class="text-center">
+	<h2>Twój książkowy challenge</h2>
+</div>
+
 <div style="display: flex; align-items: center; justify-content: center;">
 	<a style="margin-right: 10px; color: #c64a16;" asp-controller="Authorized" asp-action="Challenge" asp-route-year="@(Model.YearChallenge.Year-1)"><i class="fa-solid fa-arrow-left fa-xl"></i></a>
 	<h1 style="margin: 0;">@Model.YearChallenge.Year</h1>
@@ -23,7 +27,7 @@
 	<a class="btn btn-primary" asp-controller="Authorized" asp-action="SetChallengeColors">Zmień kolory</a>
 	@if(Model.YearChallenge.Id != 0)
 	{
-		<a class="btn btn-primary">Edytuj challenge</a>
+		<a asp-controller="Authorized" asp-action="AddChallenge" asp-route-year="@Model.YearChallenge.Year" class="btn btn-primary">Edytuj challenge</a>
 	}
 </div>
 
@@ -37,23 +41,23 @@
 				string color;
 				if(Model.ChallengeColors != null)
 				{
-					if(item.Rating >= 1 && item.Rating < 2)
+					if(item.Rating >= 1 && item.Rating <= 1.5)
 					{
 						color = Model.ChallengeColors.ColorForOne;
 					}
-					else if(item.Rating >= 2 && item.Rating < 3)
+					else if(item.Rating > 1.5 && item.Rating <= 2.5)
 					{
 						color = Model.ChallengeColors.ColorForTwo;
 					}
-					else if(item.Rating >= 3 && item.Rating < 4)
+					else if(item.Rating > 2.5 && item.Rating <= 3.5)
 					{
 						color = Model.ChallengeColors.ColorForThree;
 					}
-					else if(item.Rating >= 4 && item.Rating < 5)
+					else if(item.Rating > 3.5 && item.Rating <= 4.5)
 					{
 						color = Model.ChallengeColors.ColorForFour;
 					}
-					else if(item.Rating == 5)
+					else if(item.Rating > 4.5)
 					{
 						color = Model.ChallengeColors.ColorForFive;
 					}
@@ -90,17 +94,33 @@
 					}
 				}
 
-				<div class="p-3 m-2 rounded border border-dark text-center" style="width: 80px; height: 80px; background-color:@color">
-					<span class="d-flex justify-content-center align-items-center" style="font-size: 24px; height: 100%;">@i</span>
+				string borderColor = "border-dark";
+				if(i > Model.YearChallenge.Count)
+				{
+					borderColor = "border-warning";
+				}
+
+				<div class="p-3 m-2 rounded border @borderColor text-center"
+					 style="width: 80px; height: 80px; background-color:@color; position: relative;">
+					<span class="d-flex justify-content-center align-items-center"
+						  style="font-size: 24px; height: 100%;">@i</span>
+					<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+						<a asp-controller="Authorized" asp-action="BookActionDetails" asp-route-actionId="@item.BookActionId"
+				  class="stretched-link"></a>
+					</div>
 				</div>
+
 				i++;
 				colored = true;
 			}			
 		}
 
-		<div class="p-3 m-2 rounded border border-dark text-center" style="width: 80px; height: 80px;">
-			<span class="d-flex justify-content-center align-items-center" style="font-size: 24px; height: 100%;">@i</span>
-		</div>
+		if(Model.YearChallenge.Count > Model.BooksInChallenge.Count())
+		{
+			<div class="p-3 m-2 rounded border border-dark text-center" style="width: 80px; height: 80px;">
+				<span class="d-flex justify-content-center align-items-center" style="font-size: 24px; height: 100%;">@i</span>
+			</div>			
+		}
 	}
 </div>
 

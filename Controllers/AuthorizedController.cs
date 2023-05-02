@@ -522,16 +522,34 @@ namespace Readerpath.Controllers
 
             using (var context = new ApplicationDbContext(_options))
             {
-                context.Add(challenge);
+				bool challengeExists = context.YearChallenges.Any(yc => yc.User == user.Id && yc.Year == model.Year);
+                if (challengeExists)
+                {
+					YearChallenge existingChallenge = await context.YearChallenges.SingleOrDefaultAsync(yc => yc.User == user.Id && yc.Year == model.Year);
+                    existingChallenge.Count = model.Count;
+					context.Update(existingChallenge);
+				}
+                else
+                {
+				    context.Add(challenge);
+                }
                 await context.SaveChangesAsync();
             }
 
 			return RedirectToAction("Challenge", new { year = model.Year });
 		}
 
-        public IActionResult SetChallengeColors()
+        public async Task<IActionResult> SetChallengeColors()
         {
-            return View();
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+            using(var context = new ApplicationDbContext(_options))
+            {
+                ChallengeColors model = new ChallengeColors();
+                model = context.ChallengeColors
+                    .Where(cc => cc.UserId == user.Id)
+                    .FirstOrDefault();
+                return View(model);
+            }            
         }
 
         [HttpPost]
@@ -543,10 +561,28 @@ namespace Readerpath.Controllers
 
 			using (var context = new ApplicationDbContext(_options))
 			{
-				context.Add(challengeColors);
+                bool challengeColorsExists = context.ChallengeColors.Any(cc => cc.UserId == user.Id);
+
+                if (challengeColorsExists)
+                {
+                    ChallengeColors existingChallengeColors = await context.ChallengeColors.SingleOrDefaultAsync(cc => cc.UserId == user.Id);
+                    existingChallengeColors.ColorForOne = model.ColorForOne;
+                    existingChallengeColors.ColorForTwo = model.ColorForTwo;
+                    existingChallengeColors.ColorForThree = model.ColorForThree;
+                    existingChallengeColors.ColorForFour = model.ColorForFour;
+                    existingChallengeColors.ColorForFive = model.ColorForFive;
+                    existingChallengeColors.ColorForNoRating = model.ColorForNoRating;
+                    
+                    context.Update(existingChallengeColors);
+                }
+                else
+                {
+                    context.Add(challengeColors);
+                }
+
 				await context.SaveChangesAsync();
 			}
-            return RedirectToAction("Index");
-		}
+            return RedirectToAction("Challenge", new { year = DateTime.Now.Year.ToString() });
+        }
 	}
 }

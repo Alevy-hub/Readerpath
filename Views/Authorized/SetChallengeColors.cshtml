@@ -1,42 +1,72 @@
-﻿<div class="text-center">
+﻿@model Readerpath.Entities.ChallengeColors
+
+@{
+    string ColorForOne = null;
+    string ColorForTwo = null;
+    string ColorForThree = null;
+    string ColorForFour = null;
+    string ColorForFive = null;
+    string ColorForNoRating = null;
+
+    if(Model == null)
+    {
+        ColorForOne = "#FF5733";       
+        ColorForTwo = "#FFC300";
+        ColorForThree = "#DAF7A6";
+        ColorForFour = "#9ACD32";
+        ColorForFive = "#228B22";
+        ColorForNoRating = "#BFBFBF";
+    }
+    else
+    {
+        ColorForOne = Model.ColorForOne;
+        ColorForTwo = Model.ColorForTwo;
+        ColorForThree = Model.ColorForThree;
+        ColorForFour = Model.ColorForFour;
+        ColorForFive = Model.ColorForFive;
+        ColorForNoRating = Model.ColorForNoRating;
+    }
+}
+
+<div class="text-center">
     <h2>Zmień kolory Twojego challengu</h2>
 </div>
 
 <div style="text-align:center;" class="mt-3">
     <form action="/Authorized/SetChallengeColors" method="post">
         <label>
-            <input type="color" name="ColorForOne" size="100">
+            <input type="color" name="ColorForOne" value="@ColorForOne">
             <br>1
         </label>
 
         <label>
-            <input type="color" name="ColorForTwo">
+            <input type="color" name="ColorForTwo" value="@ColorForTwo">
             <br>2
         </label>
 
         <label>
-            <input type="color" name="ColorForThree">
+            <input type="color" name="ColorForThree" value="@ColorForThree">
             <br>3
         </label>
 
         <label>
-            <input type="color" name="ColorForFour">
+            <input type="color" name="ColorForFour" value="@ColorForFour">
             <br>4
         </label>
 
         <label>
-            <input type="color" name="ColorForFive">
+            <input type="color" name="ColorForFive" value="@ColorForFive">
             <br>5
         </label>
 
         <label>
-            <input type="color" name="ColorForNoRating">
+            <input type="color" name="ColorForNoRating" value="@ColorForNoRating">
             <br>Brak oceny
         </label>
 
         <div style="display: block; margin-top: 10px;">
             <input type="submit" value="Zapisz" class="btn btn-primary" />
+            <a asp-controller="Authorized" asp-action="Challenge" asp-route-year="@DateTime.Now.Year.ToString()" class="btn btn-primary">Anuluj</a>
         </div>
-        @*<a asp-controller="Authorized" asp-action="Challenge" asp-route-year="@Model" class="btn btn-primary">Anuluj</a>*@
     </form>
 </div>

@@ -323,7 +323,7 @@ namespace Readerpath.Controllers
             }
         }
 
-		[Route("{bookId}/{editionId}/AddNewEdition")]
+		[Route("{bookId}/{editionId}/AddToMyBooks")]
 		public IActionResult AddToMyBooks(int bookId, int editionId)
         {
             using (var context = new ApplicationDbContext(_options))
@@ -467,6 +467,7 @@ namespace Readerpath.Controllers
                 return View(model);
             }
         }
+
 
         [Route("Challenge/{year}")]
         public async Task<IActionResult> Challenge(string year)

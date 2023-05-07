@@ -2,6 +2,9 @@
 @{
     int row = 1;
 }
+
+<script src="https://kit.fontawesome.com/af2a249344.js" crossorigin="anonymous"></script>
+
 <div class="text-center">
 	<h1>Wszystkie moje książki</h1>
 </div>
@@ -16,7 +19,7 @@
             <th scope="col">Ocena</th>
             <th scope="col">Rozpoczęto</th>
             <th scope="col">Zakończono</th>
-            <th scope="col">Szczegóły</th>
+            <th scope="col">Akcje</th>
         </tr>
     </thead>
     <tbody>
@@ -38,7 +41,11 @@
                 <td>@item.Rating</td>
                 <td>@startDate.ToString("dd.MM.yyyy")</td>
                 <td>@finishDateString</td>
-                <td><a asp-controller="Authorized" asp-action="BookActionDetails" asp-route-actionId="@item.Id" class="btn btn-primary btn-sm">Szczegóły</a></td>
+                <td class="btn-group d-flex" role="group" aria-label="Basic example">
+                    <a asp-controller="Authorized" asp-action="BookActionDetails" asp-route-actionId="@item.Id" class="btn btn-primary btn-sm" class="btn btn-primary btn-sm w-100"><i class="fa-solid fa-info fa-xl"></i></a>
+                    <a asp-controller="Authorized" asp-action="BookActionDetails" asp-route-actionId="@item.Id" class="btn btn-primary btn-sm" class="btn btn-primary btn-sm w-100"><i class="fa-solid fa-pen fa-xl"></i></a>
+                    <a asp-controller="Authorized" asp-action="DeleteFromMyBooks" asp-route-id="@item.Id" class="btn btn-primary btn-sm" class="btn btn-primary btn-sm w-100"><i class="fa-solid fa-trash fa-xl"></i></a>
+                </td>
             </tr>
             row++;
         }

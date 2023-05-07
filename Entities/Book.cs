@@ -1,4 +1,6 @@
-﻿namespace Readerpath.Entities
+﻿
+
+namespace Readerpath.Entities
 {
     public class Book
     {

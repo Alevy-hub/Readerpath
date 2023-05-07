@@ -16,27 +16,33 @@ namespace Readerpath.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("ReaderPathDb")
-                .UseCollation("utf8mb4_unicode_ci")
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("Id");
 
@@ -44,7 +50,7 @@ namespace Readerpath.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles", "ReaderPathDb");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -54,37 +60,49 @@ namespace Readerpath.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", "ReaderPathDb");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
@@ -97,30 +115,42 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("Id");
 
@@ -131,7 +161,7 @@ namespace Readerpath.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", "ReaderPathDb");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -141,80 +171,106 @@ namespace Readerpath.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", "ReaderPathDb");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("ProviderKey")
                         .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", "ReaderPathDb");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", "ReaderPathDb");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("Name")
                         .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("Value")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", "ReaderPathDb");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("Readerpath.Entities.Author", b =>
@@ -225,21 +281,25 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("AddedBy")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<bool>("isAccepted")
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", "ReaderPathDb");
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.Bingo", b =>
@@ -253,15 +313,19 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("User")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bingos", "ReaderPathDb");
+                    b.ToTable("Bingos");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.BingoField", b =>
@@ -278,7 +342,9 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("Id");
 
@@ -286,7 +352,7 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("BookActionId");
 
-                    b.ToTable("BingoFields", "ReaderPathDb");
+                    b.ToTable("BingoFields");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.Book", b =>
@@ -297,7 +363,9 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("AddedBy")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
@@ -313,7 +381,9 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("Id");
 
@@ -321,7 +391,7 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Books", "ReaderPathDb");
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.BookAction", b =>
@@ -343,20 +413,24 @@ namespace Readerpath.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Opinion")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<float?>("Rating")
                         .HasColumnType("float");
 
                     b.Property<string>("User")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EditionId");
 
-                    b.ToTable("BookActions", "ReaderPathDb");
+                    b.ToTable("BookActions");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.ChallengeColors", b =>
@@ -366,29 +440,43 @@ namespace Readerpath.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ColorForFive")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("ColorForFour")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("ColorForNoRating")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("ColorForOne")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("ColorForThree")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("ColorForTwo")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ChallengeColors", "ReaderPathDb");
+                    b.ToTable("ChallengeColors");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.Edition", b =>
@@ -399,7 +487,9 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("AddedBy")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<int>("BookId")
                         .HasColumnType("int");
@@ -428,7 +518,7 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("PublisherId");
 
-                    b.ToTable("Editions", "ReaderPathDb");
+                    b.ToTable("Editions");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.Genre", b =>
@@ -439,18 +529,22 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("AddedBy")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres", "ReaderPathDb");
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.MonthBook", b =>
@@ -467,7 +561,9 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("User")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<int>("WorstBookId")
                         .HasColumnType("int");
@@ -481,7 +577,7 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("WorstBookId");
 
-                    b.ToTable("MonthBooks", "ReaderPathDb");
+                    b.ToTable("MonthBooks");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.Publisher", b =>
@@ -492,21 +588,25 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("AddedBy")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<bool>("isAccepted")
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Publishers", "ReaderPathDb");
+                    b.ToTable("Publishers");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.TBR", b =>
@@ -523,7 +623,9 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("User")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<int>("Year")
                         .HasColumnType("int");
@@ -532,7 +634,7 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("TBRs", "ReaderPathDb");
+                    b.ToTable("TBRs");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.YearBook", b =>
@@ -546,7 +648,9 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("User")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<int>("WorstBookId")
                         .HasColumnType("int");
@@ -560,7 +664,7 @@ namespace Readerpath.Migrations
 
                     b.HasIndex("WorstBookId");
 
-                    b.ToTable("YearBooks", "ReaderPathDb");
+                    b.ToTable("YearBooks");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.YearChallenge", b =>
@@ -574,14 +678,16 @@ namespace Readerpath.Migrations
 
                     b.Property<string>("User")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("YearChallenges", "ReaderPathDb");
+                    b.ToTable("YearChallenges");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

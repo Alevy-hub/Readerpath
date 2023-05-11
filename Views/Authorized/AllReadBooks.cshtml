@@ -1,6 +1,7 @@
 ﻿@model List<AllReadBooksModel>
 @{
     int row = 1;
+    string ratingString;
 }
 
 <script src="https://kit.fontawesome.com/af2a249344.js" crossorigin="anonymous"></script>
@@ -33,12 +34,21 @@
                 finishDateString = finishDate.ToString("dd.MM.yyyy");                
             }
 
+            if(item.Rating == 0)
+            {
+                ratingString = "Nie oceniono";
+            }
+            else
+            {
+                ratingString = item.Rating.ToString();
+            }
+
             <tr>
                 <th scope="row">@row</th>
                 <td>@item.Title</td>
                 <td>@item.Author</td>
                 <td>@item.Genre</td>
-                <td>@item.Rating</td>
+                <td>@ratingString</td>
                 <td>@startDate.ToString("dd.MM.yyyy")</td>
                 <td>@finishDateString</td>
                 <td class="btn-group d-flex" role="group" aria-label="Basic example">

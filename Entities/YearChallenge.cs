@@ -1,4 +1,6 @@
-﻿namespace Readerpath.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Readerpath.Entities
 {
     public class YearChallenge
     {

@@ -337,7 +337,6 @@ namespace Readerpath.Controllers
             }
         }
 
-		//[Route("{bookId}/{editionId}/AddNewEdition")]
         [HttpPost]
 		public async Task<IActionResult> AddToMyBooks(AddToMyBooksModel model)
         {
@@ -584,6 +583,56 @@ namespace Readerpath.Controllers
 				await context.SaveChangesAsync();
 			}
             return RedirectToAction("Challenge", new { year = DateTime.Now.Year.ToString() });
+        }
+
+		[Route("Statistics/{year}")]
+		public IActionResult Statistics(string year)
+        {
+            return View("Statistics", year);
+        }
+
+        [Route("Statistics/{year}/{month}")]
+        public async Task<IActionResult> MonthStatistics(string month, string year)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            MonthStatisticsModel model = new MonthStatisticsModel();
+            model.Month = month;
+            model.Year = year;
+
+            string prevMonth, prevYear;
+
+            if((int.Parse(month)-1) == 0)
+            {
+                prevMonth = "12";
+                prevYear = (int.Parse(year) - 1).ToString();
+            }
+            else
+            {
+                prevMonth = (int.Parse(month) - 1).ToString();
+                prevYear = year;
+            }
+
+            using (var context = new ApplicationDbContext(_options))
+            {
+                model.BookCount = context.BookActions
+                    .Count(a => a.User == user.Id && a.DateFinished != null && a.DateFinished.Value.Month.ToString() == month && a.DateFinished.Value.Year.ToString() == year);
+                 
+                model.PrevMonthBookCount = context.BookActions
+                    .Count(a => a.User == user.Id && a.DateFinished != null && a.DateFinished.Value.Month.ToString() == prevMonth && a.DateFinished.Value.Year.ToString() == year);
+
+                model.YearChallengeCount = (int)(context.YearChallenges
+                        .SingleOrDefault(c => c.User == user.Id && c.Year.ToString() == year)?
+                        .Count);
+
+            }
+
+            return View("MonthStatistics");
+        }
+
+        [Route("Statistics/{year}/Details")]
+        public async Task<IActionResult> YearStatisticsDetails(string year)
+        {
+            return View();
         }
 	}
 }

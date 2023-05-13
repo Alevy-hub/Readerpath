@@ -1,8 +1,8 @@
 ﻿
 
-@model string
+@model StatisticsModel
 @{
-    int year = int.Parse(Model);
+    int year = int.Parse(Model.year);
     List<string> months = new List<string> { "Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień" };
     Dictionary<string, int> monthsDict = new Dictionary<string, int>
 {
@@ -25,26 +25,41 @@
 
 <div style="display: flex; align-items: center; justify-content: center;">
 	<a style="margin-right: 10px; color: #c64a16;" asp-controller="Authorized" asp-action="Statistics" asp-route-year="@(year-1)"><i class="fa-solid fa-arrow-left fa-xl"></i></a>
-	<h1 style="margin: 0;">@Model</h1>
+	<h1 style="margin: 0;">@Model.year</h1>
 	<a style="margin-left: 10px; color: #c64a16;" asp-controller="Authorized" asp-action="Statistics" asp-route-year="@(year+1)"><i class="fa-solid fa-arrow-right fa-xl"></i></a>
 </div>
 
 
 
 <div class="row justify-content-center mt-3">
+    @{
+        int i = 0;
+    }
     @foreach (string month in months)
     {
-        <div class="col-md-3">
-            <a class="d-block text-decoration-none" asp-controller="Authorized" asp-action="MonthStatistics" asp-route-month="@monthsDict[month]" asp-route-year="@Model">
+        if(Model.months[i] == true)
+        {
+            <div class="col-md-3">
+                <a class="d-block text-decoration-none" asp-controller="Authorized" asp-action="MonthStatistics" asp-route-month="@monthsDict[month]" asp-route-year="@Model.year">
+                    <div class="month-block text-center mb-3">
+                        <h3>@month</h3>
+                    </div>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="col-md-3">
                 <div class="month-block text-center mb-3">
                     <h3>@month</h3>
                 </div>
-            </a>
-        </div>
+            </div>
+        }
+        i++;
     }
 
     <div class="col-md-6">
-        <a class="d-block text-decoration-none" asp-controller="Authorized" asp-action="YearStatisticsDetails" asp-route-year="@Model">
+        <a class="d-block text-decoration-none" asp-controller="Authorized" asp-action="YearStatisticsDetails" asp-route-year="@Model.year">
             <div class="month-block text-center mb-3">
                 <h3>Cały rok</h3>
             </div>

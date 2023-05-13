@@ -585,10 +585,31 @@ namespace Readerpath.Controllers
             return RedirectToAction("Challenge", new { year = DateTime.Now.Year.ToString() });
         }
 
-		[Route("Statistics/{year}")]
-		public IActionResult Statistics(string year)
+        [Route("Statistics/{year}")]
+        public async Task<IActionResult> Statistics(string year)
         {
-            return View("Statistics", year);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            StatisticsModel model = new StatisticsModel();
+            model.year = year;
+            List<string> months = new List<string> { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" };
+
+            using (var context = new ApplicationDbContext(_options))
+            {
+                var finishedBooks = context.BookActions
+                    .Where(a => a.DateFinished != null
+                        && a.DateFinished.Value.Year.ToString() == year
+                        && a.User == user.Id)
+                    .ToList();
+
+                var finishedMonths = finishedBooks
+                    .Select(a => a.DateFinished.Value.Month.ToString("D2"))
+                    .Distinct()
+                    .ToList();
+
+                model.months = months.Select(month => finishedMonths.Contains(month)).ToList();
+            }
+
+            return View("Statistics", model);
         }
 
         [Route("Statistics/{year}/{month}")]
@@ -624,9 +645,91 @@ namespace Readerpath.Controllers
                         .SingleOrDefault(c => c.User == user.Id && c.Year.ToString() == year)?
                         .Count);
 
+                model.PaperBooksCount = await context.BookActions
+                        .CountAsync(a => a.User == user.Id && a.DateFinished != null
+                            && a.DateFinished.Value.Month.ToString() == month
+                            && a.DateFinished.Value.Year.ToString() == year
+                            && a.Edition.Type == Entities.Type.PaperBook);
+                
+                model.EbooksCount = await context.BookActions
+                        .CountAsync(a => a.User == user.Id && a.DateFinished != null
+                            && a.DateFinished.Value.Month.ToString() == month
+                            && a.DateFinished.Value.Year.ToString() == year
+                            && a.Edition.Type == Entities.Type.Ebook);
+                
+                model.AudiobooksCount = await context.BookActions
+                        .CountAsync(a => a.User == user.Id && a.DateFinished != null
+                            && a.DateFinished.Value.Month.ToString() == month
+                            && a.DateFinished.Value.Year.ToString() == year
+                            && a.Edition.Type == Entities.Type.Audiobook);
+
+                model.PagesCount = await context.BookActions
+                        .Where(a => a.DateFinished != null
+                            && a.DateFinished.Value.Month.ToString() == month
+                            && a.DateFinished.Value.Year.ToString() == year
+                            && (a.Edition.Type == Entities.Type.Ebook || a.Edition.Type == Entities.Type.PaperBook)
+                            && a.User == user.Id)
+                        .SumAsync(a => a.Edition.Pages ?? 0);
+
+
+                model.AudiobooksMinutes = await context.BookActions
+                    .Where(a => a.DateFinished != null
+                        && a.DateFinished.Value.Month.ToString() == month
+                        && a.DateFinished.Value.Year.ToString() == year
+                        && a.Edition.Type == Entities.Type.Audiobook
+                        && a.User == user.Id)
+                    .SumAsync(a => a.Edition.Duration ?? 0);
+
+                model.RatingAverage = await context.BookActions
+                    .Where(a => a.DateFinished != null
+                        && a.DateFinished.Value.Month.ToString() == month
+                        && a.DateFinished.Value.Year.ToString() == year
+                        && a.User == user.Id
+                        && a.Rating != 0)
+                    .AverageAsync(a => a.Rating ?? 0);
+                
+                model.PrevMonthRatingAverage = await context.BookActions
+                    .Where(a => a.DateFinished != null
+                        && a.DateFinished.Value.Month.ToString() == prevMonth
+                        && a.DateFinished.Value.Year.ToString() == prevYear
+                        && a.User == user.Id
+                        && a.Rating != 0)
+                    .AverageAsync(a => a.Rating ?? 0);
+
+                model.FavouriteGenre = context.BookActions
+                    .Where(a => a.DateFinished != null
+                        && a.DateFinished.Value.Month.ToString() == month
+                        && a.DateFinished.Value.Year.ToString() == year)
+                    .GroupBy(a => a.Edition.Book.Genre.Name)
+                    .Select(group => new
+                    {
+                        GenreName = group.Key,
+                        Count = group.Count()
+                    })
+                    .OrderByDescending(g => g.Count)
+                    .FirstOrDefault()?.GenreName;
+
+                model.Genres = context.BookActions
+                    .Where(a => a.DateFinished != null
+                        && a.DateFinished.Value.Month.ToString() == month
+                        && a.DateFinished.Value.Year.ToString() == year)
+                    .GroupBy(a => a.Edition.Book.Genre.Name)
+                    .Select(group => new GenreWithCount
+                    {
+                        Name = group.Key,
+                        Count = group.Count()
+                    })
+                    .ToList();
+
+                model.Books = context.BookActions
+                    .Where(a => a.DateFinished != null
+                        && a.DateFinished.Value.Month.ToString() == month
+                        && a.DateFinished.Value.Year.ToString() == year)
+                    .Select(a => a.Edition.Book)
+                    .ToList();
             }
 
-            return View("MonthStatistics");
+            return View("MonthStatistics", model);
         }
 
         [Route("Statistics/{year}/Details")]

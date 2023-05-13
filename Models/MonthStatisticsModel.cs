@@ -17,6 +17,13 @@
         public string FavouriteGenre { get; set; }
         public string BestBook { get; set; }
         public string WorstBook { get; set; }
+        public List<Entities.Book> Books { get; set; }
+        public List<GenreWithCount> Genres { get; set; }
+    }
 
+    public class GenreWithCount
+    {
+        public string Name { get; set; }
+        public int Count { get; set; }
     }
 }

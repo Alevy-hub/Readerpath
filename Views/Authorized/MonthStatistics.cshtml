@@ -29,7 +29,7 @@
         moreOrLess = "Więcej niż";
     }
 
-    string percentOfChallenge = (((float)Model.BookCount / (float)Model.YearChallengeCount)*100).ToString() + "%";
+    string percentOfChallenge = Math.Round((((float)Model.BookCount / (float)Model.YearChallengeCount)*100),2).ToString() + "%";
 
     string audiobooksTime = (Model.AudiobooksMinutes / 60).ToString() + ":" + (Model.AudiobooksMinutes % 60).ToString();
 
@@ -103,7 +103,7 @@
 
 <div class="mt-3" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
     <h4>Średnia ocen</h4>
-    <h1 style="color: #b53905"><b>@Model.RatingAverage</b></h1>
+    <h1 style="color: #b53905"><b>@Math.Round(Model.RatingAverage,2)</b></h1>
 </div>
 
 <div class="row mt-3" style="display: flex; justify-content: center; align-items: center;">

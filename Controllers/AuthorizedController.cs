@@ -688,6 +688,7 @@ namespace Readerpath.Controllers
                         && a.Rating != 0)
                     .AverageAsync(a => a.Rating ?? 0);
 
+
                 var bookActions = await context.BookActions
                     .Where(a => a.DateFinished != null
                         && a.DateFinished.Value.Month.ToString() == prevMonth

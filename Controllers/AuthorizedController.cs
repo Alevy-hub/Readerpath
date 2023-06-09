@@ -687,14 +687,19 @@ namespace Readerpath.Controllers
                         && a.User == user.Id
                         && a.Rating != 0)
                     .AverageAsync(a => a.Rating ?? 0);
-                
-                model.PrevMonthRatingAverage = await context.BookActions
+
+                var bookActions = await context.BookActions
                     .Where(a => a.DateFinished != null
                         && a.DateFinished.Value.Month.ToString() == prevMonth
                         && a.DateFinished.Value.Year.ToString() == prevYear
                         && a.User == user.Id
                         && a.Rating != 0)
-                    .AverageAsync(a => a.Rating ?? 0);
+                    .ToListAsync();
+
+                model.PrevMonthRatingAverage = (float)bookActions
+                    .Select(a => a.Rating)
+                    .DefaultIfEmpty(0)
+                    .Average();
 
                 model.FavouriteGenre = context.BookActions
                     .Where(a => a.DateFinished != null

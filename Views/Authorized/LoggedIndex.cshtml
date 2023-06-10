@@ -1,92 +1,97 @@
-﻿@*@page
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager*@
+﻿
 @model LoggedIndexModel
 @{
-    var type = new Dictionary<string, string> { { "PaperBook", "Książka papierowa" }, { "Ebook", "Ebook" }, { "Audiobook", "Audiobook" } };
+	var type = new Dictionary<string, string> { { "PaperBook", "Książka papierowa" }, { "Ebook", "Ebook" }, { "Audiobook", "Audiobook" } };
 }
 
 
 <h2 class="d-flex justify-content-center align-items-center">Cześć, @Model.UserName!</h2>
 <h3 class="d-flex justify-content-center align-items-center">Tutaj znajdziesz wszystko co najpotrzebniejsze!</h3>
 <div class="d-flex justify-content-center align-items-center">
-    <form method="get" action="/Authorized/Search" class="d-flex" style="min-width: 500px;">
-        <input class="form-control" type="text" id="query" name="query">
-        <button class="btn btn-primary mx-1" type="submit">Szukaj</button>
-    </form>
+	<form method="get" action="/Authorized/Search" class="d-flex" style="min-width: 500px;">
+		<input class="form-control" type="text" id="query" name="query">
+		<button class="btn btn-primary mx-1" type="submit">Szukaj</button>
+	</form>
 </div>
 
 
 
 
 <div class="d-flex justify-content-center align-items-center">
-    <a class="btn btn-primary btn-lg w-25 py-3 mt-2" asp-action="AddNewBook">Dodaj książkę</a>
+	<a class="btn btn-primary btn-lg w-25 py-3 mt-2" asp-action="AddNewBook">Dodaj książkę</a>
 </div>
 
+
 <div class="d-flex justify-content-center align-items-center mt-4">
-    <h2>Aktualnie czytane książki</h2>
+	<h2>Aktualnie czytane książki</h2>
 </div>
 
 <style>
-    .card {
-        border-color: #c64a16;
-    }
+	.card {
+		border-color: #c64a16;
+	}
 
-    .list-group-item {
-        border-color: #c64a16;
-    }
+	.list-group-item {
+		border-color: #c64a16;
+	}
 </style>
 
 <div class="d-flex justify-content-center flex-wrap">
-    @if (Model.NowReadingBooks != null && Model.NowReadingBooks.Any())
-    {
-        Model.NowReadingBooks = Model.NowReadingBooks.OrderBy(nb => nb.startDate).ToList();
-        @foreach (NowReadingBook nowReadingBook in Model.NowReadingBooks)
-        {
-            DateTime startDate = (DateTime)nowReadingBook.startDate;
-            string startDateString = startDate.ToString("dd.MM.yyyy");
+	@if (Model.NowReadingBooks != null && Model.NowReadingBooks.Any())
+	{
+		Model.NowReadingBooks = Model.NowReadingBooks.OrderBy(nb => nb.startDate).ToList();
+		@foreach (NowReadingBook nowReadingBook in Model.NowReadingBooks)
+		{
+			DateTime startDate = (DateTime)nowReadingBook.startDate;
+			string startDateString = startDate.ToString("dd.MM.yyyy");
 
-            <div class="card col-md-3 my-3 mx-1" style="max-width: 18rem;">
-                <div class="card-body text-center">
-                    <h4 class="card-title">@nowReadingBook.Title</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">@nowReadingBook.Author</h6>
-                    <h6 class="card-subtitle mb-2 text-muted">@nowReadingBook.Genre</h6>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Data rozpoczęcia: @startDateString</li>
-                    <li class="list-group-item">Typ: @type[nowReadingBook.Type]</li>
-                    @if(nowReadingBook.Type == "Audiobook")
-                    {
-                        if (nowReadingBook.Duration != null || nowReadingBook.Duration != 0)
-                        {
-                            int startTime = (int)nowReadingBook.Duration;
-                            string minutes = (startTime % 60).ToString().PadLeft(2, '0');
-                            int hours = startTime / 60;
-                            <li class="list-group-item">Czas trwania: @hours:@minutes</li>
-                        }
-                        else
-                        {
-                            <li class="list-group-item">Czas trwania: nie podano</li>                            
-                        }
-                    }
-                    else
-                    {
-                        <li class="list-group-item">Ilość stron: @nowReadingBook.Pages</li>                                                
-                    }
-                </ul>
-                <div class="card-body text-center">
-                    <a asp-action="FinishBook" asp-route-actionId="@nowReadingBook.ActionId" class="btn btn-primary">Ukończono</a>
-                    <a asp-action="DeleteFromMyBooks" asp-route-id="@nowReadingBook.ActionId" class="btn btn-primary">Usuń</a>
+			<div class="card col-md-3 my-3 mx-1" style="max-width: 18rem;">
+				<div class="card-body text-center">
+					<h4 class="card-title">@nowReadingBook.Title</h4>
+					<h6 class="card-subtitle mb-2 text-muted">@nowReadingBook.Author</h6>
+					<h6 class="card-subtitle mb-2 text-muted">@nowReadingBook.Genre</h6>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">Data rozpoczęcia: @startDateString</li>
+					<li class="list-group-item">Typ: @type[nowReadingBook.Type]</li>
+					@if(nowReadingBook.Type == "Audiobook")
+					{
+						if (nowReadingBook.Duration != null || nowReadingBook.Duration != 0)
+						{
+							int startTime = (int)nowReadingBook.Duration;
+							string minutes = (startTime % 60).ToString().PadLeft(2, '0');
+							int hours = startTime / 60;
+							<li class="list-group-item">Czas trwania: @hours:@minutes</li>
+						}
+						else
+						{
+							<li class="list-group-item">Czas trwania: nie podano</li>                            
+						}
+					}
+					else
+					{
+						<li class="list-group-item">Ilość stron: @nowReadingBook.Pages</li>                                                
+					}
+				</ul>
+				<div class="card-body text-center">
+					<a asp-action="FinishBook" asp-route-actionId="@nowReadingBook.ActionId" class="btn btn-primary">Ukończono</a>
+					<a asp-action="DeleteFromMyBooks" asp-route-id="@nowReadingBook.ActionId" class="btn btn-primary">Usuń</a>
 
 
-                </div>
-            </div>
-        }
-    }
-    else
-    {
-        <p>Aktualnie nie czytasz żadnych ksiażek :)</p>
-    }
+				</div>
+			</div>
+		}
+	}
+	else
+	{
+		<p>Aktualnie nie czytasz żadnych ksiażek :)</p>
+	}
 </div>
+
+@if (Model.MonthToClose != null)
+{
+	<div class="d-flex justify-content-center align-items-center">
+		<a class="btn btn-primary btn-lg w-25 py-3 mt-5" asp-action="CloseMonth" asp-route-month="@Model.MonthToClose" asp-route-year="@Model.YearOfMonthToClose">Zamknij miesiąc</a>
+	</div>    
+}
 

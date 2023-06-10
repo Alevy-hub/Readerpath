@@ -4,6 +4,8 @@
     {
         public string UserName { get; set; }
         public List<NowReadingBook> NowReadingBooks { get; set; }
+        public int? MonthToClose { get; set; }
+        public int? YearOfMonthToClose { get; set; }
 
 
     }

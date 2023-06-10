@@ -55,6 +55,33 @@ namespace Readerpath.Controllers
 					})
 					.ToList();
 
+                var years = context.BookActions
+                    .Where(ba => ba.User == user.Id)
+                    .Select(ba => ba.DateFinished.Value.Year)
+                    .Distinct()
+                    .OrderBy(y => y)
+                    .ToList();
+
+                foreach (int year in years)
+                {
+                    var monthsWithBook = context.BookActions 
+                        .Where(ba => ba.User == user.Id && ba.DateFinished.Value.Year == year)
+                        .Select(ba => ba.DateFinished.Value.Month)
+                        .Distinct()
+                        .ToList();
+
+                    var finishedMonths = context.MonthBooks
+                            .Where(mb => mb.User == user.Id && mb.Year == year)
+                            .Select(mb => mb.Month)
+                            .ToList();
+
+                    if (monthsWithBook.Except(finishedMonths).Any())
+                    {
+                        model.MonthToClose = monthsWithBook.Except(finishedMonths).Min();
+                        model.YearOfMonthToClose = year;
+                        break;
+                    }
+                }
 
                 return View(model);
 			}

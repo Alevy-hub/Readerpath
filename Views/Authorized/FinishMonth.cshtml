@@ -1,0 +1,96 @@
+﻿@model FinishMonthModel
+@{
+    int row = 1;
+}
+<div class="text-center mt-3">
+    <h2>Zakończ miesiąc @Model.month / @Model.year</h2>
+</div>
+
+<div class="text-center">
+    <h4>Wybierz najlepszą książkę tego miesiąca!</h4>
+</div>
+
+<form method="post" action="FinishMonth">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Ocena</th>
+                <th scope="col">Wybierz</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ReadBook book in Model.ReadBooks)
+            {
+                <tr>
+                    <th scope="row">@row</th>
+                    <td>@book.BookTitle</td>
+                    <td>@book.Rating</td>
+                    <td>
+                        <input type="hidden" id="bestId" name="bestId" value="@book.BookActionId" />
+                        <button class="btn btn-primary" onclick="highlightRow(this)">Wybierz</button>
+                    </td>
+                </tr>
+                row++;
+            }
+        </tbody>
+    </table>
+
+    <div class="text-center">
+        <h4>Wybierz najgorszą książkę tego miesiąca!</h4>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Ocena</th>
+                <th scope="col">Wybierz</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ReadBook book in Model.ReadBooks)
+            {
+                <tr>
+                    <th scope="row">@row</th>
+                    <td>@book.BookTitle</td>
+                    <td>@book.Rating</td>
+                    <td>
+                        <input type="hidden" id="worstId" name="worstId" value="@book.BookActionId" />
+                        <button class="btn btn-primary" onclick="highlightRow(this)">Wybierz</button>
+                    </td>
+                </tr>
+                row++;
+            }
+        </tbody>
+    </table>
+
+    <input type="hidden" id="month" name="month" value="@Model.month" />
+    <input type="hidden" id="month" name="year" value="@Model.year" />
+    <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary btn-lg mx-2">Zapisz</button>
+        <a asp-controller="Authorized" asp-action="LoggedIndex" class="btn btn-primary btn-lg mx-2">Anuluj</a>
+    </div>
+</form>
+
+<script>
+    function highlightRow(button) {
+        var row = button.closest("tr");
+        var table = row.closest("table");
+        var rows = table.getElementsByTagName("tr");
+
+        for (var i = 0; i < rows.length; i++) {
+            rows[i].classList.remove("highlight");
+        }
+
+        row.classList.add("highlight");
+    }
+</script>
+
+<style>
+    .highlight {
+        background-color: #488f1f;
+    }
+</style>

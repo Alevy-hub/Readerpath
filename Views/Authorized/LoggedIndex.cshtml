@@ -91,7 +91,7 @@
 @if (Model.MonthToClose != null)
 {
 	<div class="d-flex justify-content-center align-items-center">
-		<a class="btn btn-primary btn-lg w-25 py-3 mt-5" asp-action="CloseMonth" asp-route-month="@Model.MonthToClose" asp-route-year="@Model.YearOfMonthToClose">Zamknij miesiąc</a>
+		<a class="btn btn-primary btn-lg w-25 py-3 mt-5" asp-action="FinishMonth" asp-route-month="@Model.MonthToClose.ToString()" asp-route-year="@Model.YearOfMonthToClose.ToString()">Zamknij miesiąc</a>
 	</div>    
 }
 

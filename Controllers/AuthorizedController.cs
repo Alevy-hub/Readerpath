@@ -774,5 +774,51 @@ namespace Readerpath.Controllers
         {
             return View();
         }
+
+        [Route("FinishMonth/{month}/{year}")]
+        public async Task<IActionResult> FinishMonth(string year, string month)
+        {
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+            var model = new FinishMonthModel();
+            model.month = int.Parse(month);
+            model.year = int.Parse(year);
+
+			using (var context = new ApplicationDbContext(_options))
+            {
+                model.ReadBooks = context.BookActions
+                    .Include(ba => ba.Edition.Book)
+                    .Where(ba => ba.DateFinished.Value.Year == int.Parse(year) && ba.DateFinished.Value.Month == int.Parse(month))
+                    .Select(ba => new ReadBook
+                    {
+                        BookActionId = ba.Id,
+                        BookTitle = ba.Edition.Book.Title,
+                        Rating = ba.Rating
+                    })
+                    .ToList();
+            }
+
+				return View(model);
+        }
+
+        public async Task<IActionResult> FinishMonth(int month, int year, int bestId, int worstId)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            using (var context = new ApplicationDbContext(_options))
+            {
+
+
+                var monthBook = new MonthBook();
+                monthBook.Month = month;
+                monthBook.Year = year;
+                monthBook.BestBook = context.BookActions.Find(bestId);
+                monthBook.WorstBook = context.BookActions.Find(worstId);
+                monthBook.User = user.Id;
+
+                context.Add(monthBook);
+                await context.SaveChangesAsync();
+
+            }
+                return RedirectToAction(nameof(LoggedIndex));
+        }
 	}
 }

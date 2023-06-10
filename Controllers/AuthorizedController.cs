@@ -66,7 +66,7 @@ namespace Readerpath.Controllers
         {
             if(query == null)
             {
-                return RedirectToAction("LoggedIndex");
+                query = "";
             }
             using (var context = new ApplicationDbContext(_options))
             {

@@ -120,3 +120,14 @@ h1 {
     color: #f7f3ec;
     height: 150px;
 }
+
+.empty-month-block {
+    background-color: #d38869;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #f7f3ec;
+    height: 150px;
+}

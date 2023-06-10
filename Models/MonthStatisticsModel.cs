@@ -6,7 +6,7 @@
         public string Year { get; set; }
         public int BookCount { get; set; }
         public int PrevMonthBookCount { get; set; }
-        public int YearChallengeCount { get; set; }
+        public int? YearChallengeCount { get; set; }
         public int PaperBooksCount { get; set; }
         public int EbooksCount { get; set; }
         public int AudiobooksCount { get; set; }

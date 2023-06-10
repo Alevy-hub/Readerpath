@@ -1,54 +1,63 @@
 ﻿@model MonthStatisticsModel
 
 @{
-    int row = 1;
-    int rowB = 1;
+	int row = 1;
+	int rowB = 1;
 
-    string month = Model.Month;
-    if(int.Parse(Model.Month) < 10)
-    {
-        month = "0" + Model.Month;
-    }
+	string month = Model.Month;
+	if(int.Parse(Model.Month) < 10)
+	{
+		month = "0" + Model.Month;
+	}
 
-    string thanPrevMonth = (Model.BookCount - Model.PrevMonthBookCount).ToString();
-    string display = "";
-    if (thanPrevMonth == "0") display = "display:none;"; 
+	string thanPrevMonth = (Model.BookCount - Model.PrevMonthBookCount).ToString();
+	string display = "";
+	if (thanPrevMonth == "0") display = "display:none;"; 
 
-    string moreOrLess;
-    if(Model.BookCount - Model.PrevMonthBookCount < 0)
-    {
-        thanPrevMonth = (int.Parse(thanPrevMonth) * -1).ToString();
-        moreOrLess = "Mniej niż";
-    }
-    else if(Model.BookCount - Model.PrevMonthBookCount == 0)
-    {
-        moreOrLess = "Tyle samo co";
-    }
-    else
-    {
-        moreOrLess = "Więcej niż";
-    }
+	string moreOrLess;
+	if(Model.BookCount - Model.PrevMonthBookCount < 0)
+	{
+		thanPrevMonth = (int.Parse(thanPrevMonth) * -1).ToString();
+		moreOrLess = "Mniej niż";
+	}
+	else if(Model.BookCount - Model.PrevMonthBookCount == 0)
+	{
+		moreOrLess = "Tyle samo co";
+	}
+	else
+	{
+		moreOrLess = "Więcej niż";
+	}
 
-    string percentOfChallenge = Math.Round((((float)Model.BookCount / (float)Model.YearChallengeCount)*100),2).ToString() + "%";
+	string percentOfChallenge = "";
+	bool isChallenge = true;
+	if(Model.YearChallengeCount != 0)
+	{
+		percentOfChallenge = Math.Round((((float)Model.BookCount / (float)Model.YearChallengeCount)*100),2).ToString() + "%";        
+	}
+	else
+	{
+		isChallenge = false;
+	}
 
-    string audiobooksTime = (Model.AudiobooksMinutes / 60).ToString() + ":" + (Model.AudiobooksMinutes % 60).ToString();
+	string audiobooksTime = (Model.AudiobooksMinutes / 60).ToString() + ":" + (Model.AudiobooksMinutes % 60).ToString();
 
-    string avgThanPrevMonth = (Model.RatingAverage - Model.PrevMonthRatingAverage).ToString("0.00");
-    string avgMoreOrLess;
+	string avgThanPrevMonth = (Model.RatingAverage - Model.PrevMonthRatingAverage).ToString("0.00");
+	string avgMoreOrLess;
 
-    if(Model.RatingAverage - Model.PrevMonthRatingAverage < 0)
-    {
-        avgThanPrevMonth = (int.Parse(avgThanPrevMonth) * -1).ToString();
-        avgMoreOrLess = "niższa niż";
-    }
-    else if(Model.RatingAverage - Model.PrevMonthRatingAverage == 0)
-    {
-        avgMoreOrLess = "taka sama jak";
-    }
-    else
-    {
-        avgMoreOrLess = "większa niż";
-    }
+	if(Model.RatingAverage - Model.PrevMonthRatingAverage < 0)
+	{
+		avgThanPrevMonth = (int.Parse(avgThanPrevMonth) * -1).ToString();
+		avgMoreOrLess = "niższa niż";
+	}
+	else if(Model.RatingAverage - Model.PrevMonthRatingAverage == 0)
+	{
+		avgMoreOrLess = "taka sama jak";
+	}
+	else
+	{
+		avgMoreOrLess = "większa niż";
+	}
 }
 
 <div style="display: flex; align-items: center; justify-content: center;">
@@ -56,124 +65,127 @@
 </div>
 
 <div class="mt-3" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-    <h4>W tym miesiącu przeczytano</h4>
-    <h1 style="color: #b53905"><b>@Model.BookCount</b></h1>
-    <h4>książek</h4>
+	<h4>W tym miesiącu przeczytano</h4>
+	<h1 style="color: #b53905"><b>@Model.BookCount</b></h1>
+	<h4>książek</h4>
 </div>
 
 <h2 class="mt-3" style="display: flex; align-items: center; justify-content: center;">Jest to</h2>
 <div class="row" style="display: flex; justify-content: center; align-items: center;">
-    <div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-        <h2 style="@display color: #b53905">@thanPrevMonth</h2>
-        <h4>@moreOrLess w poprzednim miesiącu</h4>
-    </div>
-    <div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-        <h2 style="color: #b53905">@percentOfChallenge</h2>
-        <h4>Twojego challengu na ten rok</h4>
-    </div>
+	<div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h2 style="@display color: #b53905">@thanPrevMonth</h2>
+		<h4>@moreOrLess w poprzednim miesiącu</h4>
+	</div>
+	@if (isChallenge)
+	{
+		<div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+			<h2 style="color: #b53905">@percentOfChallenge</h2>
+			<h4>Twojego challengu na ten rok</h4>
+		</div>		
+	}
 </div>
 
 <h2 class="mt-3" style="display: flex; align-items: center; justify-content: center;">W tym</h2>
 <div class="row mt-3" style="display: flex; justify-content: center; align-items: center;">
-    <div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-        <h4>Książki papierowe</h4>
-        <h2 style="color: #b53905">@Model.PaperBooksCount</h2>
-    </div>
-    <div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-        <h4>Ebooki</h4>
-        <h2 style="color: #b53905">@Model.EbooksCount</h2>
-    </div>
-    <div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-        <h4>Audiobooki</h4>
-        <h2 style="color: #b53905">@Model.AudiobooksCount</h2>
-    </div>
+	<div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h4>Książki papierowe</h4>
+		<h2 style="color: #b53905">@Model.PaperBooksCount</h2>
+	</div>
+	<div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h4>Ebooki</h4>
+		<h2 style="color: #b53905">@Model.EbooksCount</h2>
+	</div>
+	<div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h4>Audiobooki</h4>
+		<h2 style="color: #b53905">@Model.AudiobooksCount</h2>
+	</div>
 </div>
 
 <h2 class="mt-3" style="display: flex; align-items: center; justify-content: center;">Czyli...</h2>
 <div class="row mt-3" style="display: flex; justify-content: center; align-items: center;">
-    <div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-        <h2 style="color: #b53905">@Model.PagesCount</h2>
-        <h4>stron książek</h4>
-    </div>
-    <div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-        <h2 style="color: #b53905">@audiobooksTime</h2>
-        <h4>godzin audiobooków</h4>
-    </div>
+	<div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h2 style="color: #b53905">@Model.PagesCount</h2>
+		<h4>stron książek</h4>
+	</div>
+	<div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h2 style="color: #b53905">@audiobooksTime</h2>
+		<h4>godzin audiobooków</h4>
+	</div>
 </div>
 
 <div class="mt-3" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-    <h4>Średnia ocen</h4>
-    <h1 style="color: #b53905"><b>@Math.Round(Model.RatingAverage,2)</b></h1>
+	<h4>Średnia ocen</h4>
+	<h1 style="color: #b53905"><b>@Math.Round(Model.RatingAverage,2)</b></h1>
 </div>
 
 <div class="row mt-3" style="display: flex; justify-content: center; align-items: center;">
-    <div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-        <h4>Średnia @avgMoreOrLess w poprzednim miesiącu o</h4>
-        <h2 style="color: #b53905">@avgThanPrevMonth</h2>
-    </div>
-    <div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-        <h4>Ulubiony gatunek</h4>
-        <h2 style="color: #b53905">@Model.FavouriteGenre</h2>
-    </div>
+	<div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h4>Średnia @avgMoreOrLess w poprzednim miesiącu o</h4>
+		<h2 style="color: #b53905">@avgThanPrevMonth</h2>
+	</div>
+	<div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h4>Ulubiony gatunek</h4>
+		<h2 style="color: #b53905">@Model.FavouriteGenre</h2>
+	</div>
 </div>
 
 <div class="row mt-3" style="display: flex; justify-content: center; align-items: center;">
-    <div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-        <h4>Najlepsza książka miesiąca</h4>
-        <h2 style="color: #b53905"><b>do zrobienia</b></h2>
-    </div>
-    <div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-        <h4>Najgorsza książka miesiąca</h4>
-        <h2 style="color: #b53905"><b>do zrobienia</b></h2>
-    </div>
+	<div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h4>Najlepsza książka miesiąca</h4>
+		<h2 style="color: #b53905"><b>do zrobienia</b></h2>
+	</div>
+	<div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h4>Najgorsza książka miesiąca</h4>
+		<h2 style="color: #b53905"><b>do zrobienia</b></h2>
+	</div>
 </div>
 
 <div class="row mt-5" style="display: flex; justify-content: center; align-items: center;">
-    <div class="col-md-5">
-        <h3 class="text-center">Przeczytane w tym miesiącu gatunki</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Gatunek</th>
-                    <th scope="col">Liczba</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach(GenreWithCount genre in Model.Genres)
-                {
-                    <tr>
-                        <th scope="row">@row</th>
-                        <td>@genre.Name</td>
-                        <td>@genre.Count</td>
-                    </tr>
-                    row++;
-                }
-            </tbody>
-        </table>
-    </div>
+	<div class="col-md-5">
+		<h3 class="text-center">Przeczytane w tym miesiącu gatunki</h3>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Gatunek</th>
+					<th scope="col">Liczba</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach(GenreWithCount genre in Model.Genres)
+				{
+					<tr>
+						<th scope="row">@row</th>
+						<td>@genre.Name</td>
+						<td>@genre.Count</td>
+					</tr>
+					row++;
+				}
+			</tbody>
+		</table>
+	</div>
 </div>
 
 <div class="row mt-5" style="display: flex; justify-content: center; align-items: center;">
-    <div class="col-md-5">
-        <h3 class="text-center">Przeczytane w tym miesiącu książki</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Tytuł</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach(Readerpath.Entities.Book book in Model.Books)
-                {
-                    <tr>
-                        <th scope="row">@rowB</th>
-                        <td>@book.Title</td>
-                    </tr>
-                    rowB++;
-                }
-            </tbody>
-        </table>
-    </div>
+	<div class="col-md-5">
+		<h3 class="text-center">Przeczytane w tym miesiącu książki</h3>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Tytuł</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach(Readerpath.Entities.Book book in Model.Books)
+				{
+					<tr>
+						<th scope="row">@rowB</th>
+						<td>@book.Title</td>
+					</tr>
+					rowB++;
+				}
+			</tbody>
+		</table>
+	</div>
 </div>

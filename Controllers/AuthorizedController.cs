@@ -441,6 +441,7 @@ namespace Readerpath.Controllers
 
         public async Task<IActionResult> AllReadBooks()
         {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
             using (var context = new ApplicationDbContext(_options))
             {
                 List<AllReadBooksModel> model = context.BookActions
@@ -448,6 +449,7 @@ namespace Readerpath.Controllers
                     .Include(ba => ba.Edition.Book.Author)
                     .Include(ba => ba.Edition.Book.Genre)
                     .Include(ba => ba.Edition.Publisher)
+                    .Where(ba => ba.User == user.Id)
                     .Select(ba => new AllReadBooksModel
                     {
                         Id = ba.Id,
@@ -670,7 +672,7 @@ namespace Readerpath.Controllers
 
                 model.YearChallengeCount = (int)(context.YearChallenges
                         .SingleOrDefault(c => c.User == user.Id && c.Year.ToString() == year)?
-                        .Count);
+                        .Count ?? 0);
 
                 model.PaperBooksCount = await context.BookActions
                         .CountAsync(a => a.User == user.Id && a.DateFinished != null

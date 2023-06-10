@@ -747,7 +747,8 @@ namespace Readerpath.Controllers
                 model.Genres = context.BookActions
                     .Where(a => a.DateFinished != null
                         && a.DateFinished.Value.Month.ToString() == month
-                        && a.DateFinished.Value.Year.ToString() == year)
+                        && a.DateFinished.Value.Year.ToString() == year
+                        && a.User == user.Id)
                     .GroupBy(a => a.Edition.Book.Genre.Name)
                     .Select(group => new GenreWithCount
                     {
@@ -759,7 +760,8 @@ namespace Readerpath.Controllers
                 model.Books = context.BookActions
                     .Where(a => a.DateFinished != null
                         && a.DateFinished.Value.Month.ToString() == month
-                        && a.DateFinished.Value.Year.ToString() == year)
+                        && a.DateFinished.Value.Year.ToString() == year
+                        && a.User == user.Id)
                     .Select(a => a.Edition.Book)
                     .ToList();
             }

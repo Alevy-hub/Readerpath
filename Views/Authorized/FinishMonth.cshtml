@@ -27,7 +27,7 @@
                 <td>@book.BookTitle</td>
                 <td>@book.Rating</td>
                 <td>
-                    <button class="btn btn-primary" onclick="highlightRow(this, 'bestBookActionId', @book.BookActionId)">Wybierz</button>
+                    <button class="btn btn-primary" onclick="highlightRow(this, 'bestBookActionId', '@book.BookActionId')">Wybierz</button>
                 </td>
             </tr>
             row++;
@@ -56,7 +56,7 @@
                 <td>@book.BookTitle</td>
                 <td>@book.Rating</td>
                 <td>
-                    <button class="btn btn-primary" onclick="highlightRow(this, 'worstBookActionId', @book.BookActionId)">Wybierz</button>
+                    <button class="btn btn-primary" onclick="highlightRow(this, 'worstBookActionId', '@book.BookActionId')">Wybierz</button>
                 </td>
             </tr>
             row++;
@@ -75,7 +75,12 @@
     </div>
 </form>
 
-
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <p id="modalMessage"></p>
+        <span class="close btn btn-primary modal-ok-button" onclick="closeModal()">OK</span>
+    </div>
+</div>
 
 <script>
     function highlightRow(button, inputId, bookActionId) {
@@ -98,13 +103,48 @@
         if (bestBookActionId && worstBookActionId) {
             document.getElementById("finishMonthForm").submit();
         } else {
-            alert("Wybierz najlepszą i najgorszą książkę tego miesiąca.");
+            var modal = document.getElementById("myModal");
+            var modalMessage = document.getElementById("modalMessage");
+
+            modalMessage.textContent = "Wybierz najlepszą i najgorszą książkę tego miesiąca!";
+            modal.style.display = "block";
         }
+    }
+
+    function closeModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "none";
     }
 </script>
 
 <style>
     .highlight {
         background-color: #488f1f;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 400px;
+    }
+
+
+
+    .modal-ok-button {
+        margin-top: 10px;
     }
 </style>

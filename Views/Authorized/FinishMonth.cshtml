@@ -70,19 +70,32 @@
     <input type="hidden" id="month" name="month" value="@Model.month" />
     <input type="hidden" id="year" name="year" value="@Model.year" />
     <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-primary btn-lg mx-2" onclick="saveSelection()">Zapisz</button>
+        <button type="button" class="btn btn-primary btn-lg mx-2" onclick="showConfirmationModal()">Zapisz</button>
         <a asp-controller="Authorized" asp-action="LoggedIndex" class="btn btn-primary btn-lg mx-2">Anuluj</a>
     </div>
 </form>
 
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <p class="text-center">Czy na pewno chcesz zapisać wybór?</p>
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-primary mx-2 px-5" onclick="saveSelection()">TAK</button>
+            <button class="btn btn-primary mx-2 px-5" onclick="closeConfirmationModal()">NIE</button>
+        </div>
+    </div>
+</div>
+
 <div id="myModal" class="modal">
     <div class="modal-content">
-        <p id="modalMessage"></p>
-        <span class="close btn btn-primary modal-ok-button" onclick="closeModal()">OK</span>
+        <p class="text-center">Wybierz najlepszą i najgorszą książkę tego miesiąca!</p>
+        <span class="btn btn-primary modal-ok-button" onclick="closeModal()">OK</span>
     </div>
 </div>
 
 <script>
+    var selectedBestBookActionId = "";
+    var selectedWorstBookActionId = "";
+
     function highlightRow(button, inputId, bookActionId) {
         var row = button.closest("tr");
         var table = row.closest("table");
@@ -93,22 +106,35 @@
         }
 
         row.classList.add("highlight");
-        document.getElementById(inputId).value = bookActionId;
+        if (inputId === "bestBookActionId") {
+            selectedBestBookActionId = bookActionId;
+        } else if (inputId === "worstBookActionId") {
+            selectedWorstBookActionId = bookActionId;
+        }
+    }
+
+    function showConfirmationModal() {
+        var confirmationModal = document.getElementById("confirmationModal");
+        confirmationModal.style.display = "block";
     }
 
     function saveSelection() {
-        var bestBookActionId = document.getElementById("bestBookActionId").value;
-        var worstBookActionId = document.getElementById("worstBookActionId").value;
+        var bestBookActionId = selectedBestBookActionId;
+        var worstBookActionId = selectedWorstBookActionId;
 
         if (bestBookActionId && worstBookActionId) {
+            document.getElementById("bestBookActionId").value = bestBookActionId;
+            document.getElementById("worstBookActionId").value = worstBookActionId;
             document.getElementById("finishMonthForm").submit();
         } else {
             var modal = document.getElementById("myModal");
-            var modalMessage = document.getElementById("modalMessage");
-
-            modalMessage.textContent = "Wybierz najlepszą i najgorszą książkę tego miesiąca!";
             modal.style.display = "block";
         }
+    }
+
+    function closeConfirmationModal() {
+        var confirmationModal = document.getElementById("confirmationModal");
+        confirmationModal.style.display = "none";
     }
 
     function closeModal() {
@@ -119,7 +145,7 @@
 
 <style>
     .highlight {
-        background-color: #488f1f;
+        background-color: #B5D2A5;
     }
 
     .modal {
@@ -141,8 +167,6 @@
         border: 1px solid #888;
         width: 400px;
     }
-
-
 
     .modal-ok-button {
         margin-top: 10px;

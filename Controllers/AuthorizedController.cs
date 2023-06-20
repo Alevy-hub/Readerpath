@@ -800,7 +800,8 @@ namespace Readerpath.Controllers
 				return View(model);
         }
 
-        public async Task<IActionResult> FinishMonth(int month, int year, int bestId, int worstId)
+        [HttpPost]
+        public async Task<IActionResult> FinishMonthPost(int month, int year, int bestId, int worstId)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             using (var context = new ApplicationDbContext(_options))

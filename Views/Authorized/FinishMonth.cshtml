@@ -10,73 +10,75 @@
     <h4>Wybierz najlepszą książkę tego miesiąca!</h4>
 </div>
 
-<form method="post" action="FinishMonth">
-    <table class="table table-striped">
-        <thead>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Ocena</th>
+            <th scope="col">Wybierz</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ReadBook book in Model.ReadBooks)
+        {
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Tytuł</th>
-                <th scope="col">Ocena</th>
-                <th scope="col">Wybierz</th>
+                <th scope="row">@row</th>
+                <td>@book.BookTitle</td>
+                <td>@book.Rating</td>
+                <td>
+                    <button class="btn btn-primary" onclick="highlightRow(this, 'bestBookActionId', @book.BookActionId)">Wybierz</button>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (ReadBook book in Model.ReadBooks)
-            {
-                <tr>
-                    <th scope="row">@row</th>
-                    <td>@book.BookTitle</td>
-                    <td>@book.Rating</td>
-                    <td>
-                        <input type="hidden" id="bestId" name="bestId" value="@book.BookActionId" />
-                        <button class="btn btn-primary" onclick="highlightRow(this)">Wybierz</button>
-                    </td>
-                </tr>
-                row++;
-            }
-        </tbody>
-    </table>
+            row++;
+        }
+    </tbody>
+</table>
 
-    <div class="text-center">
-        <h4>Wybierz najgorszą książkę tego miesiąca!</h4>
-    </div>
+<div class="text-center">
+    <h4>Wybierz najgorszą książkę tego miesiąca!</h4>
+</div>
 
-    <table class="table table-striped">
-        <thead>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Ocena</th>
+            <th scope="col">Wybierz</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ReadBook book in Model.ReadBooks)
+        {
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Tytuł</th>
-                <th scope="col">Ocena</th>
-                <th scope="col">Wybierz</th>
+                <th scope="row">@row</th>
+                <td>@book.BookTitle</td>
+                <td>@book.Rating</td>
+                <td>
+                    <button class="btn btn-primary" onclick="highlightRow(this, 'worstBookActionId', @book.BookActionId)">Wybierz</button>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (ReadBook book in Model.ReadBooks)
-            {
-                <tr>
-                    <th scope="row">@row</th>
-                    <td>@book.BookTitle</td>
-                    <td>@book.Rating</td>
-                    <td>
-                        <input type="hidden" id="worstId" name="worstId" value="@book.BookActionId" />
-                        <button class="btn btn-primary" onclick="highlightRow(this)">Wybierz</button>
-                    </td>
-                </tr>
-                row++;
-            }
-        </tbody>
-    </table>
+            row++;
+        }
+    </tbody>
+</table>
 
+<form id="finishMonthForm" method="post" asp-controller="Authorized" asp-action="FinishMonthPost">
+    <input type="hidden" id="bestBookActionId" name="bestId" value="" />
+    <input type="hidden" id="worstBookActionId" name="worstId" value="" />
     <input type="hidden" id="month" name="month" value="@Model.month" />
-    <input type="hidden" id="month" name="year" value="@Model.year" />
+    <input type="hidden" id="year" name="year" value="@Model.year" />
     <div class="d-flex justify-content-center">
-        <button type="submit" class="btn btn-primary btn-lg mx-2">Zapisz</button>
+        <button type="button" class="btn btn-primary btn-lg mx-2" onclick="saveSelection()">Zapisz</button>
         <a asp-controller="Authorized" asp-action="LoggedIndex" class="btn btn-primary btn-lg mx-2">Anuluj</a>
     </div>
 </form>
 
+
+
 <script>
-    function highlightRow(button) {
+    function highlightRow(button, inputId, bookActionId) {
         var row = button.closest("tr");
         var table = row.closest("table");
         var rows = table.getElementsByTagName("tr");
@@ -86,6 +88,18 @@
         }
 
         row.classList.add("highlight");
+        document.getElementById(inputId).value = bookActionId;
+    }
+
+    function saveSelection() {
+        var bestBookActionId = document.getElementById("bestBookActionId").value;
+        var worstBookActionId = document.getElementById("worstBookActionId").value;
+
+        if (bestBookActionId && worstBookActionId) {
+            document.getElementById("finishMonthForm").submit();
+        } else {
+            alert("Wybierz najlepszą i najgorszą książkę tego miesiąca.");
+        }
     }
 </script>
 

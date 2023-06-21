@@ -148,7 +148,8 @@ namespace Readerpath.Controllers
         [Route("{id}/BookDetails")]
         public async Task<IActionResult> BookDetails(int id)
         {
-            using(var context = new ApplicationDbContext(_options))
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            using (var context = new ApplicationDbContext(_options))
             {
                 Book? book = context.Books
                     .Include(b => b.Author)
@@ -176,7 +177,7 @@ namespace Readerpath.Controllers
 
                 model.Actions = context.BookActions
                     .Include(a => a.Edition.Publisher)
-                    .Where(a => a.Edition.Book == book)
+                    .Where(a => a.Edition.Book == book && a.User == user.Id)
                     .Select(a => new ActionModel
                     {
                         Id = a.Id,

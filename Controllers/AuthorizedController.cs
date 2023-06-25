@@ -765,9 +765,26 @@ namespace Readerpath.Controllers
                         && a.User == user.Id)
                     .Select(a => a.Edition.Book)
                     .ToList();
-            }
 
-            return View("MonthStatistics", model);
+				var monthBooks = context.MonthBooks
+					.Include(mb => mb.BestBook.Edition.Book)
+					.Include(mb => mb.WorstBook.Edition.Book)
+					.FirstOrDefault(a => a.User == user.Id && a.Year.ToString() == year && a.Month.ToString() == month);
+
+				model.BestBook = monthBooks?.BestBook?.Edition?.Book?.Title;
+				model.WorstBook = monthBooks?.WorstBook?.Edition?.Book?.Title;
+
+
+				//var worstBook = context.MonthBooks
+				//    .Where(mb => mb.User == user.Id
+				//                && mb.Year.ToString() == year
+				//                && mb.Month.ToString() == month)
+				//    .Select(mb => mb.WorstBook.Edition.Book.Title)
+				//    .FirstOrDefault();
+
+			}
+
+			return View("MonthStatistics", model);
         }
 
         [Route("Statistics/{year}/Details")]

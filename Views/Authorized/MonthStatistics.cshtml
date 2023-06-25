@@ -135,16 +135,19 @@
 	</div>
 </div>
 
-<div class="row mt-3" style="display: flex; justify-content: center; align-items: center;">
-	<div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-		<h4>Najlepsza książka miesiąca</h4>
-		<h2 style="color: #b53905"><b>do zrobienia</b></h2>
-	</div>
-	<div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
-		<h4>Najgorsza książka miesiąca</h4>
-		<h2 style="color: #b53905"><b>do zrobienia</b></h2>
-	</div>
-</div>
+@if(Model.BestBook != null && Model.WorstBook != null)
+{
+	<div class="row mt-3" style="display: flex; justify-content: center; align-items: center;">
+		<div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+			<h4>Najlepsza książka miesiąca</h4>
+			<h2 style="color: #b53905"><b>@Model.BestBook</b></h2>
+		</div>
+		<div class="col-md-4 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+			<h4>Najgorsza książka miesiąca</h4>
+			<h2 style="color: #b53905"><b>@Model.WorstBook</b></h2>
+		</div>
+	</div>	
+}
 
 <div class="row mt-5" style="display: flex; justify-content: center; align-items: center;">
 	<div class="col-md-5">

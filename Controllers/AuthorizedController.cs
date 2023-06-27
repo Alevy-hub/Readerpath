@@ -803,7 +803,7 @@ namespace Readerpath.Controllers
             {
                 model.ReadBooks = context.BookActions
                     .Include(ba => ba.Edition.Book)
-                    .Where(ba => ba.DateFinished.Value.Year == int.Parse(year) && ba.DateFinished.Value.Month == int.Parse(month))
+                    .Where(ba => ba.DateFinished.Value.Year == int.Parse(year) && ba.DateFinished.Value.Month == int.Parse(month) && ba.User == user.Id)
                     .Select(ba => new ReadBook
                     {
                         BookActionId = ba.Id,
@@ -822,8 +822,6 @@ namespace Readerpath.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             using (var context = new ApplicationDbContext(_options))
             {
-
-
                 var monthBook = new MonthBook();
                 monthBook.Month = month;
                 monthBook.Year = year;
@@ -837,5 +835,38 @@ namespace Readerpath.Controllers
             }
                 return RedirectToAction(nameof(LoggedIndex));
         }
+
+		[Route("FinishYear/{year}")]
+		public async Task<IActionResult> FinishYear(string year)
+		{
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+			var model = new FinishYearModel();
+			model.Year = int.Parse(year);
+
+			using (var context = new ApplicationDbContext(_options))
+			{
+                model.WorstBooks = context.MonthBooks
+                    .Where(mb => mb.Year.ToString() == year && mb.User == user.Id)
+                    .Select(mb => new WorstBook
+                    {
+                        BookActionId = mb.WorstBook.Id,
+                        BookTitle = mb.WorstBook.Edition.Book.Title,
+                        Rating = mb.WorstBook.Rating,
+                    })
+                    .ToList();
+
+                model.BestBooks = context.MonthBooks
+                    .Where(mb => mb.Year.ToString() == year && mb.User == user.Id)
+                    .Select(mb => new BestBook
+                    {
+                        BookActionId = mb.BestBook.Id,
+                        BookTitle = mb.BestBook.Edition.Book.Title,
+                        Rating = mb.BestBook.Rating,
+                    })
+                    .ToList();
+			}
+
+			return View(model);
+		}
 	}
 }

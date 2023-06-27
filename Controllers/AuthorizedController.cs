@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Security.Certificates;
 using Readerpath.Data;
@@ -55,14 +56,14 @@ namespace Readerpath.Controllers
 					})
 					.ToList();
 
-                var years = context.BookActions
-                    .Where(ba => ba.User == user.Id)
-                    .Select(ba => ba.DateFinished.Value.Year)
-                    .Distinct()
-                    .OrderBy(y => y)
-                    .ToList();
+				var years = context.BookActions
+					.Where(ba => ba.User == user.Id && !context.YearBooks.Any(yb => yb.User == user.Id && yb.Year == ba.DateFinished.Value.Year))
+					.Select(ba => ba.DateFinished.Value.Year)
+					.Distinct()
+					.OrderBy(y => y)
+					.ToList();
 
-                foreach (int year in years)
+				foreach (int year in years)
                 {
                     var monthsWithBook = context.BookActions 
                         .Where(ba => ba.User == user.Id && ba.DateFinished.Value.Year == year)
@@ -75,12 +76,18 @@ namespace Readerpath.Controllers
                             .Select(mb => mb.Month)
                             .ToList();
 
+                    if(monthsWithBook.Count > 3 && monthsWithBook.Except(finishedMonths).IsNullOrEmpty() && model.YearToClose == null && year < DateTime.Now.Year)
+                    {
+                        model.YearToClose = year;
+                    }
+
                     if (monthsWithBook.Except(finishedMonths).Any())
                     {
                         model.MonthToClose = monthsWithBook.Except(finishedMonths).Min();
                         model.YearOfMonthToClose = year;
                         break;
                     }
+
                 }
 
                 return View(model);
@@ -773,15 +780,6 @@ namespace Readerpath.Controllers
 
 				model.BestBook = monthBooks?.BestBook?.Edition?.Book?.Title;
 				model.WorstBook = monthBooks?.WorstBook?.Edition?.Book?.Title;
-
-
-				//var worstBook = context.MonthBooks
-				//    .Where(mb => mb.User == user.Id
-				//                && mb.Year.ToString() == year
-				//                && mb.Month.ToString() == month)
-				//    .Select(mb => mb.WorstBook.Edition.Book.Title)
-				//    .FirstOrDefault();
-
 			}
 
 			return View("MonthStatistics", model);

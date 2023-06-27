@@ -4,8 +4,8 @@
     {
         public int Id { get; set; }
         public int Year { get; set; }
-        public Book BestBook { get; set; }
-        public Book WorstBook { get; set; }
+        public BookAction BestBook { get; set; }
+        public BookAction WorstBook { get; set; }
         public string User { get; set; }
     }
 }

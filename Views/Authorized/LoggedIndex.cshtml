@@ -88,10 +88,20 @@
 	}
 </div>
 
-@if (Model.MonthToClose != null)
-{
-	<div class="d-flex justify-content-center align-items-center">
-		<a class="btn btn-primary btn-lg w-25 py-3 mt-5" asp-action="FinishMonth" asp-route-month="@Model.MonthToClose.ToString()" asp-route-year="@Model.YearOfMonthToClose.ToString()">Zamknij miesiąc</a>
-	</div>    
-}
+<div class="d-flex justify-content-center align-items-center">
+	@if (Model.MonthToClose != null)
+	{
+		<div class="py-3 mt-5 mx-1">
+			<a class="btn btn-primary btn-lg w-100" asp-action="FinishMonth" asp-route-month="@Model.MonthToClose.ToString()" asp-route-year="@Model.YearOfMonthToClose.ToString()">Zamknij miesiąc</a>
+		</div>
+	}
+
+	@if (Model.YearToClose != null)
+	{
+		<div class="py-3 mt-5 mx-1">
+			<a class="btn btn-primary btn-lg w-100" asp-action="FinishYear" asp-route-year="@Model.YearToClose.ToString()">Zamknij rok</a>
+		</div>
+	}
+</div>
+
 

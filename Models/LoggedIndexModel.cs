@@ -6,6 +6,7 @@
         public List<NowReadingBook> NowReadingBooks { get; set; }
         public int? MonthToClose { get; set; }
         public int? YearOfMonthToClose { get; set; }
+        public int? YearToClose { get; set; }
 
 
     }

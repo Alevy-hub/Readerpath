@@ -325,13 +325,16 @@ namespace Readerpath.Controllers
             using (var context = new ApplicationDbContext(_options))
             {
                 Publisher publisher = context.Publishers.FirstOrDefault(p => p.Name == model.Publisher);
-                if (publisher == null)
+                if(model.Publisher != null)
                 {
-                    Entities.Publisher newPublisher = new Publisher();
-                    newPublisher.Name = model.Publisher;
-                    newPublisher.AddedBy = user.Id;
-                    context.Add(newPublisher);
-                    publisher = newPublisher;
+                    if (publisher == null)
+                    {
+                        Entities.Publisher newPublisher = new Publisher();
+                        newPublisher.Name = model.Publisher;
+                        newPublisher.AddedBy = user.Id;
+                        context.Add(newPublisher);
+                        publisher = newPublisher;
+                    }
                 }
 
                 Book book = context.Books.Find(model.BookId);

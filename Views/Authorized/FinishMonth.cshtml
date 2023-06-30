@@ -25,7 +25,14 @@
             <tr>
                 <th scope="row">@row</th>
                 <td>@book.BookTitle</td>
-                <td>@book.Rating</td>
+                @if(book.Rating != 0)
+                {
+                    <td>@book.Rating</td>
+                }
+                else
+                {
+                    <td>Nie oceniono</td>
+                }
                 <td>
                     <button class="btn btn-primary" onclick="highlightRow(this, 'bestBookActionId', '@book.BookActionId')">Wybierz</button>
                 </td>
@@ -54,7 +61,14 @@
             <tr>
                 <th scope="row">@row</th>
                 <td>@book.BookTitle</td>
-                <td>@book.Rating</td>
+                @if (book.Rating != 0)
+                {
+                    <td>@book.Rating</td>
+                }
+                else
+                {
+                    <td>Nie oceniono</td>
+                }
                 <td>
                     <button class="btn btn-primary" onclick="highlightRow(this, 'worstBookActionId', '@book.BookActionId')">Wybierz</button>
                 </td>

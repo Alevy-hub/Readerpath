@@ -672,6 +672,11 @@ namespace Readerpath.Controllers
 
             using (var context = new ApplicationDbContext(_options))
             {
+                if(!context.BookActions.Any(ba => ba.DateFinished.Value.Month == int.Parse(month) && ba.DateFinished.Value.Year == int.Parse(year)))
+                {
+                    return RedirectToAction(nameof(Statistics), new {year = DateTime.Now.Year});
+                }
+
                 model.BookCount = context.BookActions
                     .Count(a => a.User == user.Id && a.DateFinished != null && a.DateFinished.Value.Month.ToString() == month && a.DateFinished.Value.Year.ToString() == year);
                  

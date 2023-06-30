@@ -799,8 +799,14 @@ namespace Readerpath.Controllers
             model.month = int.Parse(month);
             model.year = int.Parse(year);
 
+
 			using (var context = new ApplicationDbContext(_options))
             {
+                if(context.MonthBooks.Any(mb => mb.Month == int.Parse(month) && mb.Year == int.Parse(year) && mb.User == user.Id))
+                {
+					return RedirectToAction(nameof(MonthStatistics), new { year = year, month = month });
+				}                    
+                    
                 model.ReadBooks = context.BookActions
                     .Include(ba => ba.Edition.Book)
                     .Where(ba => ba.DateFinished.Value.Year == int.Parse(year) && ba.DateFinished.Value.Month == int.Parse(month) && ba.User == user.Id)
@@ -811,6 +817,8 @@ namespace Readerpath.Controllers
                         Rating = ba.Rating
                     })
                     .ToList();
+
+                if(!model.ReadBooks.Any()) { return RedirectToAction(nameof(LoggedIndex)); }
             }
 
 				return View(model);

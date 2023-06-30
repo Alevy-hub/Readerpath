@@ -57,7 +57,7 @@ namespace Readerpath.Controllers
 					.ToList();
 
 				var years = context.BookActions
-					.Where(ba => ba.User == user.Id && !context.YearBooks.Any(yb => yb.User == user.Id && yb.Year == ba.DateFinished.Value.Year))
+					.Where(ba => ba.User == user.Id && !context.YearBooks.Any(yb => yb.User == user.Id && yb.Year == ba.DateFinished.Value.Year) && ba.DateFinished.HasValue)
 					.Select(ba => ba.DateFinished.Value.Year)
 					.Distinct()
 					.OrderBy(y => y)
@@ -262,14 +262,17 @@ namespace Readerpath.Controllers
                 context.Add(NewBook);
 
 				Publisher publisher = context.Publishers.FirstOrDefault(p => p.Name == model.Publisher);
-				if (publisher == null)
-				{
-					Publisher newPublisher = new Publisher();
-					newPublisher.Name = model.Publisher;
-					newPublisher.AddedBy = user.Id;
-					context.Add(newPublisher);
-					publisher = newPublisher;
-				}
+                if(model.Publisher != null)
+                {
+				    if (publisher == null)
+				    {
+			            Publisher newPublisher = new Publisher();
+					    newPublisher.Name = model.Publisher;
+					    newPublisher.AddedBy = user.Id;
+					    context.Add(newPublisher);
+					    publisher = newPublisher;
+				    }
+                }
 
 				Edition NewEdition = new Edition();
                 NewEdition.Book = NewBook;

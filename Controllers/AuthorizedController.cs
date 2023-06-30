@@ -57,7 +57,9 @@ namespace Readerpath.Controllers
 					.ToList();
 
 				var years = context.BookActions
-					.Where(ba => ba.User == user.Id && !context.YearBooks.Any(yb => yb.User == user.Id && yb.Year == ba.DateFinished.Value.Year) && ba.DateFinished.HasValue)
+					.Where(ba => ba.User == user.Id 
+                            && !context.YearBooks.Any(yb => yb.User == user.Id && yb.Year == ba.DateFinished.Value.Year) 
+                            && ba.DateFinished.HasValue)
 					.Select(ba => ba.DateFinished.Value.Year)
 					.Distinct()
 					.OrderBy(y => y)

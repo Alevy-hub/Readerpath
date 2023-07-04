@@ -180,7 +180,9 @@ namespace Readerpath.Controllers
                         Name = e.Publisher.Name,
                         Pages = e.Pages,
                         Duration = e.Duration,
-                        Type = e.Type
+                        Type = e.Type,
+                        AddedBy = e.AddedBy,
+                        User = user.Id
                     })
                     .ToList();
 
@@ -329,7 +331,7 @@ namespace Readerpath.Controllers
                 {
                     if (publisher == null)
                     {
-                        Entities.Publisher newPublisher = new Publisher();
+                        Publisher newPublisher = new Publisher();
                         newPublisher.Name = model.Publisher;
                         newPublisher.AddedBy = user.Id;
                         context.Add(newPublisher);
@@ -365,6 +367,76 @@ namespace Readerpath.Controllers
                 return RedirectToAction("BookDetails", new {id = model.BookId});
             }
         }
+
+        [HttpGet]
+        [Route("{id}/UpdateEdition")]
+        public async Task<IActionResult> UpdateEdition(int editionId)
+        {
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+			UpdateEditionViewModel model = new();
+            using (var context = new ApplicationDbContext(_options))
+            {
+                model.Edition = context.Editions.Include(e => e.Book).FirstOrDefault(e => e.Id == editionId);
+                model.PublisherList = context.Publishers.ToList();
+                model.BookId = model.Edition.Book.Id;
+                model.Title = context.Books.Find(model.BookId).Title;
+            }
+
+            if(model.Edition.AddedBy != user.Id)
+            {
+				return RedirectToAction("BookDetails", new { id = model.BookId });
+			}
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateEdition(AddNewEditionModel model, int editionId)
+        {
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+
+			using (var context = new ApplicationDbContext(_options))
+            {
+                Publisher publisher = context.Publishers.FirstOrDefault(p => p.Name == model.Publisher);
+                if (model.Publisher != null)
+                {
+                    if (publisher == null)
+                    {
+                        Publisher newPublisher = new Publisher();
+                        newPublisher.Name = model.Publisher;
+                        newPublisher.AddedBy = user.Id;
+                        context.Add(newPublisher);
+                        publisher = newPublisher;
+                    }
+                }
+
+				Book book = context.Books.Find(model.BookId);
+
+				Edition existingEdition = context.Editions.Find(editionId);
+				existingEdition.Book = book;
+				if (model.Type == "Książka papierowa")
+				{
+					existingEdition.Type = Entities.Type.PaperBook;
+					existingEdition.Pages = model.Pages;
+				}
+				else if (model.Type == "Ebook")
+				{
+					existingEdition.Type = Entities.Type.Ebook;
+					existingEdition.Pages = model.Pages;
+				}
+				else if (model.Type == "Audiobook")
+				{
+					existingEdition.Type = Entities.Type.Audiobook;
+					existingEdition.Duration = model.Duration;
+				}
+				existingEdition.AddedBy = user.Id;
+				existingEdition.Publisher = publisher;
+				context.Update(existingEdition);
+				await context.SaveChangesAsync();
+			}
+
+			return RedirectToAction("BookDetails", new { id = model.BookId });
+		}
 
 		[Route("{bookId}/{editionId}/AddToMyBooks")]
 		public IActionResult AddToMyBooks(int bookId, int editionId)

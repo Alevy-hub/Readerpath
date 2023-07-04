@@ -1,0 +1,97 @@
+﻿
+@model UpdateEditionViewModel
+
+@{
+	int valueForLength;
+
+	if(Model.Edition.Type == Readerpath.Entities.Type.Ebook || Model.Edition.Type == Readerpath.Entities.Type.PaperBook)
+	{
+		valueForLength = Model.Edition.Pages ?? 0;
+	}
+	else
+	{
+		valueForLength = Model.Edition.Duration ?? 0;
+	}
+
+	string publisherName;
+	if(Model.Edition.Publisher != null)
+	{
+		publisherName = Model.Edition.Publisher.Name;
+	}
+	else
+	{
+		publisherName = "";
+	}
+}
+
+<div class="row form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+	<div class="col-md-4">
+		<form action="/Authorized/UpdateEdition" method="post">
+			<h3>@Model.Title - edycja wydania</h3>
+
+			<div class="form-group mb-3">
+				<label for="Type"><b>Rodzaj</b></label>
+				<select class="form-control" id="Type" name="Type">
+					<option selected="@(Model.Edition.Type == Readerpath.Entities.Type.PaperBook)">Książka papierowa</option>
+					<option selected="@(Model.Edition.Type == Readerpath.Entities.Type.Ebook)">Ebook</option>
+					<option selected="@(Model.Edition.Type == Readerpath.Entities.Type.Audiobook)">Audiobook</option>
+				</select>
+			</div>
+
+			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="Publisher"><b>Wydawnictwo</b></label>
+				<datalist id="publisher">
+					@foreach (var publisher in Model.PublisherList)
+					{
+						<option>@publisher.Name</option>
+					}
+				</datalist>
+				<input class="form-control form-text-input" autocomplete="on" list="publisher" type="text" id="Publisher" name="Publisher" value="@publisherName"/>
+			</div>
+
+			<div id="pages" class="form-group mb-3">
+				<label for="Pages"><b>Ilość stron</b></label>
+				<input class="form-control" type="text" id="Pages" name="Pages" value="@valueForLength">
+			</div>
+
+			<div id="duration" class="form-group mb-3 d-none">
+				<label for="Duration"><b>Czas trwania</b></label>
+				<input class="form-control" type="text" id="Duration" name="Duration" value="@valueForLength">
+			</div>
+
+			<input type="hidden" name="BookId" value="@Model.BookId">
+			<input type="hidden" name="editionId" value="@Model.Edition.Id">
+
+			<input type="submit" value="Utwórz" class="btn btn-primary" />
+			<a asp-action="BookDetails" asp-route-id="@Model.BookId" class="btn btn-primary">Anuluj</a>
+		</form>
+	</div>
+</div>
+
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const typeSelect = document.getElementById("Type");
+		const pagesDiv = document.getElementById("pages");
+		const durationDiv = document.getElementById("duration");
+
+		function handleTypeChange() {
+			if (typeSelect.value === "Książka papierowa" || typeSelect.value === "Ebook") {
+				pagesDiv.classList.remove("d-none");
+			} else {
+				pagesDiv.classList.add("d-none");
+			}
+
+			if (typeSelect.value === "Audiobook") {
+				durationDiv.classList.remove("d-none");
+			} else {
+				durationDiv.classList.add("d-none");
+			}
+		}
+
+		typeSelect.addEventListener("change", handleTypeChange);
+
+		// Wywołanie funkcji po wczytaniu strony
+		handleTypeChange();
+	});
+</script>

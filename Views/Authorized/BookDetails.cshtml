@@ -73,6 +73,10 @@
                     </ul>
                     <div class="card-body text-center">
                         <a class="btn btn-primary w-100" asp-action="AddToMyBooks" asp-route-bookId="@Model.Id" asp-route-editionId="@edition.Id">Dodaj do moich książek</a>
+                        @if(edition.AddedBy == edition.User)
+                        {
+                            <a class="btn btn-primary w-100 mt-2" asp-action="UpdateEdition" asp-route-editionId="@edition.Id">Edytuj wydanie</a>                      
+                        }
                     </div>
                 </div>
             </div>

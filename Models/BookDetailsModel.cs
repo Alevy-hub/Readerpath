@@ -19,6 +19,8 @@ namespace Readerpath.Models
         public Readerpath.Entities.Type Type { get; set; }
         public int? Pages { get; set; }
         public int? Duration { get; set; }
+        public string AddedBy { get; set; }
+        public string User { get; set; }
     }
 
     public class ActionModel

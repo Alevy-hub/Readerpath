@@ -293,7 +293,7 @@ namespace Readerpath.Controllers
                 else if(model.Type == "Audiobook")
                 {
                     NewEdition.Type = Entities.Type.Audiobook;
-                    NewEdition.Duration = model.Duration;
+                    NewEdition.Duration = model.DurationH * 60 + model.DurationM; ;
                 }
                 NewEdition.AddedBy = user.Id;
                 NewEdition.Publisher = publisher;
@@ -356,7 +356,7 @@ namespace Readerpath.Controllers
                 else if (model.Type == "Audiobook")
                 {
                     NewEdition.Type = Entities.Type.Audiobook;
-                    NewEdition.Duration = model.Duration;
+                    NewEdition.Duration = model.DurationH*60 + model.DurationM;
                 }
                 NewEdition.AddedBy = user.Id;
                 NewEdition.Publisher = publisher;
@@ -427,7 +427,7 @@ namespace Readerpath.Controllers
 				else if (model.Type == "Audiobook")
 				{
 					existingEdition.Type = Entities.Type.Audiobook;
-					existingEdition.Duration = model.Duration;
+					existingEdition.Duration = model.DurationH*60 + model.DurationM;
 				}
 				existingEdition.AddedBy = user.Id;
 				existingEdition.Publisher = publisher;

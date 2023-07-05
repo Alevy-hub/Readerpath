@@ -3,6 +3,8 @@
 
 @{
 	int valueForLength;
+	int durationH = 0;
+	int durationM = 0;
 
 	if(Model.Edition.Type == Readerpath.Entities.Type.Ebook || Model.Edition.Type == Readerpath.Entities.Type.PaperBook)
 	{
@@ -10,7 +12,13 @@
 	}
 	else
 	{
-		valueForLength = Model.Edition.Duration ?? 0;
+		int tempDuration = Model.Edition.Duration ?? 0;
+		if(tempDuration != 0)
+		{
+			durationM = tempDuration % 60;
+			durationH = tempDuration/60;
+		}
+		valueForLength = 0;
 	}
 
 	string publisherName;
@@ -54,9 +62,18 @@
 				<input class="form-control" type="text" id="Pages" name="Pages" value="@valueForLength">
 			</div>
 
-			<div id="duration" class="form-group mb-3 d-none">
-				<label for="Duration"><b>Czas trwania</b></label>
-				<input class="form-control" type="text" id="Duration" name="Duration" value="@valueForLength">
+			<div class="d-flex">
+				<div id="durationH" class="form-group mb-3 d-none" style="width: 50%;">
+					<label for="DurationH"><b>Godziny</b></label>
+					<input class="form-control" type="number" id="DurationH" name="DurationH" value="@durationH">
+				</div>
+				<div id="durationColon" class="d-none d-flex align-items-center mx-2">
+					<h3>:</h3>
+				</div>
+				<div id="durationM" class="form-group mb-3 d-none" style="width: 50%;">
+					<label for="DurationM"><b>Minuty</b></label>
+					<input class="form-control" type="number" id="DurationM" name="DurationM" value="@durationM">
+				</div>
 			</div>
 
 			<input type="hidden" name="BookId" value="@Model.BookId">
@@ -73,7 +90,9 @@
 	document.addEventListener("DOMContentLoaded", function () {
 		const typeSelect = document.getElementById("Type");
 		const pagesDiv = document.getElementById("pages");
-		const durationDiv = document.getElementById("duration");
+		const durationHDiv = document.getElementById("durationH");
+		const durationMDiv = document.getElementById("durationM");
+		const durationColon = document.getElementById("durationColon");
 
 		function handleTypeChange() {
 			if (typeSelect.value === "Książka papierowa" || typeSelect.value === "Ebook") {
@@ -83,9 +102,13 @@
 			}
 
 			if (typeSelect.value === "Audiobook") {
-				durationDiv.classList.remove("d-none");
+				durationHDiv.classList.remove("d-none");
+				durationMDiv.classList.remove("d-none");
+				durationColon.classList.remove("d-none");
 			} else {
-				durationDiv.classList.add("d-none");
+				durationHDiv.classList.add("d-none");
+				durationMDiv.classList.add("d-none");
+				durationColon.classList.add("d-none");
 			}
 		}
 

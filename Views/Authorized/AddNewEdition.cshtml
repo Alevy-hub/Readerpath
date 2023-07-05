@@ -31,9 +31,18 @@
 				<input class="form-control" type="text" id="Pages" name="Pages">
 			</div>
 
-			<div id="duration" class="form-group mb-3 d-none">
-				<label for="Duration"><b>Czas trwania</b></label>
-				<input class="form-control" type="text" id="Duration" name="Duration">
+			<div class="d-flex">
+				<div id="durationH" class="form-group mb-3 d-none" style="width: 50%;">
+					<label for="DurationH"><b>Godziny</b></label>
+					<input class="form-control" type="number" id="DurationH" name="DurationH">
+				</div>
+				<div id="durationColon" class="d-none d-flex align-items-center mx-2">
+					<h3>:</h3>
+				</div>
+				<div id="durationM" class="form-group mb-3 d-none" style="width: 50%;">
+					<label for="DurationM"><b>Minuty</b></label>
+					<input class="form-control" type="number" id="DurationM" name="DurationM">
+				</div>
 			</div>
 
 			<input type="hidden" name="BookId" value="@Model.BookId">
@@ -48,7 +57,9 @@
 <script>
 	const typeSelect = document.getElementById("Type");
 	const pagesDiv = document.getElementById("pages");
-	const durationDiv = document.getElementById("duration");
+	const durationHDiv = document.getElementById("durationH");
+	const durationMDiv = document.getElementById("durationM");
+	const durationColon = document.getElementById("durationColon");
 
 	typeSelect.addEventListener("change", function () {
 		if (typeSelect.value === "Książka papierowa" || typeSelect.value === "Ebook") {
@@ -58,9 +69,13 @@
 		}
 
 		if (typeSelect.value === "Audiobook") {
-			durationDiv.classList.remove("d-none");
+			durationHDiv.classList.remove("d-none");
+			durationMDiv.classList.remove("d-none");
+			durationColon.classList.remove("d-none");
 		} else {
-			durationDiv.classList.add("d-none");
+			durationHDiv.classList.add("d-none");
+			durationMDiv.classList.add("d-none");
+			durationColon.classList.add("d-none");
 		}
 	});
 </script>

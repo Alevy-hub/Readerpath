@@ -60,14 +60,28 @@
                     <ul class="list-group list-group-flush">
                         @if (edition.Type == Readerpath.Entities.Type.PaperBook || edition.Type == Readerpath.Entities.Type.Ebook)
                         {
-                            <li class="list-group-item">Ilość stron: @edition.Pages</li>
+                            if(edition.Pages == null || edition.Pages == 0)
+                            {
+                                <li class="list-group-item">Ilość stron: nie podano</li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item">Ilość stron: @edition.Pages</li>                                
+                            }
                         }
                         else
                         {
-                            int startTime = (int)edition.Duration;
+                            int startTime = edition.Duration ?? 0;
                             string minutes = (startTime % 60).ToString().PadLeft(2, '0');
                             int hours = startTime / 60;
-                            <li class="list-group-item">Czas trwania: @hours:@minutes</li>
+                            if(hours == 0 && minutes == "00")
+                            {
+                                <li class="list-group-item">Czas trwania: nie podano</li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item">Czas trwania: @hours:@minutes</li>                                
+                            }
                         }
 
                     </ul>

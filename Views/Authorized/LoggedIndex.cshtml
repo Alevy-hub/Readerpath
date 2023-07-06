@@ -4,15 +4,24 @@
 	var type = new Dictionary<string, string> { { "PaperBook", "Książka papierowa" }, { "Ebook", "Ebook" }, { "Audiobook", "Audiobook" } };
 }
 
+<script src="https://kit.fontawesome.com/af2a249344.js" crossorigin="anonymous"></script>
 
 <h2 class="d-flex justify-content-center align-items-center">Cześć, @Model.UserName!</h2>
 <h3 class="d-flex justify-content-center align-items-center">Tutaj znajdziesz wszystko co najpotrzebniejsze!</h3>
-<div class="d-flex justify-content-center align-items-center">
-	<form method="get" action="/Authorized/Search" class="d-flex" style="min-width: 500px;">
-		<input class="form-control" type="text" id="query" name="query">
-		<button class="btn btn-primary mx-1" type="submit">Szukaj</button>
-	</form>
+
+<h4 class="text-center mt-3">Wyszukaj swoją nową przygodę!</h4>
+<div class="d-flex justify-content-center">
+    <div class="input-group mb-3" style="max-width: 500px">
+        <input type="text" class="form-control" id="query" name="query" placeholder="Tytuł książki...">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+    </div>
 </div>
+
+
+
+
 
 
 

@@ -114,3 +114,53 @@
 </div>
 
 
+<div class="d-flex justify-content-center">
+	<div class="input-group mb-3" style="max-width: 500px">
+		<input type="text" class="form-control" id="query" name="query" placeholder="Tytuł książki...">
+		<div class="input-group-append">
+			<button class="btn btn-outline-secondary" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #c64a16;"></i></button>
+		</div>
+	</div>
+</div>
+
+<div class="d-flex justify-content-center">
+    <div class="input-group mb-3" style="max-width: 500px">
+        <input type="text" class="form-control" id="query" name="query" placeholder="Tytuł książki...">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #c64a16;"></i></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Lista wartości dla placeholdera
+    var placeholderValues = ["Wyszukaj...", "Szukaj książki...", "Podaj tytuł...", "Czego szukasz?"];
+
+    // Pobranie elementu inputu
+    var input = document.getElementById("query");
+
+    // Funkcja do symulowania pisania pojedynczych liter
+    function typeWriteEffect(value, index, delay) {
+        setTimeout(function () {
+            var placeholder = value.substring(0, index);
+            input.placeholder = placeholder;
+            if (index < value.length) {
+                typeWriteEffect(value, index + 1, delay);
+            }
+        }, delay);
+    }
+
+    // Funkcja do cyklicznej zmiany placeholdera
+    function changePlaceholder() {
+        var randomIndex = Math.floor(Math.random() * placeholderValues.length);
+        var randomValue = placeholderValues[randomIndex];
+        typeWriteEffect(randomValue, 0, 100);
+    }
+
+    // Wywołanie zmiany placeholdera na starcie
+    changePlaceholder();
+
+    // Cykliczna zmiana placeholdera co 2 sekundy
+    setInterval(changePlaceholder, 2000);
+</script>
+

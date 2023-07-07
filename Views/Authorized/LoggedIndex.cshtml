@@ -11,20 +11,15 @@
 
 <h4 class="text-center mt-3">Wyszukaj swoją nową przygodę!</h4>
 <div class="d-flex justify-content-center">
-    <div class="input-group mb-3" style="max-width: 500px">
+    <form method="get" action="/Authorized/Search" class="input-group mb-3" style="max-width: 500px">
         <input type="text" class="form-control" id="query" name="query" placeholder="Tytuł książki...">
         <div class="input-group-append">
 			<button class="btn btn-outline-secondary" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #c64a16;"></i></button>
         </div>
-    </div>
+    </form>
 </div>
 
-
-
-
-
-
-
+@*<form method="get" action="/Authorized/Search">*@
 
 <div class="d-flex justify-content-center align-items-center">
 	<a class="btn btn-primary btn-lg w-25 py-3 mt-2" asp-action="AddNewBook">Dodaj książkę</a>
@@ -113,54 +108,40 @@
 	}
 </div>
 
-
-<div class="d-flex justify-content-center">
-	<div class="input-group mb-3" style="max-width: 500px">
-		<input type="text" class="form-control" id="query" name="query" placeholder="Tytuł książki...">
-		<div class="input-group-append">
-			<button class="btn btn-outline-secondary" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #c64a16;"></i></button>
-		</div>
-	</div>
-</div>
-
-<div class="d-flex justify-content-center">
-	<div class="input-group mb-3" style="max-width: 500px">
-		<input type="text" class="form-control" id="query" name="query" placeholder="Tytuł książki...">
-		<div class="input-group-append">
-			<button class="btn btn-outline-secondary" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #c64a16;"></i></button>
-		</div>
-	</div>
-</div>
-
 <script>
-	// Lista wartości dla placeholdera
-	var placeholderValues = ["Wyszukaj...", "Szukaj książki...", "Podaj tytuł...", "Czego szukasz?"];
+	const placeholderValues = ["Harry Potter", "Wiedźmin", "Krzyżacy", "Pan Tadeusz", "Mały Książę", "Krew elfów", "451 Fahrenheita", "Dwór cierni i róż", "Mirabelka", "Wyspa Tajemnic", "Tajemniczy Ogród", "Folwark Zwierzęcy", "Nic tu po was", "Koń i jego chłopiec", "Podpalaczka", "Opowieść podręcznej", "Gołąb i Wąż", "Bezgwiezdne morze", "Przygody Tomka Sawyera", "Dziwne losy Jane Eyre", "Zanim wystygnie kawa", "Imperium burz", "A co wyście myślały?", "Lekcje chemii", "Gra o tron", "Miasto w chmurach", "Daisy Jones & The Six", "Hobbit czyli tam i z powrotem", "Mężczyzna imieniem Ove", "Kocia kawiarnia", "Ophelia mimo wszystko", "Mitologia nordycka", "Przewodnik lesbijki po katolickiej szkole", "Siedmiu mężów Evelyn Hugo", "Ostatnie życzenie", "Utracona godzina", "Utracona godzina"];
+	const speed = 110;
+	const pause = 800;
+	var shuffledValues;
 
-	// Pobranie elementu inputu
-	var input = document.getElementById("query");
-
-	// Funkcja do symulowania pisania pojedynczych liter
-	function typeWriteEffect(value, index, delay) {
-		setTimeout(function () {
-			var placeholder = value.substring(0, index);
-			input.placeholder = placeholder;
-			if (index < value.length) {
-				typeWriteEffect(value, index + 1, delay);
-			}
-		}, delay);
+	function shuffleArray(array) {
+		for (let i = array.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[array[i], array[j]] = [array[j], array[i]];
+		}
+		return array;
 	}
 
-	// Funkcja do cyklicznej zmiany placeholdera
-	function changePlaceholder() {
-		var randomIndex = Math.floor(Math.random() * placeholderValues.length);
-		var randomValue = placeholderValues[randomIndex];
-		typeWriteEffect(randomValue, 0, 100);
+	function initShuffle(){
+		shuffledValues = shuffleArray(placeholderValues);
 	}
 
-	// Wywołanie zmiany placeholdera na starcie
-	changePlaceholder();
+	function typeWriter(i = 0, index = 1, direction = 1) {
+		let displayed = shuffledValues[i].slice(0, index);
+		document.getElementById("query").placeholder = displayed;
 
-	// Cykliczna zmiana placeholdera co 2 sekundy
-	setInterval(changePlaceholder, 2000);
+		if (displayed.length >= shuffledValues[i].length) {
+			setTimeout(() => typeWriter(i, index - 1, -1), pause);
+		} else if (displayed.length === 0) { 
+			setTimeout(() => typeWriter((i + 1) % shuffledValues.length), pause);
+		} else { 
+			setTimeout(() => typeWriter(i, index + direction, direction), speed);
+		}
+	}
+
+	initShuffle();
+	typeWriter();
 </script>
+
+
 

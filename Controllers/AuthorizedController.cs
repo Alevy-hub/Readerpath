@@ -479,9 +479,9 @@ namespace Readerpath.Controllers
                 {
                     bookAction.DateFinished = model.finishDate.Date;
                     bookAction.Rating = float.Parse(model.rating, CultureInfo.InvariantCulture);
-                    bookAction.Opinion = model.comment;
-                }
-                context.Add(bookAction);
+					bookAction.Opinion = model.comment.Replace("\n", "<br>");
+				}
+				context.Add(bookAction);
                 await context.SaveChangesAsync();
 
 				return RedirectToAction("LoggedIndex");

@@ -301,8 +301,16 @@ namespace Readerpath.Controllers
 
 
 				await context.SaveChangesAsync();
-				return RedirectToAction(nameof(LoggedIndex));
-            }
+
+                if(model.toMyBooks == "false")
+                {
+				    return RedirectToAction(nameof(LoggedIndex));
+                }
+                else
+                {
+				    return RedirectToAction("AddToMyBooks", new {bookId = NewBook.Id, editionId = NewEdition.Id});
+				}
+			}
         }
 
 		[Route("{id}/AddNewEdition")]

@@ -85,14 +85,16 @@
 				</div>
 			</div>
 
+			<input type="hidden" name="toMyBooks" value="false" id="toMyBooks" />
+
 			<input type="submit" value="Utwórz" class="btn btn-primary" />
+			<input type="submit" value="Utwórz i dodaj do moich książek" class="btn btn-primary" name="submitAndAddToMyBooks" />
 			<a href="./LoggedIndex" class="btn btn-primary">Anuluj</a>
 		</form>
 	</div>
 </div>
 
-@section Scripts {
-	@{
+
 	<script>
 		const typeSelect = document.getElementById("Type");
 		const pagesDiv = document.getElementById("pages");
@@ -119,6 +121,17 @@
 		});
 	</script>
 
+	<script>
+		const submitAndToMyBooks = document.querySelector('input[name="submitAndAddToMyBooks"]');
+			submitAndToMyBooks.addEventListener('click', function () {
+		const toMyBooksField = document.getElementById('toMyBooks');
+			toMyBooksField.value = "true";
+		});
+	</script>
+
+
+@section Scripts {
+	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
 }

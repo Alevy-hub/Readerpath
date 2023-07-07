@@ -22,6 +22,7 @@ namespace Readerpath.Models
 		public int? Duration { get; set; }
 		public int? DurationH { get; set; }
 		public int? DurationM { get; set; }
+		public string toMyBooks { get; set; }
 
 		public List<Author>? AuthorList { get; set; }
         public List<Genre>? GenreList { get; set; }

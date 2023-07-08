@@ -513,7 +513,14 @@ namespace Readerpath.Controllers
 	            .FirstOrDefault(ba => ba.Id == actionId);
 
                 model.Title = bookAction.Edition.Book.Title;
-                model.Comment = bookAction.Opinion.Replace("<br>","");
+                if(bookAction.Opinion != null)
+                {
+                    model.Comment = bookAction.Opinion.Replace("<br>","");
+                }
+                else
+                {
+                    model.Comment = "";
+                }
 			}
 
 				return View("AddComment", model);
@@ -548,7 +555,15 @@ namespace Readerpath.Controllers
 
                 model.Title = bookAction.Edition.Book.Title;
                 model.StartDate = (DateTime)bookAction.DateStarted;
-                model.Comment = bookAction.Opinion;
+                //model.Comment = bookAction.Opinion;
+				if (bookAction.Opinion != null)
+				{
+					model.Comment = bookAction.Opinion.Replace("<br>", "");
+				}
+				else
+				{
+					model.Comment = "";
+				}
 
 
 				return View(model);

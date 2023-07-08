@@ -499,6 +499,42 @@ namespace Readerpath.Controllers
             }
         }
 
+        [HttpGet]
+		[Route("{actionId}/AddCommentWhileReading")]
+		public async Task<IActionResult> AddCommentWhileReading(int actionId)
+        {
+            AddCommentWhileReadingModel model = new();
+			using (var context = new ApplicationDbContext(_options))
+            {
+                model.Id = actionId;
+
+				var bookAction = context.BookActions
+	            .Include(ba => ba.Edition.Book)
+	            .FirstOrDefault(ba => ba.Id == actionId);
+
+                model.Title = bookAction.Edition.Book.Title;
+                model.Comment = bookAction.Opinion.Replace("<br>","");
+			}
+
+				return View("AddComment", model);
+        }
+
+        [HttpPost]
+		[Route("{actionId}/AddCommentWhileReadingPatch")]
+		public async Task<IActionResult> AddCommentWhileReadingPatch(AddCommentWhileReadingModel model)
+        {
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+
+			using (var context = new ApplicationDbContext(_options))
+            {
+				BookAction bookAction = await context.BookActions.SingleOrDefaultAsync(ba => ba.User == user.Id && ba.Id == model.Id);
+				bookAction.Opinion = model.Comment.Replace("\n", "<br>");
+				context.Update(bookAction);
+                await context.SaveChangesAsync();
+			}
+			return RedirectToAction("LoggedIndex");
+		}
+
 		[Route("{actionId}/FinishBook")]
 		public IActionResult FinishBook(int actionId)
         {
@@ -512,6 +548,8 @@ namespace Readerpath.Controllers
 
                 model.Title = bookAction.Edition.Book.Title;
                 model.StartDate = (DateTime)bookAction.DateStarted;
+                model.Comment = bookAction.Opinion;
+
 
 				return View(model);
             }
@@ -527,9 +565,9 @@ namespace Readerpath.Controllers
                 bookAction.DateStarted = finishBook.StartDate;
                 bookAction.DateFinished = finishBook.FinishDate;
                 bookAction.Rating = float.Parse(finishBook.Rating, CultureInfo.InvariantCulture);
-                bookAction.Opinion = finishBook.Comment;
+				bookAction.Opinion = finishBook.Comment.Replace("\n", "<br>");
 
-                context.Update(bookAction);
+				context.Update(bookAction);
                 await context.SaveChangesAsync();
                 return RedirectToAction("LoggedIndex");
             }

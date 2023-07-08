@@ -1,0 +1,39 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+@model AddCommentWhileReadingModel
+
+<div class="row form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+	<div class="col-md-4">
+
+		<h3>Dodaj komentarz do "@Model.Title"</h3>
+
+		<form action="/Authorized/AddCommentWhileReadingPatch" method="post">
+			<div id="commentDiv" class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="Comment"><b>Komentarz</b></label>
+				<textarea class="form-control" id="Comment" name="Comment" rows="3">@Model.Comment</textarea>
+			</div>
+			<input type="hidden" name="Id" value="@Model.Id">
+
+			<input type="submit" value="Dodaj" class="btn btn-primary" />
+			<a asp-action="LoggedIndex" class="btn btn-primary">Anuluj</a>
+		</form>
+
+	</div>
+</div>
+
+
+<script>
+	const startDateInput = document.getElementById('StartDate');
+	const finishDateInput = document.getElementById('FinishDate');
+
+	startDateInput.addEventListener('change', function () {
+		finishDateInput.min = this.value;
+	});
+</script>
+
+

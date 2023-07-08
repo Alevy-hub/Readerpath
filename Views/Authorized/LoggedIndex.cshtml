@@ -76,11 +76,12 @@
 						<li class="list-group-item">Ilość stron: @nowReadingBook.Pages</li>                                                
 					}
 				</ul>
-				<div class="card-body text-center">
+				<div class="card-body text-center" style="padding-bottom:0">
 					<a asp-action="FinishBook" asp-route-actionId="@nowReadingBook.ActionId" class="btn btn-primary">Ukończono</a>
 					<a asp-action="DeleteFromMyBooks" asp-route-id="@nowReadingBook.ActionId" class="btn btn-primary">Usuń</a>
-
-
+				</div>
+				<div class="card-body text-center mt-1" style="padding-top:0">
+					<a asp-action="AddCommentWhileReading" asp-route-actionId="@nowReadingBook.ActionId" class="btn btn-primary px-4">Dodaj komentarz</a>
 				</div>
 			</div>
 		}

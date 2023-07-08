@@ -535,7 +535,14 @@ namespace Readerpath.Controllers
 			using (var context = new ApplicationDbContext(_options))
             {
 				BookAction bookAction = await context.BookActions.SingleOrDefaultAsync(ba => ba.User == user.Id && ba.Id == model.Id);
-				bookAction.Opinion = model.Comment.Replace("\n", "<br>");
+				if (model.Comment != null)
+				{
+					bookAction.Opinion = model.Comment.Replace("<br>", "");
+				}
+				else
+				{
+					bookAction.Opinion = "";
+				}
 				context.Update(bookAction);
                 await context.SaveChangesAsync();
 			}

@@ -1045,5 +1045,10 @@ namespace Readerpath.Controllers
 
 			return View(model);
 		}
+
+        public IActionResult UpdateLog()
+        {
+            return View();
+        }
 	}
 }

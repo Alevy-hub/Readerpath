@@ -63,6 +63,16 @@ body {
         border-color: lightgray;
     }
 
+.btn-outline-warning {
+    color: #c64a16;
+    border-color: #c64a16;
+}
+
+    .btn-outline-warning:hover {
+        color: white;
+        border-color: #c64a16;
+        background-color: #c64a16;
+    }
 
 /* --- End changes in bootstrap --- */
 #loginPageAnimation {

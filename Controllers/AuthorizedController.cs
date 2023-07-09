@@ -479,7 +479,15 @@ namespace Readerpath.Controllers
                 {
                     bookAction.DateFinished = model.finishDate.Date;
                     bookAction.Rating = float.Parse(model.rating, CultureInfo.InvariantCulture);
-					bookAction.Opinion = model.comment.Replace("\n", "<br>");
+					if (model.comment != null)
+					{
+						bookAction.Opinion = model.comment.Replace("<br>", "");
+					}
+					else
+					{
+						bookAction.Opinion = "";
+					}
+
 				}
 				context.Add(bookAction);
                 await context.SaveChangesAsync();
@@ -587,7 +595,14 @@ namespace Readerpath.Controllers
                 bookAction.DateStarted = finishBook.StartDate;
                 bookAction.DateFinished = finishBook.FinishDate;
                 bookAction.Rating = float.Parse(finishBook.Rating, CultureInfo.InvariantCulture);
-				bookAction.Opinion = finishBook.Comment.Replace("\n", "<br>");
+				if (finishBook.Comment != null)
+				{
+					bookAction.Opinion = finishBook.Comment.Replace("<br>", "");
+				}
+				else
+				{
+					bookAction.Opinion = "";
+				}
 
 				context.Update(bookAction);
                 await context.SaveChangesAsync();

@@ -910,7 +910,8 @@ namespace Readerpath.Controllers
                 model.FavouriteGenre = context.BookActions
                     .Where(a => a.DateFinished != null
                         && a.DateFinished.Value.Month.ToString() == month
-                        && a.DateFinished.Value.Year.ToString() == year)
+                        && a.DateFinished.Value.Year.ToString() == year
+                        && a.User == user.Id)
                     .GroupBy(a => a.Edition.Book.Genre.Name)
                     .Select(group => new
                     {
@@ -918,7 +919,7 @@ namespace Readerpath.Controllers
                         Count = group.Count()
                     })
                     .OrderByDescending(g => g.Count)
-                    .FirstOrDefault()?.GenreName;
+                    .FirstOrDefault()?.GenreName ?? "Brak ulubionego gatunku";
 
                 model.Genres = context.BookActions
                     .Where(a => a.DateFinished != null

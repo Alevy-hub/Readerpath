@@ -183,14 +183,23 @@
 				<tr>
 					<th scope="col">#</th>
 					<th scope="col">Tytuł</th>
+					<th class="text-center" scope="col">Ocena</th>
 				</tr>
 			</thead>
 			<tbody>
-				@foreach(Readerpath.Entities.Book book in Model.Books)
+				@foreach(BookWithRating book in Model.Books)
 				{
 					<tr>
 						<th scope="row">@rowB</th>
 						<td>@book.Title</td>
+						@if(book.Rating == 0)
+						{
+							<td class="text-center">Brak oceny</td>														
+						}
+						else
+						{
+							<td class="text-center">@book.Rating</td>							
+						}
 					</tr>
 					rowB++;
 				}

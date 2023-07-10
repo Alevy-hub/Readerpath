@@ -17,7 +17,7 @@
         public string FavouriteGenre { get; set; }
         public string BestBook { get; set; }
         public string WorstBook { get; set; }
-        public List<Entities.Book> Books { get; set; }
+        public List<BookWithRating> Books { get; set; }
         public List<GenreWithCount> Genres { get; set; }
     }
 
@@ -25,5 +25,11 @@
     {
         public string Name { get; set; }
         public int Count { get; set; }
+    }
+
+    public class BookWithRating
+    {
+        public string Title { get; set; }
+        public float Rating { get; set; }
     }
 }

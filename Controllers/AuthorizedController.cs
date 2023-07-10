@@ -939,7 +939,11 @@ namespace Readerpath.Controllers
                         && a.DateFinished.Value.Month.ToString() == month
                         && a.DateFinished.Value.Year.ToString() == year
                         && a.User == user.Id)
-                    .Select(a => a.Edition.Book)
+                    .Select(a => new BookWithRating
+                    {
+                        Title = a.Edition.Book.Title,
+                        Rating = a.Rating ?? 0
+                    })
                     .ToList();
 
 				var monthBooks = context.MonthBooks

@@ -40,7 +40,7 @@
 		isChallenge = false;
 	}
 
-	string audiobooksTime = (Model.AudiobooksMinutes / 60).ToString() + ":" + (Model.AudiobooksMinutes % 60).ToString();
+	string audiobooksTime = (Model.AudiobooksMinutes / 60).ToString() + ":" + (Model.AudiobooksMinutes % 60).ToString().PadLeft(2, '0');
 
 	string avgThanPrevMonth = (Model.RatingAverage - Model.PrevMonthRatingAverage).ToString("0.00");
 	string avgMoreOrLess;

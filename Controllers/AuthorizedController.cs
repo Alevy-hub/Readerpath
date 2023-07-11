@@ -98,9 +98,11 @@ namespace Readerpath.Controllers
         }
 
         [HttpGet]
-        public IActionResult Search(string query)
+        public async Task<IActionResult> Search(string query)
         {
-            if(query == null)
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            if (query == null)
             {
                 query = "";
             }
@@ -109,7 +111,7 @@ namespace Readerpath.Controllers
                 List<Book> books = context.Books
                     .Include(b => b.Author)
                     .Include(b => b.Genre)
-                    .Where(b => b.Title.Contains(query))
+                    .Where(b => b.Title.Contains(query) && (b.IsAccepted == true || b.AddedBy == user.Id))
                     .ToList();
                 List<SearchModel> modelList = new List<SearchModel>();
 
@@ -120,7 +122,7 @@ namespace Readerpath.Controllers
                     bool ebook = false;
 
                     List<Edition> editions = context.Editions
-                        .Where(e => e.Book == book)
+                        .Where(e => e.Book == book && (e.isAccepted == true || e.AddedBy == user.Id))
                         .ToList();
                     foreach(Edition edition in editions)
                     {
@@ -173,7 +175,7 @@ namespace Readerpath.Controllers
                 model.Genre = book.Genre.Name;
                 model.Editions = context.Editions
                     .Include(e => e.Publisher)
-                    .Where(e => e.Book == book)
+                    .Where(e => e.Book == book && (e.isAccepted == true || e.AddedBy == user.Id))
                     .Select(e => new EditionModel
                     {
                         Id = e.Id,

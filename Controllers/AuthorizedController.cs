@@ -265,12 +265,10 @@ namespace Readerpath.Controllers
                 NewBook.AddedBy = user.Id;
                 if(User.IsInRole("Admin") || User.IsInRole("Editor"))
                 {
-                    var isa = 1;
                     NewBook.IsAccepted = true;
                 }
                 else
                 {
-                    var isa = 0;
                     NewBook.IsAccepted = false;
                 }
 
@@ -308,6 +306,16 @@ namespace Readerpath.Controllers
                 }
                 NewEdition.AddedBy = user.Id;
                 NewEdition.Publisher = publisher;
+
+                if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                {
+                    NewEdition.isAccepted = true;
+                }
+                else
+                {
+                    NewEdition.isAccepted = false;
+                }
+
                 context.Add(NewEdition);
 
 

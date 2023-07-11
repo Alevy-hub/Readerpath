@@ -20,6 +20,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => {
     options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 8;
 })
+    .AddRoles<IdentityRole>() // Dodaj us?ug? zarz?dzania rolami
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -55,5 +56,28 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var adminRoleExists = await roleManager.RoleExistsAsync("Admin");
+    var editorRoleExists = await roleManager.RoleExistsAsync("Editor");
+
+    if (!adminRoleExists)
+    {
+        var adminRole = new IdentityRole("Admin");
+        await roleManager.CreateAsync(adminRole);
+    }
+
+    if (!editorRoleExists)
+    {
+        var editorRole = new IdentityRole("Editor");
+        await roleManager.CreateAsync(editorRole);
+    }
+}
+
 
 app.Run();

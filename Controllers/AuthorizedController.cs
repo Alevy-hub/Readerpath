@@ -263,6 +263,17 @@ namespace Readerpath.Controllers
                 NewBook.Author = author;
                 NewBook.Genre = genre;
                 NewBook.AddedBy = user.Id;
+                if(User.IsInRole("Admin") || User.IsInRole("Editor"))
+                {
+                    var isa = 1;
+                    NewBook.IsAccepted = true;
+                }
+                else
+                {
+                    var isa = 0;
+                    NewBook.IsAccepted = false;
+                }
+
                 context.Add(NewBook);
 
 				Publisher publisher = context.Publishers.FirstOrDefault(p => p.Name == model.Publisher);

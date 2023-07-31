@@ -502,7 +502,7 @@ namespace Readerpath.Controllers
                     bookAction.Rating = float.Parse(model.rating, CultureInfo.InvariantCulture);
 					if (model.comment != null)
 					{
-						bookAction.Opinion = model.comment.Replace("<br>", "");
+						bookAction.Opinion = model.comment.Replace("\n", "<br>");
 					}
 					else
 					{
@@ -566,7 +566,7 @@ namespace Readerpath.Controllers
 				BookAction bookAction = await context.BookActions.SingleOrDefaultAsync(ba => ba.User == user.Id && ba.Id == model.Id);
 				if (model.Comment != null)
 				{
-					bookAction.Opinion = model.Comment.Replace("<br>", "");
+					bookAction.Opinion = model.Comment.Replace("\n", "<br>");
 				}
 				else
 				{
@@ -614,11 +614,11 @@ namespace Readerpath.Controllers
                 BookAction bookAction = context.BookActions.Find(finishBook.Id);
 
                 bookAction.DateStarted = finishBook.StartDate;
-                bookAction.DateFinished = finishBook.FinishDate;
+                bookAction.DateFinished = finishBook.FinishDate.Date + DateTime.Now.TimeOfDay;
                 bookAction.Rating = float.Parse(finishBook.Rating, CultureInfo.InvariantCulture);
 				if (finishBook.Comment != null)
 				{
-					bookAction.Opinion = finishBook.Comment.Replace("<br>", "");
+					bookAction.Opinion = finishBook.Comment.Replace("\n", "<br>");
 				}
 				else
 				{

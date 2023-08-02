@@ -30,7 +30,10 @@ namespace Readerpath.Controllers
 
         public async Task<IActionResult> LoggedIndex()
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            int yearChallenge = 0;
+            int booksInChallenge = 0;
+
+			var user = await _userManager.GetUserAsync(HttpContext.User);
             LoggedIndexModel model = new LoggedIndexModel();
             model.UserName = user.UserName;
 
@@ -90,11 +93,54 @@ namespace Readerpath.Controllers
                         break;
                     }
 
+
+
+                }
+				int currentYear = DateTime.Now.Year;
+
+				bool congratsShowed = context.YearChallenges.Where(yc => yc.User == user.Id && yc.Year == currentYear).Select(yc => yc.CongratsShowed).FirstOrDefault();
+
+				if (!congratsShowed)
+                {
+                    yearChallenge = context.YearChallenges.Where(yc => yc.User == user.Id && yc.Year == currentYear).Select(yc => yc.Count).FirstOrDefault();
+                    booksInChallenge = context.BookActions.Where(ba => ba.User == user.Id && ((DateTime)ba.DateFinished).Year.ToString() == currentYear.ToString()).Count();
+                }
+
+                if(!congratsShowed && yearChallenge != 0 && booksInChallenge !=0 && booksInChallenge >= yearChallenge )
+                {
+                    model.ShowCongrats = true;
                 }
 
                 return View(model);
 			}
 
+        }
+
+        [HttpPost]
+		[Route("Authorized/CongratsShowed")]
+		public async Task<IActionResult> CongratsShowed()
+        {
+            using(var context = new ApplicationDbContext(_options))
+            {
+				int currentYear = DateTime.Now.Year;
+				var user = await _userManager.GetUserAsync(HttpContext.User);
+                var yearChallenge = new YearChallenge();
+
+                yearChallenge = await context.YearChallenges.Where(yc => yc.User == user.Id && yc.Year == currentYear).FirstOrDefaultAsync();
+				if (yearChallenge != null)
+				{
+					yearChallenge.CongratsShowed = true;
+					context.Update(yearChallenge);
+					await context.SaveChangesAsync();
+					var data = new { Message = "Success!" };
+					return Json(data);
+				}
+				else
+				{
+					var data = new { Message = "YearChallenge not found!" };
+					return Json(data);
+				}
+			}
         }
 
         [HttpGet]

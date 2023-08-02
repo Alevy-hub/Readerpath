@@ -1,4 +1,6 @@
-﻿namespace Readerpath.Models
+﻿using Readerpath.Entities;
+
+namespace Readerpath.Models
 {
     public class LoggedIndexModel
     {
@@ -7,9 +9,10 @@
         public int? MonthToClose { get; set; }
         public int? YearOfMonthToClose { get; set; }
         public int? YearToClose { get; set; }
+        public bool ShowCongrats { get; set; }
 
 
-    }
+	}
 
     public class NowReadingBook
     {

@@ -6,6 +6,9 @@
 
 <script src="https://kit.fontawesome.com/af2a249344.js" crossorigin="anonymous"></script>
 
+
+
+
 <h2 class="d-flex justify-content-center align-items-center">Cześć, @Model.UserName!</h2>
 <h3 class="d-flex justify-content-center align-items-center">Tutaj znajdziesz wszystko co najpotrzebniejsze!</h3>
 
@@ -17,6 +20,16 @@
 			<button class="btn btn-outline-secondary" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #c64a16;"></i></button>
         </div>
     </form>
+</div>
+
+<div id="finishedChallengeModal" class="modal">
+	<div class="modal-content">
+		<h2 class="text-center">GRATULACJE!!!</h2>
+		<p class="text-center">Książkowy challenge na ten rok został ukończony!!!</p>
+		<div class="d-flex justify-content-center">
+			<button class="btn btn-primary mx-2 px-5" onclick="closeFinishedChallengeModal()">Ale jestem super</button>
+		</div>
+	</div>
 </div>
 
 
@@ -149,7 +162,37 @@
 
 	initShuffle();
 	typeWriter();
+
+	function showFinishedChallengeModal() {
+		var finishedChallengeModal = document.getElementById("finishedChallengeModal");
+		finishedChallengeModal.style.display = "block";
+	}
+
+	function closeFinishedChallengeModal() {
+		var finishedChallengeModal = document.getElementById("finishedChallengeModal");
+		finishedChallengeModal.style.display = "none";
+		stopConfetti();
+
+		$.ajax({
+			url: '/Authorized/CongratsShowed', 
+			type: 'POST',
+			data: {},
+			success: function (data) {
+				console.log(data);
+			},
+			error: function (xhr, status, error) {
+				console.error(error); 
+			}
+		});
+	}
+
+	
 </script>
 
 
 
+@if (Model.ShowCongrats == true)
+{
+	<script>showFinishedChallengeModal();</script>
+	<script>startConfetti();</script>
+}

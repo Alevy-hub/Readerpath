@@ -19,6 +19,7 @@
         public string WorstBook { get; set; }
         public List<BookWithRating> Books { get; set; }
         public List<GenreWithCount> Genres { get; set; }
+        public List<PublisherWithCount> Publishers { get; set; }
     }
 
     public class GenreWithCount
@@ -31,5 +32,11 @@
     {
         public string Title { get; set; }
         public float Rating { get; set; }
+    }
+
+    public class PublisherWithCount
+    {
+        public string Name { get; set; }
+        public int Count { get; set; }
     }
 }

@@ -1018,6 +1018,23 @@ namespace Readerpath.Controllers
 					.Include(mb => mb.WorstBook.Edition.Book)
 					.FirstOrDefault(a => a.User == user.Id && a.Year.ToString() == year && a.Month.ToString() == month);
 
+                model.Publishers = context.BookActions
+					.Where(a => a.DateFinished != null
+						&& a.DateFinished.Value.Month.ToString() == month
+						&& a.DateFinished.Value.Year.ToString() == year
+						&& a.User == user.Id)
+					.GroupBy(a => a.Edition.Publisher.Name)
+					.Select(group => new PublisherWithCount
+					{
+						Name = group.Key,
+						Count = group.Count()
+					})
+					.ToList();
+
+                model.Genres = model.Genres.OrderByDescending(g => g.Count).ToList();
+                model.Books = model.Books.OrderByDescending(b => b.Rating).ToList();
+                model.Publishers = model.Publishers.OrderByDescending(p => p.Count).ToList();
+
 				model.BestBook = monthBooks?.BestBook?.Edition?.Book?.Title;
 				model.WorstBook = monthBooks?.WorstBook?.Edition?.Book?.Title;
 			}

@@ -1009,6 +1009,7 @@ namespace Readerpath.Controllers
                     .Select(a => new BookWithRating
                     {
                         Title = a.Edition.Book.Title,
+                        Type = a.Edition.Type,
                         Rating = a.Rating ?? 0
                     })
                     .ToList();
@@ -1034,6 +1035,22 @@ namespace Readerpath.Controllers
                 model.Genres = model.Genres.OrderByDescending(g => g.Count).ToList();
                 model.Books = model.Books.OrderByDescending(b => b.Rating).ToList();
                 model.Publishers = model.Publishers.OrderByDescending(p => p.Count).ToList();
+
+                foreach(var book in model.Books)
+                {
+                    if(book.Type == Entities.Type.PaperBook)
+                    {
+                        book.StringType = "Książka papierowa";
+                    }
+                    else if(book.Type == Entities.Type.Audiobook)
+                    {
+                        book.StringType = "Audiobook";
+                    }
+                    else
+                    {
+                        book.StringType = "Ebook";
+                    }
+                }
 
 				model.BestBook = monthBooks?.BestBook?.Edition?.Book?.Title;
 				model.WorstBook = monthBooks?.WorstBook?.Edition?.Book?.Title;

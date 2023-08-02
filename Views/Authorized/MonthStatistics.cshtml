@@ -177,13 +177,14 @@
 </div>
 
 <div class="row mt-5" style="display: flex; justify-content: center; align-items: center;">
-	<div class="col-md-5">
+	<div class="col-md-7">
 		<h3 class="text-center">Przeczytane w tym miesiącu książki</h3>
 		<table class="table table-striped">
 			<thead>
 				<tr>
 					<th scope="col">#</th>
 					<th scope="col">Tytuł</th>
+					<th scope="col">Typ</th>
 					<th class="text-center" scope="col">Ocena</th>
 				</tr>
 			</thead>
@@ -193,6 +194,7 @@
 					<tr>
 						<th scope="row">@rowB</th>
 						<td>@book.Title</td>
+						<td>@book.StringType</td>
 						@if(book.Rating == 0)
 						{
 							<td class="text-center">Brak oceny</td>														

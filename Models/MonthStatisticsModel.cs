@@ -1,5 +1,8 @@
-﻿namespace Readerpath.Models
+﻿using Readerpath.Entities;
+
+namespace Readerpath.Models
 {
+
     public class MonthStatisticsModel
     {
         public string Month { get; set; }
@@ -31,6 +34,8 @@
     public class BookWithRating
     {
         public string Title { get; set; }
+        public Entities.Type Type { get; set; }
+        public string StringType { get; set; }
         public float Rating { get; set; }
     }
 

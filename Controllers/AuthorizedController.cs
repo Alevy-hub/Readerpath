@@ -111,6 +111,15 @@ namespace Readerpath.Controllers
                     model.ShowCongrats = true;
                 }
 
+                if(context.UpdatePromptSeen.Where(ups => ups.UserId == user.Id).Any() == false)
+                {
+                    model.ShowUpdate = true;
+                }
+                else
+                {
+                    model.ShowUpdate = false;
+                }
+
                 return View(model);
 			}
 
@@ -143,7 +152,23 @@ namespace Readerpath.Controllers
 			}
         }
 
-        [HttpGet]
+        [HttpPost]
+        [Route("Authorized/UpdateShowed")]
+        public async Task<IActionResult> UpdateShowed()
+        {
+            using (var context = new ApplicationDbContext(_options))
+            {
+                var user = await _userManager.GetUserAsync(HttpContext.User);
+                UpdatePromptSeen seen = new();
+                seen.UserId = user.Id;
+                context.UpdatePromptSeen.Add(seen);
+                await context.SaveChangesAsync();
+                var data = new { Message = "Success!" };
+                return Ok();
+            }
+        }
+
+		[HttpGet]
         public async Task<IActionResult> Search(string query)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);

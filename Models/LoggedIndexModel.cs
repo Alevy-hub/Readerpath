@@ -10,6 +10,7 @@ namespace Readerpath.Models
         public int? YearOfMonthToClose { get; set; }
         public int? YearToClose { get; set; }
         public bool ShowCongrats { get; set; }
+        public bool ShowUpdate { get; set; }
 
 
 	}

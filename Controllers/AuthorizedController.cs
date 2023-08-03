@@ -563,6 +563,7 @@ namespace Readerpath.Controllers
             }
         }
 
+        [HttpPost]
         public async Task<IActionResult> DeleteFromMyBooks(int id)
         {
             using (var context = new ApplicationDbContext(_options))

@@ -111,6 +111,11 @@ body {
         background-color: #c64a16;
     }
 
+.text-loader {
+    --bs-text-opacity: 1;
+    color: #c64a16 !important;
+}
+
 /* --- End changes in bootstrap --- */
 #loginPageAnimation {
     opacity: 0;

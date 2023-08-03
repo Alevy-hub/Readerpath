@@ -87,22 +87,18 @@
     </div>
 </div>
 
-<style>
-#spinnerLoader {
-        display: flex;
-        justify-content: center; 
-        align-items: center; 
-        position: fixed;
-        z-index: 9999;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.4);
-    }
-</style>
+<div id="infoModal" class="modal">
+    <div class="modal-content">
+        <p class="text-center">Nie możesz usunąć książki, która jest najlepszą lub najgorszą książką w miesiącu!</p>
 
-<div id="spinnerLoader" class="text-center mb-2 d-none">
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-primary mx-2 px-5" onclick="closeInfoModal()">OK</button>
+        </div>
+    </div>
+</div>
+
+
+<div id="spinnerLoader" class="text-center mb-2" style="display:none">
     <div class="spinner-border text-loader" style="width:10rem; height:10rem;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
@@ -118,9 +114,15 @@
         idToDelete = itemId;
     }
 
+    function ShowInfoModal()
+    {
+        var infoModal = document.getElementById("infoModal");
+        infoModal.style.display = "block";
+    }
+
     function saveSelection()
     {
-        document.getElementById("spinnerLoader").classList.remove("d-none");
+        document.getElementById("spinnerLoader").style.display = "flex";
         fetch(`/Authorized/DeleteFromMyBooks/${idToDelete}`, {
             method: 'POST'
         })
@@ -129,6 +131,9 @@
                 window.location.href = '/Authorized/AllReadBooks';
             } else {
                 console.error('Nie udało się usunąć książki.');
+                closeConfirmationModal();
+                document.getElementById("spinnerLoader").style.display = "none";
+                ShowInfoModal();
             }
         })
         .catch(error => {
@@ -142,4 +147,11 @@
         confirmationModal.style.display = "none";
         idToDelete = null;
     }
+
+    function closeInfoModal() {
+        var infoModal = document.getElementById("infoModal");
+        infoModal.style.display = "none";
+        idToDelete = null;
+    }
+
 </script>

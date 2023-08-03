@@ -99,7 +99,7 @@
 				</ul>
 				<div class="card-body text-center" style="padding-bottom:0">
 					<a asp-action="FinishBook" asp-route-actionId="@nowReadingBook.ActionId" class="btn btn-primary">Ukończono</a>
-					<a asp-action="DeleteFromMyBooks" asp-route-id="@nowReadingBook.ActionId" class="btn btn-primary">Usuń</a>
+					<button class="btn btn-primary" onclick="DeleteAction(@nowReadingBook.ActionId)">Usuń</button>
 				</div>
 				<div class="card-body text-center mt-1" style="padding-top:0">
 					<a asp-action="AddCommentWhileReading" asp-route-actionId="@nowReadingBook.ActionId" class="btn btn-primary px-4">Dodaj komentarz</a>
@@ -129,11 +129,61 @@
 	}
 </div>
 
+<div id="confirmationModal" class="modal">
+	<div class="modal-content">
+		<p class="text-center">Czy na pewno chcesz usunąć książkę?</p>
+
+		<div class="d-flex justify-content-center">
+			<button class="btn btn-primary mx-2 px-5" onclick="saveSelection()">TAK</button>
+			<button class="btn btn-primary mx-2 px-5" onclick="closeConfirmationModal()">NIE</button>
+		</div>
+	</div>
+</div>
+
+<div id="spinnerLoader" class="text-center mb-2" style="display:none">
+	<div class="spinner-border text-loader" style="width:10rem; height:10rem;" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
+</div>
+
 <script>
 	const placeholderValues = ["Harry Potter", "Wiedźmin", "Krzyżacy", "Pan Tadeusz", "Mały Książę", "Krew elfów", "451 Fahrenheita", "Dwór cierni i róż", "Mirabelka", "Wyspa Tajemnic", "Tajemniczy Ogród", "Folwark Zwierzęcy", "Nic tu po was", "Koń i jego chłopiec", "Podpalaczka", "Opowieść podręcznej", "Gołąb i Wąż", "Bezgwiezdne morze", "Przygody Tomka Sawyera", "Dziwne losy Jane Eyre", "Zanim wystygnie kawa", "Imperium burz", "A co wyście myślały?", "Lekcje chemii", "Gra o tron", "Miasto w chmurach", "Daisy Jones & The Six", "Hobbit czyli tam i z powrotem", "Mężczyzna imieniem Ove", "Kocia kawiarnia", "Ophelia mimo wszystko", "Mitologia nordycka", "Przewodnik lesbijki po katolickiej szkole", "Siedmiu mężów Evelyn Hugo", "Ostatnie życzenie", "Utracona godzina", "Utracona godzina"];
 	const speed = 110;
 	const pause = 800;
 	var shuffledValues;
+
+	let idToDelete;
+
+	function DeleteAction(itemId) {
+		var confirmationModal = document.getElementById("confirmationModal");
+		confirmationModal.style.display = "block";
+		idToDelete = itemId;
+	}
+
+	function saveSelection() {
+		document.getElementById("spinnerLoader").style.display = "flex";
+		fetch(`/Authorized/DeleteFromMyBooks/${idToDelete}`, {
+			method: 'POST'
+		})
+			.then(response => {
+				if (response.ok) {
+					window.location.href = '/Authorized/LoggedIndex';
+				} else {
+					console.error('Nie udało się usunąć książki.');
+					closeConfirmationModal();
+					document.getElementById("spinnerLoader").style.display = "none";
+				}
+			})
+			.catch(error => {
+				console.error('Wystąpił błąd podczas wysyłania żądania:', error);
+			});
+	}
+
+	function closeConfirmationModal() {
+		var confirmationModal = document.getElementById("confirmationModal");
+		confirmationModal.style.display = "none";
+		idToDelete = null;
+	}
 
 	function shuffleArray(array) {
 		for (let i = array.length - 1; i > 0; i--) {

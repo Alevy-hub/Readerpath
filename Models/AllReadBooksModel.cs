@@ -10,5 +10,6 @@
 		public float? Rating { get; set; }
 		public DateTime StartDate { get; set; }
 		public DateTime? FinishDate { get; set; }
+		public bool Blocked { get; set; }
 	}
 }

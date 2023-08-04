@@ -59,8 +59,17 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
                         <li><a class="dropdown-item" asp-controller="Authorized" asp-action="BookActionDetails" asp-route-actionId="@item.Id">Szczegóły</a></li>
-                        <li><a class="dropdown-item" asp-controller="Authorized" asp-action="EditBookAction" asp-route-bookActionId="@item.Id">Edytuj</a></li>
-                        <li><button class="dropdown-item" onclick="DeleteAction(@item.Id)">Usuń</button></li>
+                        @if (item.Blocked)
+                        {
+                            <li><a class="dropdown-item disabled" asp-controller="Authorized" asp-action="EditBookAction" asp-route-bookActionId="@item.Id">Edytuj</a></li>
+                            <li><button class="dropdown-item disabled" onclick="DeleteAction(@item.Id)">Usuń</button></li>
+
+                        }
+                        else
+                        {
+                            <li><a class="dropdown-item" asp-controller="Authorized" asp-action="EditBookAction" asp-route-bookActionId="@item.Id">Edytuj</a></li>
+                            <li><button class="dropdown-item" onclick="DeleteAction(@item.Id)">Usuń</button></li>                            
+                        }
                     </ul>
                 </td>
             </tr>

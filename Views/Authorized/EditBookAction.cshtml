@@ -1,0 +1,161 @@
+﻿@model EditBookActionViewModel
+@using System.Globalization
+
+@{
+	DateTime dateFinished = DateTime.Now;
+	DateTime dateStarted = DateTime.Parse(Model.BookAction.DateStarted.ToString());
+	if(Model.BookAction.DateFinished != null)
+	{
+		dateFinished = DateTime.Parse(Model.BookAction.DateFinished.ToString());	
+	}
+	float rating = Model.BookAction.Rating ?? 1;
+
+
+	string status;
+	if(Model.BookAction.DateFinished == null)
+	{
+		status = "Czytam";
+	}
+	else
+	{
+		status = "Przeczytano";
+	}
+}
+
+<input type="hidden" id="statusImport" value="@status" />
+
+<div class="row form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+	<div class="col-md-4">
+
+		<h3>Edytuj "@Model.Title" w moich książkach</h3>
+
+		<form action="/Authorized/EditBookAction" method="post">
+			<div class="form-group mb-3">
+				<label for="Status"><b>Status książki</b></label>
+					<select class="form-control" id="Status" name="Status">
+						<option value="czytam">Czytam</option>
+						<option value="przeczytano">Przeczytano</option>
+					</select>
+			</div>
+
+			<div id="startDateDiv" class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="startDate"><b>Data rozpoczęcia</b></label>
+
+				<input class="form-control" type="date" id="startDate" name="startDate"
+					   value="@dateStarted.ToString("yyyy-MM-dd")"
+					   max="@DateTime.Now.ToString("yyyy-MM-dd")">
+			</div>
+
+			<div id="finishDateDiv" class="d-none form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="finishDate"><b>Data zakończenia</b></label>
+
+				<input class="form-control" type="date" id="finishDate" name="finishDate"
+					   value="@dateFinished.ToString("yyyy-MM-dd")"
+					   max="@DateTime.Now.ToString("yyyy-MM-dd")">
+			</div>
+
+			<div id="ratingDiv" class="d-none form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="rating"><b>Ocena</b></label>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="notRating" onchange="toggleRatingInput()">
+					<label class="form-check-label" for="notRating">Nie oceniam</label>
+				</div>
+				<input class="form-control" max="5" min="1" value="@rating.ToString("F", CultureInfo.InvariantCulture)" type="number" step="0.01" id="Rating" name="rating">
+				<input id="hiddenRating" type="hidden" name="rating" value="0">
+			</div>
+
+			<div id="commentDiv" class="d-none form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="comment"><b>Komentarz</b></label>
+				<textarea class="form-control" id="Comment" name="comment" rows="3">@Model.BookAction.Opinion</textarea>
+			</div>
+			<input type="hidden" name="bookActionId" value="@Model.BookAction.Id">
+
+			<input type="submit" value="Utwórz" class="btn btn-primary" />
+			<a asp-action="AllReadBooks" class="btn btn-primary">Anuluj</a>
+		</form>
+
+	</div>
+</div>
+
+
+<script>
+	var statusSelect1 = document.getElementById("Status");
+	var statusImport = document.getElementById("statusImport");
+	console.log(statusImport.value);
+	if(statusImport.value == "Przeczytano"){
+		statusSelect1.value = "przeczytano";
+	}
+	else{
+		statusSelect1.value = "czytam";
+	}
+</script>
+
+<script>
+	var ratingInput = document.getElementById("Rating");
+	console.log(ratingInput.value);
+	if(ratingInput.value == '0.00'){
+		var notRatingCheckbox = document.getElementById("notRating");
+		notRatingCheckbox.checked = true;
+		toggleRatingInput();
+	}
+</script>
+
+<script>
+	const startDateInput = document.getElementById('startDate');
+	const finishDateInput = document.getElementById('finishDate');
+
+	startDateInput.addEventListener('change', function () {
+		finishDateInput.min = this.value;
+	});
+</script>
+
+<script>
+	function handleStatusChange() {
+		const statusSelect = document.getElementById("Status");
+		const startDiv = document.getElementById("startDateDiv");
+		const finishDiv = document.getElementById("finishDateDiv");
+		const ratingDiv = document.getElementById("ratingDiv");
+		const commentDiv = document.getElementById("commentDiv");
+
+		if (statusSelect.value === "czytam") {
+			startDiv.classList.remove("d-none");
+			finishDiv.classList.add("d-none");
+			ratingDiv.classList.add("d-none");
+			commentDiv.classList.add("d-none");
+		}
+
+		if (statusSelect.value === "przeczytano") {
+			startDiv.classList.remove("d-none");
+			finishDiv.classList.remove("d-none");
+			ratingDiv.classList.remove("d-none");
+			commentDiv.classList.remove("d-none");
+		}
+	}
+
+	handleStatusChange();
+
+	const statusSelect = document.getElementById("Status");
+	statusSelect.addEventListener("change", handleStatusChange);
+</script>
+
+
+<script>
+	function toggleRatingInput() {
+		var ratingInput = document.getElementById("Rating");
+		var hiddenRatingInput = document.getElementById("hiddenRating");
+		var notRatingCheckbox = document.getElementById("notRating");
+
+		if (notRatingCheckbox.checked) {
+			ratingInput.disabled = true;
+			ratingInput.value = "";
+			hiddenRatingInput.disabled = false;
+		} else {
+			ratingInput.disabled = false;
+			hiddenRatingInput.disabled = true;
+			hiddenRatingInput.value = "0";
+			ratingInput.value = "1";
+		}
+	}
+
+	toggleRatingInput();
+</script>

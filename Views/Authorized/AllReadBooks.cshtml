@@ -53,20 +53,13 @@
                 <td>@ratingString</td>
                 <td>@startDate.ToString("dd.MM.yyyy")</td>
                 <td>@finishDateString</td>
-@*                <td class="btn-group d-flex" role="group" aria-label="Basic example">
-                    <a asp-controller="Authorized" asp-action="BookActionDetails" asp-route-actionId="@item.Id" class="btn btn-primary btn-sm" class="btn btn-primary btn-sm w-100"><i class="fa-solid fa-info fa-xl"></i></a>
-                    <a asp-controller="Authorized" asp-action="BookActionDetails" asp-route-actionId="@item.Id" class="btn btn-primary btn-sm" class="btn btn-primary btn-sm w-100"><i class="fa-solid fa-pen fa-xl"></i></a>
-                    <a asp-controller="Authorized" asp-action="DeleteFromMyBooks" asp-route-id="@item.Id" class="btn btn-primary btn-sm" class="btn btn-primary btn-sm w-100"><i class="fa-solid fa-trash fa-xl"></i></a>
-                </td>*@
                 <td class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="actionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         Więcej
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
-                        <li>
-                            <a class="dropdown-item" asp-controller="Authorized" asp-action="BookActionDetails" asp-route-actionId="@item.Id">Szczegóły</a>
-                        </li>
-                        <li><a class="dropdown-item disabled" href="#">Edytuj</a></li>
+                        <li><a class="dropdown-item" asp-controller="Authorized" asp-action="BookActionDetails" asp-route-actionId="@item.Id">Szczegóły</a></li>
+                        <li><a class="dropdown-item" asp-controller="Authorized" asp-action="EditBookAction" asp-route-bookActionId="@item.Id">Edytuj</a></li>
                         <li><button class="dropdown-item" onclick="DeleteAction(@item.Id)">Usuń</button></li>
                     </ul>
                 </td>

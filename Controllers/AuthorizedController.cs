@@ -7,7 +7,7 @@ using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Security.Certificates;
 using Readerpath.Data;
 using Readerpath.Entities;
-
+using Readerpath.Migrations;
 using Readerpath.Models;
 using System.Globalization;
 using System.Security.Policy;
@@ -1180,6 +1180,60 @@ namespace Readerpath.Controllers
         public IActionResult UpdateLog()
         {
             return View();
+        }
+
+        [HttpGet]
+        [Route("EditBookAction/{bookActionId}")]
+        public IActionResult EditBookAction(int bookActionId)
+        {
+            using(var context = new ApplicationDbContext(_options))
+            {
+                EditBookActionViewModel model = new();
+
+                model.BookAction = context.BookActions.Include(ba => ba.Edition.Book).FirstOrDefault(ba => ba.Id == bookActionId);
+                model.Title = context.Books.Where(b => b.Id == model.BookAction.Edition.Book.Id).Select(b => b.Title).FirstOrDefault();
+
+                if(model.BookAction.Opinion != null)
+                {
+				    model.BookAction.Opinion = model.BookAction.Opinion.Replace("<br>", "");
+                }
+
+				return View(model);
+
+            }
+        }
+
+		[HttpPost]
+		public async Task<IActionResult> EditBookAction(EditBookActionModel model)
+        {
+            model.Rating = model.Rating ?? "0";
+			using (var context = new ApplicationDbContext(_options))
+			{
+				BookAction bookAction = context.BookActions.Find(model.BookActionId);
+
+				bookAction.DateStarted = model.StartDate;
+                if(model.FinishDate != null)
+                {
+				    bookAction.DateFinished = model.FinishDate.Date + DateTime.Now.TimeOfDay;
+                }
+                else
+                {
+                    bookAction.DateFinished = null;
+                }
+				bookAction.Rating = float.Parse(model.Rating, CultureInfo.InvariantCulture);
+				if (model.Comment != null)
+				{
+					bookAction.Opinion = model.Comment.Replace("\n", "<br>");
+				}
+				else
+				{
+					bookAction.Opinion = "";
+				}
+
+				context.Update(bookAction);
+				await context.SaveChangesAsync();
+			    return RedirectToAction(nameof(AllReadBooks));
+			}
         }
 	}
 }

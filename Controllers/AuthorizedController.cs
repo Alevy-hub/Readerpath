@@ -88,8 +88,15 @@ namespace Readerpath.Controllers
 
 					if (monthsWithBook.Except(finishedMonths).Any())
 					{
+						
 						model.MonthToClose = monthsWithBook.Except(finishedMonths).Min();
 						model.YearOfMonthToClose = year;
+
+						if(model.MonthToClose == DateTime.Now.Month && year == DateTime.Now.Year)
+						{
+							model.MonthToClose = null;
+							model.YearOfMonthToClose = null;
+						}
 						break;
 					}
 

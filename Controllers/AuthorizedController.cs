@@ -1248,12 +1248,5 @@ namespace Readerpath.Controllers
 				return RedirectToAction(nameof(AllReadBooks));
 			}
 		}
-
-		public async Task<IActionResult> TBR()
-		{
-
-
-			return View();
-		}
 	}
 }

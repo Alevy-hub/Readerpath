@@ -18,6 +18,7 @@ namespace Readerpath.Data
         public DbSet<Genre> Genres { get; set; }
         public DbSet<MonthBook> MonthBooks { get; set; }
         public DbSet<TBR> TBRs { get; set; }
+        public DbSet<TBRBook> TBRBooks { get; set; }
         public DbSet<YearBook> YearBooks { get; set; }
         public DbSet<YearChallenge> YearChallenges { get; set; }
         public DbSet<Publisher> Publishers { get; set; }

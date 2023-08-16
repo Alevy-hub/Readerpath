@@ -4,8 +4,34 @@
 @{
 }
 
+@model List<TBRModel>
 
 <div class="text-center">
-    <h2>TBR</h2>
-    <h4>Czyli książki do przeczytania</h4>
+    <h2>ToBeRead</h2>
+</div>
+
+<div class="d-flex justify-content-center align-items-center">
+    <a class="btn btn-primary btn-lg w-25 py-3 mt-2" asp-action="AddNewTBR">Dodaj nowy TBR</a>
+
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (TBRModel tbr in Model)
+        {
+            string deadline = tbr.TBR.Deadline.ToString("dd.MM.yyyy");
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">@tbr.TBR.Title</h3>
+                        <p class="card-text">Deadline: @deadline</p>
+                        <div class="d-flex justify-content-end">
+                        <h4>Przeczytano: @tbr.CountRead/@tbr.CountToRead</h4>
+                            <a asp-controller="Authorized" asp-action="BookDetails" asp-route-id="@tbr.TBR.Id" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

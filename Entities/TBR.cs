@@ -3,9 +3,9 @@
     public class TBR
     {
         public int Id { get; set; }
-        public Book Book { get; set; }
+        public string Title { get; set; }
         public string User { get; set; }
-        public int Year { get; set; }
+        public DateTime Deadline { get; set; }
         public DateTime DateAdded { get; set; }
 
         public TBR()

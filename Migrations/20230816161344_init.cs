@@ -143,6 +143,37 @@ namespace Readerpath.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "TBRs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Title = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci"),
+                    User = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci"),
+                    Deadline = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TBRs", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "UpdatePromptSeen",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UpdatePromptSeen", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "YearChallenges",
                 columns: table => new
                 {
@@ -150,6 +181,7 @@ namespace Readerpath.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Year = table.Column<int>(type: "int", nullable: false),
                     Count = table.Column<int>(type: "int", nullable: false),
+                    CongratsShowed = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     User = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci")
                 },
                 constraints: table =>
@@ -334,88 +366,6 @@ namespace Readerpath.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "MonthBooks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Month = table.Column<int>(type: "int", nullable: false),
-                    Year = table.Column<int>(type: "int", nullable: false),
-                    BestBookId = table.Column<int>(type: "int", nullable: false),
-                    WorstBookId = table.Column<int>(type: "int", nullable: false),
-                    User = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MonthBooks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MonthBooks_Books_BestBookId",
-                        column: x => x.BestBookId,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_MonthBooks_Books_WorstBookId",
-                        column: x => x.WorstBookId,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "TBRs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    BookId = table.Column<int>(type: "int", nullable: false),
-                    User = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci"),
-                    Year = table.Column<int>(type: "int", nullable: false),
-                    DateAdded = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TBRs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TBRs_Books_BookId",
-                        column: x => x.BookId,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "YearBooks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Year = table.Column<int>(type: "int", nullable: false),
-                    BestBookId = table.Column<int>(type: "int", nullable: false),
-                    WorstBookId = table.Column<int>(type: "int", nullable: false),
-                    User = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_YearBooks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_YearBooks_Books_BestBookId",
-                        column: x => x.BestBookId,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_YearBooks_Books_WorstBookId",
-                        column: x => x.WorstBookId,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "BookActions",
                 columns: table => new
                 {
@@ -436,6 +386,35 @@ namespace Readerpath.Migrations
                         name: "FK_BookActions_Editions_EditionId",
                         column: x => x.EditionId,
                         principalTable: "Editions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "TBRBooks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Title = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci"),
+                    TBRId = table.Column<int>(type: "int", nullable: false),
+                    LinkedEditionId = table.Column<int>(type: "int", nullable: true),
+                    IsRead = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TBRBooks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TBRBooks_Editions_LinkedEditionId",
+                        column: x => x.LinkedEditionId,
+                        principalTable: "Editions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TBRBooks_TBRs_TBRId",
+                        column: x => x.TBRId,
+                        principalTable: "TBRs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -463,6 +442,65 @@ namespace Readerpath.Migrations
                     table.ForeignKey(
                         name: "FK_BingoFields_BookActions_BookActionId",
                         column: x => x.BookActionId,
+                        principalTable: "BookActions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "MonthBooks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Month = table.Column<int>(type: "int", nullable: false),
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    BestBookId = table.Column<int>(type: "int", nullable: false),
+                    WorstBookId = table.Column<int>(type: "int", nullable: false),
+                    User = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MonthBooks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MonthBooks_BookActions_BestBookId",
+                        column: x => x.BestBookId,
+                        principalTable: "BookActions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MonthBooks_BookActions_WorstBookId",
+                        column: x => x.WorstBookId,
+                        principalTable: "BookActions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "YearBooks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    BestBookId = table.Column<int>(type: "int", nullable: false),
+                    WorstBookId = table.Column<int>(type: "int", nullable: false),
+                    User = table.Column<string>(type: "varchar(255)", nullable: false, collation: "utf8mb4_unicode_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_YearBooks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_YearBooks_BookActions_BestBookId",
+                        column: x => x.BestBookId,
+                        principalTable: "BookActions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_YearBooks_BookActions_WorstBookId",
+                        column: x => x.WorstBookId,
                         principalTable: "BookActions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -552,9 +590,14 @@ namespace Readerpath.Migrations
                 column: "WorstBookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TBRs_BookId",
-                table: "TBRs",
-                column: "BookId");
+                name: "IX_TBRBooks_LinkedEditionId",
+                table: "TBRBooks",
+                column: "LinkedEditionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TBRBooks_TBRId",
+                table: "TBRBooks",
+                column: "TBRId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_YearBooks_BestBookId",
@@ -595,7 +638,10 @@ namespace Readerpath.Migrations
                 name: "MonthBooks");
 
             migrationBuilder.DropTable(
-                name: "TBRs");
+                name: "TBRBooks");
+
+            migrationBuilder.DropTable(
+                name: "UpdatePromptSeen");
 
             migrationBuilder.DropTable(
                 name: "YearBooks");
@@ -611,6 +657,9 @@ namespace Readerpath.Migrations
 
             migrationBuilder.DropTable(
                 name: "Bingos");
+
+            migrationBuilder.DropTable(
+                name: "TBRs");
 
             migrationBuilder.DropTable(
                 name: "BookActions");

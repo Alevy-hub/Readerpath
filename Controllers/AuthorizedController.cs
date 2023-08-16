@@ -7,7 +7,6 @@ using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Security.Certificates;
 using Readerpath.Data;
 using Readerpath.Entities;
-using Readerpath.Migrations;
 using Readerpath.Models;
 using System.Globalization;
 using System.Security.Policy;
@@ -1248,5 +1247,66 @@ namespace Readerpath.Controllers
 				return RedirectToAction(nameof(AllReadBooks));
 			}
 		}
+
+		public async Task<IActionResult> TBR()
+		{
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+
+			using (var context = new ApplicationDbContext(_options))
+			{
+				var tbrs = context.TBRs.Where(t => t.User == user.Id).ToList();
+                var model = new List<TBRModel>();
+
+				foreach(var tbr in tbrs)
+				{
+					var oneForModel = new TBRModel();
+					oneForModel.TBR = tbr;
+					oneForModel.CountRead = context.TBRBooks.Where(t => t.Id == tbr.Id && t.IsRead).Count();
+					oneForModel.CountToRead = context.TBRBooks.Where(t => t.Id == tbr.Id).Count();
+					model.Add(oneForModel);
+				}
+
+				return View(model);
+			}
+
+		}
+
+		public async Task<IActionResult> AddNewTBR()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> AddNewTBR(string title, DateTime deadline)
+		{
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+
+			using (var context = new ApplicationDbContext(_options))
+			{
+				TBR tbr = new TBR();
+				tbr.Title = title;
+				tbr.Deadline = deadline;
+				tbr.User = user.Id;
+
+				context.Add(tbr);
+				await context.SaveChangesAsync();
+			}
+			return RedirectToAction(nameof(TBR));
+		}
+
+		[Route("TBRDetails/{TBRId}")]
+		public async Task<IActionResult> TBRDetails(int TBRId)
+		{
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            using (var context = new ApplicationDbContext(_options))
+            {
+				var tbr = context.TBRs.Find(TBRId);
+
+                var model = new List<TBRBook>();
+				model = context.TBRBooks.Where(t => t.TBR == tbr).ToList();
+				return View(model);
+            }
+        }
 	}
 }

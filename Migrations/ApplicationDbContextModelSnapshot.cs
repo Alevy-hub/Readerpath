@@ -615,11 +615,17 @@ namespace Readerpath.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("Deadline")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.Property<string>("User")
                         .IsRequired()
@@ -627,14 +633,39 @@ namespace Readerpath.Migrations
                         .UseCollation("utf8mb4_unicode_ci")
                         .HasAnnotation("MySQL:Charset", "utf8mb4");
 
-                    b.Property<int>("Year")
+                    b.HasKey("Id");
+
+                    b.ToTable("TBRs");
+                });
+
+            modelBuilder.Entity("Readerpath.Entities.TBRBook", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int?>("LinkedEditionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TBRId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)")
+                        .UseCollation("utf8mb4_unicode_ci")
+                        .HasAnnotation("MySQL:Charset", "utf8mb4");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("LinkedEditionId");
 
-                    b.ToTable("TBRs");
+                    b.HasIndex("TBRId");
+
+                    b.ToTable("TBRBooks");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.UpdatePromptSeen", b =>
@@ -846,15 +877,22 @@ namespace Readerpath.Migrations
                     b.Navigation("WorstBook");
                 });
 
-            modelBuilder.Entity("Readerpath.Entities.TBR", b =>
+            modelBuilder.Entity("Readerpath.Entities.TBRBook", b =>
                 {
-                    b.HasOne("Readerpath.Entities.Book", "Book")
+                    b.HasOne("Readerpath.Entities.Edition", "LinkedEdition")
                         .WithMany()
-                        .HasForeignKey("BookId")
+                        .HasForeignKey("LinkedEditionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Readerpath.Entities.TBR", "TBR")
+                        .WithMany()
+                        .HasForeignKey("TBRId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Book");
+                    b.Navigation("LinkedEdition");
+
+                    b.Navigation("TBR");
                 });
 
             modelBuilder.Entity("Readerpath.Entities.YearBook", b =>

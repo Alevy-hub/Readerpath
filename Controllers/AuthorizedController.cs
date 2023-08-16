@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Security.Certificates;
@@ -1262,7 +1263,7 @@ namespace Readerpath.Controllers
 					var oneForModel = new TBRModel();
 					oneForModel.TBR = tbr;
 					oneForModel.CountRead = context.TBRBooks.Where(t => t.Id == tbr.Id && t.IsRead).Count();
-					oneForModel.CountToRead = context.TBRBooks.Where(t => t.Id == tbr.Id).Count();
+					oneForModel.CountToRead = context.TBRBooks.Where(t => t.TBR.Id == tbr.Id).Count();
 					model.Add(oneForModel);
 				}
 
@@ -1303,10 +1304,29 @@ namespace Readerpath.Controllers
             {
 				var tbr = context.TBRs.Find(TBRId);
 
-                var model = new List<TBRBook>();
-				model = context.TBRBooks.Where(t => t.TBR == tbr).ToList();
+                var model = new TBRDetailsModel();
+				model.TBRBooks = context.TBRBooks.Where(t => t.TBR == tbr).ToList();
+				model.Title = tbr.Title;
+				model.TBRId = TBRId;
 				return View(model);
             }
         }
+
+		[HttpPost]
+		[Route("Authorized/AddNewTBRBook")]
+		public async Task<IActionResult> AddNewTBRBook([FromBody] AddTBRBookModel model)
+		{
+			using (var context = new ApplicationDbContext(_options))
+			{
+				var tbrBook = new TBRBook();
+				tbrBook.Title = model.Title;
+				tbrBook.TBR = context.TBRs.Find(model.TBRId);
+
+				context.TBRBooks.Add(tbrBook);
+				await context.SaveChangesAsync();
+			}
+
+			return Ok();
+		}
 	}
 }

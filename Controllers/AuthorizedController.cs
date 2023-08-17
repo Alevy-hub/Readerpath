@@ -1328,5 +1328,28 @@ namespace Readerpath.Controllers
 
 			return Ok();
 		}
+
+		[HttpPost]
+		[Route("Authorized/ChangeTBRStatus")]
+		public async Task<IActionResult> ChangeTBRStatus([FromBody] int Id)
+		{
+			using (var context = new ApplicationDbContext(_options))
+			{
+				var tbrBook = context.TBRBooks.Find(Id);
+				if (tbrBook.IsRead)
+				{
+					tbrBook.IsRead = false;
+				}
+				else
+				{
+					tbrBook.IsRead = true;
+				}
+
+				context.TBRBooks.Update(tbrBook);
+				await context.SaveChangesAsync();
+			}
+
+				return Ok();
+		}
 	}
 }

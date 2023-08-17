@@ -1352,5 +1352,18 @@ namespace Readerpath.Controllers
 
 				return Ok();
 		}
+
+		[HttpDelete]
+		[Route("Authorized/DeleteTBRBook")]
+		public async Task<IActionResult> DeleteTBRBook([FromBody] int Id)
+		{
+			using (var context = new ApplicationDbContext(_options))
+			{
+				var tbrBook = context.TBRBooks.Find(Id);
+				context.TBRBooks.Remove(tbrBook);
+				await context.SaveChangesAsync();
+				return Ok();
+			}
+		}
 	}
 }

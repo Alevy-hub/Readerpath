@@ -11,6 +11,11 @@
 
 <h2 class="text-center">@Model.Title</h2>
 
+@if(Model.Deadline != "0")
+{
+	<h5 class="text-center">Deadline: @Model.Deadline</h5>
+}
+
 <style>
 	.circle {
 		width: 40px;
@@ -34,8 +39,6 @@
 	}
 </style>
 
-<div class="circle"></div>
-<div class="circle checkmark circle-checked"></div>
 
 <div class="d-flex justify-content-center align-items-center flex-column">
 	@foreach (var book in Model.TBRBooks)

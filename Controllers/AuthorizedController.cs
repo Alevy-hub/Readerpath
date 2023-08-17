@@ -1307,6 +1307,7 @@ namespace Readerpath.Controllers
                 var model = new TBRDetailsModel();
 				model.TBRBooks = context.TBRBooks.Where(t => t.TBR == tbr).ToList();
 				model.Title = tbr.Title;
+				model.Deadline = tbr.Deadline.ToString("dd.MM.yyyy") ?? "0";
 				model.TBRId = TBRId;
 				return View(model);
             }

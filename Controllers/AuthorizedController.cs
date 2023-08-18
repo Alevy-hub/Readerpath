@@ -1262,7 +1262,7 @@ namespace Readerpath.Controllers
 				{
 					var oneForModel = new TBRModel();
 					oneForModel.TBR = tbr;
-					oneForModel.CountRead = context.TBRBooks.Where(t => t.Id == tbr.Id && t.IsRead).Count();
+					oneForModel.CountRead = context.TBRBooks.Where(t => t.TBR.Id == tbr.Id && t.IsRead).Count();
 					oneForModel.CountToRead = context.TBRBooks.Where(t => t.TBR.Id == tbr.Id).Count();
 					model.Add(oneForModel);
 				}

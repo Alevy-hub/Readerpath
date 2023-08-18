@@ -1,10 +1,12 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
 
 @model List<TBRModel>
+
+@{
+    List<TBRModel> TbrList = Model.OrderByDescending(d => d.TBR.DateAdded).ToList();
+}
 
 <div class="text-center">
     <h2>ToBeRead</h2>
@@ -17,7 +19,7 @@
 
 <div class="container mt-5">
     <div class="row">
-        @foreach (TBRModel tbr in Model)
+        @foreach (TBRModel tbr in TbrList)
         {
             string deadline = tbr.TBR.Deadline.ToString("dd.MM.yyyy");
             <div class="col-12 mb-4">

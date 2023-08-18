@@ -1365,5 +1365,21 @@ namespace Readerpath.Controllers
 				return Ok();
 			}
 		}
+
+		[HttpPost]
+		[Route("Authorized/EditTBRBook")]
+		public async Task<IActionResult> EditTBRBook([FromBody] EditTBRBook model)
+		{
+			using (var context = new ApplicationDbContext(_options))
+			{
+				var tbrbook = context.TBRBooks.Find(model.TBRBookId);
+				tbrbook.Title = model.Title;
+
+				context.Update(tbrbook);
+				await context.SaveChangesAsync();
+
+				return Ok();
+			}
+		}
 	}
 }

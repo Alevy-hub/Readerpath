@@ -44,6 +44,7 @@
 	@foreach (var book in Model.TBRBooks)
 	{
 		string divId = book.Id.ToString() + "div";
+		string titleId = book.Id.ToString() + "title";
 		<div id="@divId" class="card mt-1 w-75" style="padding: 0; height: 75px;">
 			<div class="card-body d-flex flex-row">
 				@if (book.IsRead == true)
@@ -55,14 +56,14 @@
 					<div onclick="checkCircle(@book.Id)" class="circle" id="@book.Id"></div>
 				}
 				<div class="flex-grow-1 d-flex align-items-center">
-					<h5 class="card-title mx-5 text-center">@book.Title</h5>
+					<h5 class="card-title mx-5 text-center" id="@titleId">@book.Title</h5>
 				</div>
 				<div class="dropdown">
 					<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 						Opcje
 					</button>
 					<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-						<li><button onclick="showAddTBRBookModal('@book.Title')" class="dropdown-item">Edytuj</button></li>
+						<li><button onclick="showEditTBRBookModal('@book.Title', @book.Id)" class="dropdown-item">Edytuj</button></li>
 						<li><button onclick="deleteBook(@book.Id, '@divId')" class="dropdown-item">Usuń</button></li>
 					</ul>
 				</div>
@@ -73,9 +74,9 @@
 
 
 <div class="d-flex justify-content-center align-items-center">
-    <a onclick="showAddTBRBookModal()" class="btn btn-primary btn-circle py-3 mt-3">
+    <button onclick="showAddTBRBookModal()" class="btn btn-primary btn-circle py-3 mt-3">
         <i class="fas fa-plus"></i>
-    </a>
+    </button>
 </div>
 
 <div id="addTBRBook" class="modal">
@@ -87,7 +88,22 @@
 		</div>
 		<div class="d-flex justify-content-center">
 			<button id="addBook" class="btn btn-primary mx-2 px-5" onclick="confirmAddTBRBook()">Dodaj</button>
-			<button class="btn btn-primary mx-2 px-5" onclick="closeModal()">Anuluj</button>
+			<button class="btn btn-primary mx-2 px-5" onclick="closeModal('addTBRBook')">Anuluj</button>
+		</div>
+	</div>
+</div>
+
+<div id="editTBRBook" class="modal">
+	<div class="modal-content">
+		<h3 class="text-center">Zmień nazwę książki</h3>
+		<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+			<label class="control-label control-label-text" for="count"><b>Tytuł książki</b></label>
+			<input class="form-control form-text-input" type="text" for="title" name="title" id="tbrBookTitleEdit" />
+		</div>
+		<input type="hidden" id="TBRBookId" value="" />
+		<div class="d-flex justify-content-center">
+			<button id="addBook" class="btn btn-primary mx-2 px-5" onclick="confirmEditTBRBook()">Zapisz</button>
+			<button class="btn btn-primary mx-2 px-5" onclick="closeModal('editTBRBook')">Anuluj</button>
 		</div>
 	</div>
 </div>
@@ -98,13 +114,13 @@
 		addTBRBookModal.style.display = "block";
 	}
 
-	function showAddTBRBookModal(title) {
-		var addTBRBookModal = document.getElementById("addTBRBook");
+	function showEditTBRBookModal(title, bookid) {
+		var addTBRBookModal = document.getElementById("editTBRBook");
 		addTBRBookModal.style.display = "block";
-		var titleInput = document.getElementById("tbrBookTitle");
+		var titleInput = document.getElementById("tbrBookTitleEdit");
 		titleInput.value = title;
-		var addButton = document.getElementById("addBook");
-		addButton.innerHTML = "Zapisz";
+		var IDInput = document.getElementById("TBRBookId");
+		IDInput.value = bookid;
 	}
 
 	function confirmAddTBRBook() {
@@ -136,8 +152,40 @@
 			});
 	}
 
-	function closeModal() {
-		var modal = document.getElementById("addTBRBook");
+	function confirmEditTBRBook(){
+		var title = document.getElementById("tbrBookTitleEdit").value;
+		var Id = document.getElementById("TBRBookId").value;
+
+		var dataToSend = {
+			title: title,
+			TBRBookId: Id
+		}
+
+		fetch(`/Authorized/EditTBRBook`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(dataToSend)
+		})
+			.then(response => {
+				if (response.ok) {
+					console.log('Zapisano!');
+					var cardTitle = document.getElementById(Id + 'title');
+					cardTitle.innerHTML = title;
+					closeModal("editTBRBook");
+
+				} else {
+					console.error('Nie udało się zapisać');
+				}
+			})
+			.catch(error => {
+				console.error('Wystąpił błąd podczas wysyłania żądania:', error);
+			});
+	}
+
+	function closeModal(modal) {
+		var modal = document.getElementById(modal);
 		modal.style.display = "none";
 	}
 

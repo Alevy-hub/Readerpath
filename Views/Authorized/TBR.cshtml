@@ -7,6 +7,8 @@
 @{
     List<TBRModel> TbrList = Model.OrderByDescending(d => d.TBR.DateAdded).ToList();
 }
+<script src="https://kit.fontawesome.com/44679a4f01.js" crossorigin="anonymous"></script>
+
 
 <div class="text-center">
     <h2>ToBeRead</h2>
@@ -25,6 +27,9 @@
             <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-body">
+                        <div class="d-flex justify-content-end">
+                            <i class="fa-solid fa-ellipsis-vertical fa-xl mt-3 mx-3"></i>
+                        </div>
                         <h3 class="card-title">@tbr.TBR.Title</h3>
                         @if(deadline != "01.01.0001")
                         {
@@ -35,7 +40,7 @@
                             <p class="card-text">Deadline: nie ustawiono</p>                                                     
                         }
                         <div class="d-flex justify-content-end">
-                        <h4>Przeczytano: @tbr.CountRead/@tbr.CountToRead</h4>
+                            <h4>Przeczytano: @tbr.CountRead/@tbr.CountToRead</h4>
                             <a asp-controller="Authorized" asp-action="TBRDetails" asp-route-TBRId="@tbr.TBR.Id" class="stretched-link"></a>
                         </div>
                     </div>

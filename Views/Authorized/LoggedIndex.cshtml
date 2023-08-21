@@ -52,9 +52,12 @@
 	}
 </div>
 
-<div class="d-flex justify-content-center align-items-center mt-3">
-	<a class="btn btn-outline-warning" asp-action="UpdateLog">Aktualizacja z --.08.2023 <br />Zobacz szczegóły!</a>
-</div>
+@if(Model.ShowUpdate == true)
+{
+	<div class="d-flex justify-content-center align-items-center mt-3">
+		<a class="btn btn-outline-warning" asp-action="UpdateLog">Aktualizacja z --.08.2023 <br />Zobacz szczegóły!</a>
+	</div>	
+}
 
 
 <div class="d-flex justify-content-center align-items-center mt-4">
@@ -128,7 +131,12 @@
 	}
 </div>
 
-
+@if (Model.ShowUpdate == false)
+{
+	<div class="d-flex justify-content-center align-items-center mt-3">
+		<a class="btn btn-outline-warning" asp-action="UpdateLog">Aktualizacja z 21.08.2023 <br />Zobacz szczegóły!</a>
+	</div>
+}
 
 <div id="confirmationModal" class="modal">
 	<div class="modal-content">

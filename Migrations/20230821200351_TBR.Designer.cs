@@ -11,8 +11,8 @@ using Readerpath.Data;
 namespace Readerpath.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230816161344_init")]
-    partial class init
+    [Migration("20230821200351_TBR")]
+    partial class TBR
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

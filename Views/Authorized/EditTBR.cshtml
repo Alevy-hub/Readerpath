@@ -1,0 +1,35 @@
+﻿
+@model EditTBRViewModel
+
+@{
+	DateTime deadline = DateTime.Parse(Model.TBRDeadline.ToString());
+}
+
+<div class="row form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+	<div class="col-md-4">
+
+		<h3>Edytuj TBR - @Model.TBRName</h3>
+
+		<form class="mt-3" action="/Authorized/EditTBR" method="post">
+			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="count"><b>Nazwa Twojego TBRu</b></label>
+				<input class="form-control form-text-input" type="text" for="title" name="title" value="@Model.TBRName" />
+			</div>
+			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" for="count"><b>Termin TBRu</b></label>
+				@if (deadline.ToString("dd.MM.yyyy") != "01.01.0001")
+				{
+					<input class="form-control form-text-input" type="date" for="deadline" name="deadline" value="@deadline.ToString("yyyy-MM-dd")" />
+				}
+				else
+				{
+					<input class="form-control form-text-input" type="date" for="deadline" name="deadline" />					
+				}
+			</div>
+			<input type="hidden" name="TBRId" value="@Model.TBRId"/>
+
+			<input type="submit" value="Zapisz" class="btn btn-primary" />
+			<a asp-controller="Authorized" asp-action="TBR" class="btn btn-primary">Anuluj</a>
+		</form>
+	</div>
+</div>

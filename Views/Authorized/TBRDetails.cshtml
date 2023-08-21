@@ -1,9 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
+﻿
 @model TBRDetailsModel
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -11,10 +6,15 @@
 
 <h2 class="text-center">@Model.Title</h2>
 
-@if(Model.Deadline != "0")
+@if (Model.Deadline != "01.01.0001")
 {
 	<h5 class="text-center">Deadline: @Model.Deadline</h5>
 }
+
+<div class="align-content-center justify-content-center d-flex mb-2">
+	<a asp-controller="Authorized" asp-action="EditTBR" asp-route-TBRId="@Model.TBRId" class="btn btn-primary mx-1">Edytuj</a>
+	<button onclick="modalRemoveTBR()" class="btn btn-danger mx-1">Usuń</button>
+</div>
 
 <style>
 	.circle {
@@ -104,6 +104,16 @@
 		<div class="d-flex justify-content-center">
 			<button id="addBook" class="btn btn-primary mx-2 px-5" onclick="confirmEditTBRBook()">Zapisz</button>
 			<button class="btn btn-primary mx-2 px-5" onclick="closeModal('editTBRBook')">Anuluj</button>
+		</div>
+	</div>
+</div>
+
+<div id="removeTBR" class="modal">
+	<div class="modal-content">
+		<h3 class="text-center">Czy na pewno chcesz usunąć TBR?</h3>
+		<div class="d-flex justify-content-center">
+			<button id="addBook" class="btn btn-primary mx-2 px-5" onclick="confirmRemoveTBR()">Tak</button>
+			<button class="btn btn-primary mx-2 px-5" onclick="closeModal('removeTBR')">Nie</button>
 		</div>
 	</div>
 </div>
@@ -233,6 +243,32 @@
 					console.log('Usunięto!');
 					var element = document.getElementById(divId);
 					element.remove();
+				} else {
+					console.error('Nie udało się usunąć!');
+				}
+			})
+			.catch(error => {
+				console.error('Wystąpił błąd podczas wysyłania żądania:', error);
+			});
+	}
+
+	function modalRemoveTBR(){
+		var editTBRModal = document.getElementById("removeTBR");
+		editTBRModal.style.display = "block";
+	}
+
+	function confirmRemoveTBR(){
+		fetch(`/Authorized/RemoveTBR`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(@Model.TBRId)
+		})
+			.then(response => {
+				if (response.ok) {
+					console.log('Usunięto!');
+					window.location.href = `/Authorized/TBR`;
 				} else {
 					console.error('Nie udało się usunąć!');
 				}

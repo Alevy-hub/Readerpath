@@ -1381,5 +1381,47 @@ namespace Readerpath.Controllers
 				return Ok();
 			}
 		}
+
+		[HttpGet]
+		public async Task<IActionResult> EditTBR(int TBRId)
+		{
+			using(var context = new ApplicationDbContext(_options))
+			{
+				var tbr = context.TBRs.Find(TBRId);
+				var model = new EditTBRViewModel();
+				model.TBRId = tbr.Id;
+				model.TBRName = tbr.Title;
+				model.TBRDeadline = tbr.Deadline;
+				return View(model);
+				
+			}
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> EditTBR(EditTBRModel model)
+		{
+			using(var context = new ApplicationDbContext(_options))
+			{
+				var tbr = context.TBRs.Find(model.TBRId);
+				tbr.Title = model.Title;
+				tbr.Deadline = model.Deadline;
+				context.TBRs.Update(tbr);
+				await context.SaveChangesAsync();
+				return RedirectToAction("TBRDetails", new { model.TBRId });
+			}
+		}
+
+		[HttpDelete]
+		[Route("Authorized/RemoveTBR")]
+		public async Task<IActionResult> RemoveTBR([FromBody] int TBRId)
+		{
+			using(var context = new ApplicationDbContext(_options))
+			{
+				var tbr = context.TBRs.Find(TBRId);
+				context.TBRs.Remove(tbr);
+				await context.SaveChangesAsync();
+				return Ok();
+			}
+		}
 	}
 }

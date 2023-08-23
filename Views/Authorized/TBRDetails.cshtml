@@ -164,6 +164,15 @@
 			});
 	}
 
+
+	document.getElementById("tbrBookTitle")
+		.addEventListener("keyup", function (event) {
+			event.preventDefault();
+			if (event.keyCode === 13) {
+				document.getElementById("addBook").click();
+			}
+		});
+
 	function confirmEditTBRBook(){
 		var title = document.getElementById("tbrBookTitleEdit").value;
 		var Id = document.getElementById("TBRBookId").value;

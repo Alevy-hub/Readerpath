@@ -263,3 +263,7 @@ h1 {
         font-size: 24px;
         color: white;
     }
+
+.border-challenge{
+    border: 3px solid;
+}

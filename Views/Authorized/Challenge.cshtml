@@ -69,25 +69,25 @@
 				}
 				else
 				{
-					if (item.Rating >= 1 && item.Rating < 2)
+					if (item.Rating >= 1 && item.Rating <= 1.5)
 					{
 						color = "#FF5733";
 					}
-					else if (item.Rating >= 2 && item.Rating < 3)
+					else if (item.Rating > 1.5 && item.Rating <= 2.5)
 					{
 						color = "#FFC300";
 					}
-					else if (item.Rating >= 3 && item.Rating < 4)
+					else if (item.Rating > 2.5 && item.Rating <= 3.5)
 					{
 						color = "#DAF7A6";
 					}
-					else if (item.Rating >= 4 && item.Rating < 5)
+					else if (item.Rating > 3.5 && item.Rating <= 4.5)
 					{
 						color = "#9ACD32";
 					}
-					else if (item.Rating == 5)
+					else if (item.Rating > 4.5)
 					{
-						color = "228B22";
+						color = "#228B22";
 					}
 					else
 					{

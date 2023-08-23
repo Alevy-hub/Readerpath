@@ -1509,6 +1509,8 @@ namespace Readerpath.Controllers
 			using(var context = new ApplicationDbContext(_options))
 			{
 				var tbr = context.TBRs.Find(TBRId);
+				var bookToRemove = context.TBRBooks.Where(t => t.TBR == tbr).ToList();
+				context.TBRBooks.RemoveRange(bookToRemove);
 				context.TBRs.Remove(tbr);
 				await context.SaveChangesAsync();
 				return Ok();

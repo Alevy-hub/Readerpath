@@ -1,0 +1,125 @@
+﻿
+@model PublisherDetailsModel
+@{
+    int row = 1;
+    string ratingString;
+}
+
+<div class="text-center">
+    <div class="title-line-container">
+        <span class="title-line"></span>
+        <h1 class="d-inline-block">@Model.Name</h1>
+        <span class="title-line"></span>
+    </div>
+    <h3 class="d-block">Twoje statystyki</h3>
+	<h4 class="d-block mt-3">Przeczytane ogółem</h4>
+	<h2 style ="color: #b53905" class="d-block">@Model.ReadCount</h2>
+    <div class="row mt-3" style="display: flex; justify-content: center; align-items: center;">
+	<div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h4>Książki papierowe</h4>
+		<h2 style="color: #b53905">@Model.PaperbookCount</h2>
+	</div>
+	<div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h4>Ebooki</h4>
+			<h2 style="color: #b53905">@Model.EbookCount</h2>
+		</div>
+	<div class="col-md-3 text-center" style="display: flex; flex-direction: column; align-items: center; align-self: center;">
+		<h4>Audiobooki</h4>
+			<h2 style="color: #b53905">@Model.AudiobookCount</h2>
+	</div>
+	<h4 class="d-block mt-3">Średnia ocen</h4>
+	<h2 style="color: #b53905" class="d-block">@Model.RatingAvg</h2>
+</div>
+    <div class="mt-3" style="border-bottom: 2px solid #c64a16;"></div>
+</div>
+
+<h3 class="text-center mt-3">Przeczytane przez Ciebie książki tego wydawnictwa</h3>
+<div class="align-content-center justify-content-center d-flex mt-3">
+    <table class="table table-striped w-75 text-center">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Autor</th>
+                <th scope="col">Gatunek</th>
+                <th scope="col">Ocena</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ReadPublisher item in Model.AllReadOfPublisher)
+            {
+                if (item.Rating == 0)
+                {
+                    ratingString = "Nie oceniono";
+                }
+                else
+                {
+                    ratingString = item.Rating.ToString();
+                }
+
+                <tr>
+                    <th scope="row">@row</th>
+                    <td>@item.Title</td>
+                    <td>@item.Author</td>
+                    <td>@item.Genre</td>
+                    <td>@ratingString</td>
+                    <td>
+                        <a class="btn btn-primary" asp-controller="Authorized" asp-action="BookActionDetails" asp-route-actionId="@item.BookActionId">Więcej </a>
+                    </td>
+                </tr>
+                row++;
+            }
+        </tbody>
+    </table>
+</div>
+
+<h3 class="text-center mt-3">Wszystkie książki tego wydawnictwa</h3>
+<div class="align-content-center justify-content-center d-flex mt-3">
+    <table class="table table-striped w-75 text-center">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Autor</th>
+            <th scope="col">Gatunek</th>
+            <th scope="col">Forma</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            row = 1;
+        }
+        @foreach (BookPublisher item in Model.AllBooksOfPublisher)
+        {
+            string type;
+            if(item.Type == Readerpath.Entities.Type.PaperBook)
+            {
+                type = "Książka papierowa";
+            }
+            else
+            {
+                type = item.Type.ToString();
+            }
+            <tr>
+                <th scope="row">@row</th>
+                <td>@item.Title</td>
+                <td>@item.Author</td>
+                <td>@item.Genre</td>
+                <td>@type</td>
+                <td class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="actionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Więcej
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
+                            <li><a class="dropdown-item" asp-controller="Authorized" asp-action="AddToMyBooks" asp-route-bookId="@item.BookId" asp-route-editionId="@item.EditionId">Dodaj do moich książek</a></li>
+                        <li><a class="dropdown-item" asp-controller="Authorized" asp-action="BookDetails" asp-route-id="@item.BookId">Szczegóły książki</a></li>
+                    </ul>
+                </td>
+            </tr>
+            row++;
+        }
+    </tbody>
+</table>
+</div>

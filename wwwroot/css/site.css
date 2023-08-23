@@ -84,6 +84,17 @@ body {
         border-color: #b53905;
     }
 
+.btn-outline-primary {
+    border-color: #c64a16;
+    color: #c64a16;
+}
+
+    .btn-outline-primary:hover {
+        border-color: #c64a16;
+        color: #fff;
+        background-color: #c64a16;
+    }
+
 .btn-outline-secondary {
     color: #c64a16;
     background-color:white;

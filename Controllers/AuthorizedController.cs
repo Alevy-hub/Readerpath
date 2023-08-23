@@ -738,6 +738,38 @@ namespace Readerpath.Controllers
 			}
 		}
 
+		public async Task<IActionResult> AllMyPublishers()
+		{
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+			using (var context = new ApplicationDbContext(_options))
+			{
+				List<AllMyPublishersModel> model = context.Publishers
+					.Select(p => new AllMyPublishersModel
+					{
+						Id = p.Id,
+						Name = p.Name,
+						ReadCount = context.BookActions
+							.Where(ba => ba.User == user.Id && ba.Edition.Publisher.Id == p.Id && ba.DateFinished != null)
+							.Count(),
+						AudiobookCount = context.BookActions
+							.Where(ba => ba.User == user.Id && ba.Edition.Publisher.Id == p.Id && ba.DateFinished != null && ba.Edition.Type == Entities.Type.Audiobook)
+							.Count(),
+						PaperbookCount = context.BookActions
+							.Where(ba => ba.User == user.Id && ba.Edition.Publisher.Id == p.Id && ba.DateFinished != null && ba.Edition.Type == Entities.Type.PaperBook)
+							.Count(),
+						EbookCount = context.BookActions
+							.Where(ba => ba.User == user.Id && ba.Edition.Publisher.Id == p.Id && ba.DateFinished != null && ba.Edition.Type == Entities.Type.Ebook)
+							.Count(),
+					})
+					.ToList();
+
+				model.RemoveAll(m => m.ReadCount == 0);
+				return View(model);
+			}
+		}
+
+
 		[Route("{actionId}/ActionDetails")]
 		public IActionResult BookActionDetails(int actionId)
 		{
@@ -768,6 +800,65 @@ namespace Readerpath.Controllers
 			}
 		}
 
+		public async Task<IActionResult> PublisherDetails(int publisherId)
+		{
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+			
+			using (var context = new ApplicationDbContext(_options))
+			{
+				PublisherDetailsModel model = new();
+
+				model.Name = context.Publishers.Find(publisherId).Name;
+				model.ReadCount = context.BookActions
+					.Where(ba => ba.User == user.Id && ba.Edition.Publisher.Id == publisherId && ba.DateFinished != null)
+					.Count();
+				model.AudiobookCount = context.BookActions
+					.Where(ba => ba.User == user.Id && ba.Edition.Publisher.Id == publisherId && ba.DateFinished != null && ba.Edition.Type == Entities.Type.Audiobook)
+					.Count();
+				model.PaperbookCount = context.BookActions
+					.Where(ba => ba.User == user.Id && ba.Edition.Publisher.Id == publisherId && ba.DateFinished != null && ba.Edition.Type == Entities.Type.PaperBook)
+					.Count();
+				model.EbookCount = context.BookActions
+					.Where(ba => ba.User == user.Id && ba.Edition.Publisher.Id == publisherId && ba.DateFinished != null && ba.Edition.Type == Entities.Type.Ebook)
+					.Count();
+
+				model.RatingAvg = context.BookActions
+					.Where(ba => ba.User == user.Id && ba.Edition.Publisher.Id == publisherId && ba.DateFinished != null)
+					.Average(a => a.Rating ?? 0); //do sprawdzenia
+
+
+				model.AllReadOfPublisher = context.BookActions
+					.Where(ba => ba.User == user.Id && ba.Edition.Publisher.Id == publisherId && ba.DateFinished != null)
+					.Include(ba => ba.Edition.Book.Author)
+					.Include(ba => ba.Edition.Book.Genre)
+					.Select(ba => new ReadPublisher
+					{
+						BookActionId = ba.Id,
+						Title = ba.Edition.Book.Title,
+						Author = ba.Edition.Book.Author.Name,
+						Genre = ba.Edition.Book.Genre.Name,
+						Rating = ba.Rating ?? 0
+					})
+					.ToList();
+
+				model.AllBooksOfPublisher = context.Editions
+					.Where(e => e.Publisher.Id == publisherId)
+					.Include(e => e.Book.Author)
+					.Include(e => e.Book.Genre)
+					.Select(ba => new BookPublisher
+					{
+						BookId = ba.Book.Id,
+						EditionId = ba.Id,
+						Title = ba.Book.Title,
+						Author = ba.Book.Author.Name,
+						Genre = ba.Book.Genre.Name,
+						Type = ba.Type
+					})
+					.ToList();
+				return View(model);
+			}
+
+		}
 
 		[Route("Challenge/{year}")]
 		public async Task<IActionResult> Challenge(string year)

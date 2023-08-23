@@ -1,0 +1,52 @@
+﻿
+@model List<AllMyPublishersModel>
+
+@{
+    int row = 1;
+
+    var sortedModel = Model.OrderByDescending(item => item.ReadCount).ToList();
+}
+
+<div class="text-center">
+    <h1>Wszystkie moje wydawnictwa</h1>
+</div>
+
+<div class="align-content-center justify-content-center d-flex mb-2">
+    <div class="btn-group w-25">
+        <a asp-controller="Authorized" asp-action="AllReadBooks" class="btn btn-outline-primary w-50">Książki</a>
+        <a asp-controller="Authorized" asp-action="AllMyPublishers" class="btn btn-primary w-50">Wydawnictwa</a>
+    </div>
+</div>
+
+<div class="align-content-center justify-content-center d-flex mt-3">
+    <table class="table table-striped w-75 text-center">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Wydawnictwo</th>
+                <th scope="col">Książki ogółem</th>
+                <th scope="col">Papierowe</th>
+                <th scope="col">Ebooki</th>
+                <th scope="col">Audiobooki</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (AllMyPublishersModel item in sortedModel)
+            {
+                <tr>
+                    <th scope="row">@row</th>
+                    <td>@item.Name</td>
+                    <td>@item.ReadCount</td>
+                    <td>@item.PaperbookCount</td>
+                    <td>@item.EbookCount</td>
+                    <td>@item.AudiobookCount</td>
+                    <td class="dropdown">
+                        <a class="btn btn-primary" asp-controller="Authorized" asp-action="PublisherDetails" asp-route-publisherId="@item.Id">Więcej </a>              
+                    </td>
+                </tr>
+                row++;
+            }
+        </tbody>
+    </table>
+</div>

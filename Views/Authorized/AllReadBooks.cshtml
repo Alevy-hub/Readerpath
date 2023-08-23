@@ -12,6 +12,13 @@
 	<h1>Wszystkie moje książki</h1>
 </div>
 
+<div class="align-content-center justify-content-center d-flex mb-2">
+    <div class="btn-group w-25">
+        <a asp-controller="Authorized" asp-action="AllReadBooks" class="btn btn-primary w-50">Książki</a>
+        <a asp-controller="Authorized" asp-action="AllMyPublishers" class="btn btn-outline-primary w-50">Wydawnictwa</a>
+    </div>
+</div>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -22,7 +29,7 @@
             <th scope="col">Ocena</th>
             <th scope="col">Rozpoczęto</th>
             <th scope="col">Zakończono</th>
-            <th scope="col">Akcje</th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>

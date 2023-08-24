@@ -177,20 +177,45 @@ body {
     font-size: 20px;
 }
 
-    .navBtn:hover {
+/*    .navBtn:hover {
         background-color: rgba(27, 76, 75, .1);
     }
 
         .navBtn:hover .navText {
             color: #c64a16;
-        }
+        }*/
 
 .navText {
     color: #1b4c4b;
+    background-image: linear-gradient( to right, #c64a16, #c64a16 50%, #1b4c4b 50% );
+    background-size: 200% 100%;
+    background-position: -100%;
+    display: inline-block;
+    padding: 5px 0;
+    position: relative;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all 0.3s ease-in-out;
 }
 
-.navTest:hover {
-    color: #c64a16;
+    .navText:before {
+        content: '';
+        background: #c64a16;
+        display: block;
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 0;
+        height: 3px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .navText:hover {
+        background-position: 0;
+    }
+
+.navText:hover::before {
+    width: 100%;
 }
 
 .textMutedSearch{

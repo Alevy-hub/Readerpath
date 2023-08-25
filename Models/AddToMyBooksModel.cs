@@ -1,4 +1,6 @@
-﻿namespace Readerpath.Models
+﻿using Readerpath.Entities;
+
+namespace Readerpath.Models
 {
 	public class AddToMyBooksModel
 	{
@@ -11,5 +13,8 @@
 		public DateTime finishDate { get; set; }
 		public string rating { get; set; }
 		public string comment { get; set; }
+
+		public List<TBR> TBRs { get; set; }
+		public int Tbr { get; set; }
 	}
 }

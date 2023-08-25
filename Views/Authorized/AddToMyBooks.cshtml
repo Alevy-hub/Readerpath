@@ -51,9 +51,23 @@
 				<label class="control-label control-label-text" for="comment"><b>Komentarz</b></label>
 				<textarea class="form-control" id="Comment" name="comment" rows="3"></textarea>
 			</div>
+
+			@if(Model.TBRs != null)
+			{
+				<div id="tbrDiv" class="form-group mb-3 d-none">
+					<label for="Tbr"><b>Wybierz TBR, do którego chcesz dodać książkę</b></label>
+					<select class="form-control" id="Tbr" name="Tbr">
+						@foreach (var tbr in Model.TBRs)
+						{
+							<option value="@tbr.Id">@tbr.Title</option>
+						}
+					</select>
+				</div>		
+			}
+
 			<input type="hidden" name="editionId" value="@Model.editionId">
 
-			<input type="submit" value="Utwórz" class="btn btn-primary" />
+			<input type="submit" value="Dodaj" class="btn btn-primary" />
 			<a asp-action="BookDetails" asp-route-id="@Model.book.Id" class="btn btn-primary">Anuluj</a>
 		</form>
 
@@ -76,6 +90,7 @@
 	const finishDiv = document.getElementById("finishDateDiv");
 	const ratingDiv = document.getElementById("ratingDiv");
 	const commentDiv = document.getElementById("commentDiv");
+	const tbrDiv = document.getElementById("tbrDiv");
 
 	statusSelect.addEventListener("change", function () {
 		if (statusSelect.value === "Czytam") {
@@ -83,6 +98,7 @@
 			finishDiv.classList.add("d-none");
 			ratingDiv.classList.add("d-none");
 			commentDiv.classList.add("d-none");
+			tbrDiv.classList.add("d-none");
 		}
 
 		if (statusSelect.value === "Przeczytano") {
@@ -90,6 +106,8 @@
 			finishDiv.classList.remove("d-none");
 			ratingDiv.classList.remove("d-none");
 			commentDiv.classList.remove("d-none");
+			tbrDiv.classList.add("d-none");
+
 		}		
 		
 		if (statusSelect.value === "Do przeczytania") {
@@ -97,6 +115,8 @@
 			finishDiv.classList.add("d-none");
 			ratingDiv.classList.add("d-none");
 			commentDiv.classList.add("d-none");
+			tbrDiv.classList.remove("d-none");
+
 		}
 
 

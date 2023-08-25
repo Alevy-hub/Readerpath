@@ -546,14 +546,17 @@ namespace Readerpath.Controllers
 		}
 
 		[Route("{bookId}/{editionId}/AddToMyBooks")]
-		public IActionResult AddToMyBooks(int bookId, int editionId)
+		public async Task<IActionResult> AddToMyBooks(int bookId, int editionId)
 		{
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+
 			using (var context = new ApplicationDbContext(_options))
 			{
 				AddToMyBooksModel model = new AddToMyBooksModel();
 				model.book = context.Books.Find(bookId);
 				model.bookId = bookId;
 				model.editionId = editionId;
+				model.TBRs = context.TBRs.Where(t => t.User == user.Id).ToList();
 
 				return View(model);
 			}
@@ -587,6 +590,16 @@ namespace Readerpath.Controllers
 						bookAction.Opinion = "";
 					}
 
+				}
+				if (model.status == "Do przeczytania")
+				{
+					var tbrBook = new TBRBook();
+					tbrBook.Title = context.Editions.Where(e => e.Id == edition.Id).Select(e => e.Book.Title).FirstOrDefault();
+					tbrBook.LinkedEdition = edition;
+					tbrBook.TBR = context.TBRs.Find(model.Tbr);
+					context.Add(tbrBook);
+					await context.SaveChangesAsync();
+					return RedirectToAction("LoggedIndex");
 				}
 				context.Add(bookAction);
 				await context.SaveChangesAsync();

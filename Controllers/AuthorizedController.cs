@@ -1350,6 +1350,13 @@ namespace Readerpath.Controllers
 
 				model.BestBook = yearBooks?.BestBook?.Edition?.Book?.Title;
 				model.WorstBook = yearBooks?.WorstBook?.Edition?.Book?.Title;
+
+				model.MonthCounts = new();
+				for(int i=1; i<=12; i++)
+				{
+					model.MonthCounts.Add(context.BookActions.Count(ba => ba.User == user.Id && ba.DateFinished.Value.Year == int.Parse(year) && ba.DateFinished.Value.Month == i));
+				}
+
 			}
 
 			return View("YearStatistics", model);

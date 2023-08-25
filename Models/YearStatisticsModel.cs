@@ -22,5 +22,6 @@ namespace Readerpath.Models
         public List<BookWithRating> Books { get; set; }
         public List<GenreWithCount> Genres { get; set; }
         public List<PublisherWithCount> Publishers { get; set; }
+        public List<int> MonthCounts { get; set; }
     }
 }

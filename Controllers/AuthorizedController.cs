@@ -1200,7 +1200,159 @@ namespace Readerpath.Controllers
 		[Route("Statistics/{year}/Details")]
 		public async Task<IActionResult> YearStatisticsDetails(string year)
 		{
-			return View();
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+			YearStatisticsModel model = new ();
+			model.Year = year;
+
+			string prevYear = (int.Parse(year) - 1).ToString();
+
+
+			using (var context = new ApplicationDbContext(_options))
+			{
+				if (!context.BookActions.Any(ba => ba.DateFinished.Value.Year == int.Parse(year)))
+				{
+					return RedirectToAction(nameof(Statistics), new { year = DateTime.Now.Year });
+				}
+
+				model.BookCount = context.BookActions
+					.Count(a => a.User == user.Id && a.DateFinished != null && a.DateFinished.Value.Year.ToString() == year);
+
+				model.PrevYearBookCount = context.BookActions
+					.Count(a => a.User == user.Id && a.DateFinished != null && a.DateFinished.Value.Year.ToString() == year);
+
+				model.YearChallengeCount = (int)(context.YearChallenges
+						.SingleOrDefault(c => c.User == user.Id && c.Year.ToString() == year)?
+						.Count ?? 0);
+
+				model.PaperBooksCount = await context.BookActions
+						.CountAsync(a => a.User == user.Id && a.DateFinished != null
+							&& a.DateFinished.Value.Year.ToString() == year
+							&& a.Edition.Type == Entities.Type.PaperBook);
+
+				model.EbooksCount = await context.BookActions
+						.CountAsync(a => a.User == user.Id && a.DateFinished != null
+							&& a.DateFinished.Value.Year.ToString() == year
+							&& a.Edition.Type == Entities.Type.Ebook);
+
+				model.AudiobooksCount = await context.BookActions
+						.CountAsync(a => a.User == user.Id && a.DateFinished != null
+							&& a.DateFinished.Value.Year.ToString() == year
+							&& a.Edition.Type == Entities.Type.Audiobook);
+
+				model.PagesCount = await context.BookActions
+						.Where(a => a.DateFinished != null
+							&& a.DateFinished.Value.Year.ToString() == year
+							&& (a.Edition.Type == Entities.Type.Ebook || a.Edition.Type == Entities.Type.PaperBook)
+							&& a.User == user.Id)
+						.SumAsync(a => a.Edition.Pages ?? 0);
+
+
+				model.AudiobooksMinutes = await context.BookActions
+					.Where(a => a.DateFinished != null
+						&& a.DateFinished.Value.Year.ToString() == year
+						&& a.Edition.Type == Entities.Type.Audiobook
+						&& a.User == user.Id)
+					.SumAsync(a => a.Edition.Duration ?? 0);
+
+				model.RatingAverage = await context.BookActions
+					.Where(a => a.DateFinished != null
+						&& a.DateFinished.Value.Year.ToString() == year
+						&& a.User == user.Id
+						&& a.Rating != 0)
+					.AverageAsync(a => a.Rating ?? 0);
+
+
+				var bookActions = await context.BookActions
+					.Where(a => a.DateFinished != null
+						&& a.DateFinished.Value.Year.ToString() == prevYear
+						&& a.User == user.Id
+						&& a.Rating != 0)
+					.ToListAsync();
+
+				model.PrevYearRatingAverage = (float)bookActions
+					.Select(a => a.Rating)
+					.DefaultIfEmpty(0)
+					.Average();
+
+				model.FavouriteGenre = context.BookActions
+					.Where(a => a.DateFinished != null
+						&& a.DateFinished.Value.Year.ToString() == year
+						&& a.User == user.Id)
+					.GroupBy(a => a.Edition.Book.Genre.Name)
+					.Select(group => new
+					{
+						GenreName = group.Key,
+						Count = group.Count()
+					})
+					.OrderByDescending(g => g.Count)
+					.FirstOrDefault()?.GenreName ?? "Brak ulubionego gatunku";
+
+				model.Genres = context.BookActions
+					.Where(a => a.DateFinished != null
+						&& a.DateFinished.Value.Year.ToString() == year
+						&& a.User == user.Id)
+					.GroupBy(a => a.Edition.Book.Genre.Name)
+					.Select(group => new GenreWithCount
+					{
+						Name = group.Key,
+						Count = group.Count()
+					})
+					.ToList();
+
+				model.Books = context.BookActions
+					.Where(a => a.DateFinished != null
+						&& a.DateFinished.Value.Year.ToString() == year
+						&& a.User == user.Id)
+					.Select(a => new BookWithRating
+					{
+						Title = a.Edition.Book.Title,
+						Type = a.Edition.Type,
+						Rating = a.Rating ?? 0
+					})
+					.ToList();
+
+				var yearBooks = context.MonthBooks
+					.Include(yb => yb.BestBook.Edition.Book)
+					.Include(yb => yb.WorstBook.Edition.Book)
+					.FirstOrDefault(a => a.User == user.Id && a.Year.ToString() == year && a.Year.ToString() == year);
+
+				model.Publishers = context.BookActions
+					.Where(a => a.DateFinished != null
+						&& a.DateFinished.Value.Year.ToString() == year
+						&& a.User == user.Id)
+					.GroupBy(a => a.Edition.Publisher.Name)
+					.Select(group => new PublisherWithCount
+					{
+						Name = group.Key,
+						Count = group.Count()
+					})
+					.ToList();
+
+				model.Genres = model.Genres.OrderByDescending(g => g.Count).ToList();
+				model.Books = model.Books.OrderByDescending(b => b.Rating).ToList();
+				model.Publishers = model.Publishers.OrderByDescending(p => p.Count).ToList();
+
+				foreach (var book in model.Books)
+				{
+					if (book.Type == Entities.Type.PaperBook)
+					{
+						book.StringType = "Książka papierowa";
+					}
+					else if (book.Type == Entities.Type.Audiobook)
+					{
+						book.StringType = "Audiobook";
+					}
+					else
+					{
+						book.StringType = "Ebook";
+					}
+				}
+
+				model.BestBook = yearBooks?.BestBook?.Edition?.Book?.Title;
+				model.WorstBook = yearBooks?.WorstBook?.Edition?.Book?.Title;
+			}
+
+			return View("YearStatistics", model);
 		}
 
 		[Route("FinishMonth/{month}/{year}")]

@@ -62,6 +62,14 @@
 
 	List<string> publishersNames = Model.Publishers.Select(g => g.Name).ToList();
 	List<int> publishersCounts = Model.Publishers.Select(g => g.Count).ToList();
+
+	List<int> countsOfRatings = new();
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 5));
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 4));
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 3));
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 2));
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 1));
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 0));
 }
 
 <div style="display: flex; align-items: center; justify-content: center;">
@@ -214,6 +222,9 @@
 			</tbody>
 		</table>
 	</div>
+	<canvas id="typeCountChart" style="width:100%;max-width:600px"></canvas>
+	<canvas id="ratingCountChart" style="width:100%;max-width:600px"></canvas>
+
 </div>
 
 <div class="row mt-5" style="display: flex; justify-content: center; align-items: center;">
@@ -363,6 +374,111 @@
 			}]
 		},
 		options: {
+		}
+	});
+</script>
+
+<script>
+	var xValues = [
+		"Książki papierowe",
+		"Ebooki",
+		"Audiobooki"
+	];
+	var yValues = [
+		@Json.Serialize(Model.PaperBooksCount),
+		@Json.Serialize(Model.EbooksCount),
+		@Json.Serialize(Model.AudiobooksCount)
+	];
+	var barColors = [
+		"#b91d47",
+		"#00aba9",
+		"#2b5797",
+		"#e8c3b9",
+		"#1e7145",
+		"#ff5733",
+		"#ffc300",
+		"#8a2be2",
+		"#ff1493",
+		"#00ff7f",
+		"#0074cc",
+		"#f06c00",
+		"#7c4dff",
+		"#ff6384",
+		"#36a2eb"
+	];
+
+	function randomSort() {
+		return 0.5 - Math.random();
+	}
+
+	barColors.sort(randomSort);
+
+	new Chart("typeCountChart", {
+		type: "doughnut",
+		data: {
+			labels: xValues,
+			datasets: [{
+				backgroundColor: barColors,
+				data: yValues
+			}]
+		},
+		options: {
+			title: {
+				display: true,
+				text: "Rozkład typów książek"
+			}
+		}
+	});
+</script>
+
+<script>
+	var xValues = [
+		"5",
+		"4",
+		"3",
+		"2",
+		"1",
+		"Nie oceniono"
+	];
+	var yValues = @Json.Serialize(countsOfRatings);
+	var barColors = [
+		"#b91d47",
+		"#00aba9",
+		"#2b5797",
+		"#e8c3b9",
+		"#1e7145",
+		"#ff5733",
+		"#ffc300",
+		"#8a2be2",
+		"#ff1493",
+		"#00ff7f",
+		"#0074cc",
+		"#f06c00",
+		"#7c4dff",
+		"#ff6384",
+		"#36a2eb"
+	];
+
+	function randomSort() {
+		return 0.5 - Math.random();
+	}
+
+	barColors.sort(randomSort);
+
+	new Chart("ratingCountChart", {
+		type: "doughnut",
+		data: {
+			labels: xValues,
+			datasets: [{
+				backgroundColor: barColors,
+				data: yValues
+			}]
+		},
+		options: {
+			title: {
+				display: true,
+				text: "Rozkład ocen książek"
+			}
 		}
 	});
 </script>

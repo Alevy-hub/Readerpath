@@ -1,5 +1,8 @@
 ﻿@model MonthStatisticsModel
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+
 @{
 	int row = 1;
 	int rowB = 1;
@@ -59,6 +62,21 @@
 	{
 		avgMoreOrLess = "większa niż";
 	}
+
+	List<string> genresNames = Model.Genres.Select(g => g.Name).ToList();
+	List<int> genresCounts = Model.Genres.Select(g => g.Count).ToList();
+
+	List<string> publishersNames = Model.Publishers.Select(g => g.Name).ToList();
+	List<int> publishersCounts = Model.Publishers.Select(g => g.Count).ToList();
+
+	List<int> countsOfRatings = new();
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 5));
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 4));
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 3));
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 2));
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 1));
+	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 0));
+
 }
 
 <div style="display: flex; align-items: center; justify-content: center;">
@@ -174,6 +192,8 @@
 			</tbody>
 		</table>
 	</div>
+	<canvas id="genresChart" style="width:100%;max-width:600px"></canvas>
+
 </div>
 
 <div class="row mt-5" style="display: flex; justify-content: center; align-items: center;">
@@ -209,6 +229,8 @@
 			</tbody>
 		</table>
 	</div>
+	<canvas id="typeCountChart" style="width:100%;max-width:600px"></canvas>
+	<canvas id="ratingCountChart" style="width:100%;max-width:600px"></canvas>
 </div>
 
 
@@ -236,4 +258,251 @@
 			</tbody>
 		</table>
 	</div>
+	<canvas id="publishersChart" style="width:100%;max-width:600px"></canvas>
+
 </div>
+
+<script>
+	var xValues = @Json.Serialize(genresNames);
+	var yValues = @Json.Serialize(genresCounts);
+	var barColors = [
+		"#b91d47",
+		"#00aba9",
+		"#2b5797",
+		"#e8c3b9",
+		"#1e7145",
+		"#ff5733",
+		"#ffc300",
+		"#8a2be2",
+		"#ff1493",
+		"#00ff7f",
+		"#0074cc",
+		"#f06c00",
+		"#7c4dff",
+		"#ff6384",
+		"#36a2eb",
+		"#ff4500",
+		"#32cd32",
+		"#ff8c00",
+		"#9400d3",
+		"#da70d6"
+	];
+
+	function randomSort() {
+		return 0.5 - Math.random();
+	}
+
+	barColors.sort(randomSort);
+
+	new Chart("genresChart", {
+		type: "doughnut",
+		data: {
+			labels: xValues,
+			datasets: [{
+				backgroundColor: barColors,
+				data: yValues
+			}]
+		},
+		options: {
+		}
+	});
+</script>
+
+<script>
+	var xValues = [
+		"Książki papierowe",
+		"Ebooki",
+		"Audiobooki"
+	];
+	var yValues = [
+	@Json.Serialize(Model.PaperBooksCount),
+	@Json.Serialize(Model.EbooksCount),
+	@Json.Serialize(Model.AudiobooksCount)
+		];
+	var barColors = [
+		"#b91d47",
+		"#00aba9",
+		"#2b5797",
+		"#e8c3b9",
+		"#1e7145",
+		"#ff5733",
+		"#ffc300",
+		"#8a2be2",
+		"#ff1493",
+		"#00ff7f",
+		"#0074cc",
+		"#f06c00",
+		"#7c4dff",
+		"#ff6384",
+		"#36a2eb"
+	];
+
+	function randomSort() {
+		return 0.5 - Math.random();
+	}
+
+	barColors.sort(randomSort);
+
+	new Chart("typeCountChart", {
+		type: "doughnut",
+		data: {
+			labels: xValues,
+			datasets: [{
+				backgroundColor: barColors,
+				data: yValues
+			}]
+		},
+		options: {
+			title: {
+				display: true,
+				text: "Rozkład typów książek"
+			}
+		}
+	});
+</script>
+
+<script>
+	var xValues = [
+		"5",
+		"4",
+		"3",
+		"2",
+		"1",
+		"Nie oceniono"
+	];
+	var yValues = @Json.Serialize(countsOfRatings);
+	var barColors = [
+		"#b91d47",
+		"#00aba9",
+		"#2b5797",
+		"#e8c3b9",
+		"#1e7145",
+		"#ff5733",
+		"#ffc300",
+		"#8a2be2",
+		"#ff1493",
+		"#00ff7f",
+		"#0074cc",
+		"#f06c00",
+		"#7c4dff",
+		"#ff6384",
+		"#36a2eb"
+	];
+
+	function randomSort() {
+		return 0.5 - Math.random();
+	}
+
+	barColors.sort(randomSort);
+
+	new Chart("ratingCountChart", {
+		type: "doughnut",
+		data: {
+			labels: xValues,
+			datasets: [{
+				backgroundColor: barColors,
+				data: yValues
+			}]
+		},
+		options: {
+			title: {
+				display: true,
+				text: "Rozkład ocen książek"
+			}
+		}
+	});
+</script>
+
+<script>
+	var xValues = @Json.Serialize(publishersNames);
+	var yValues = @Json.Serialize(publishersCounts);
+	var barColors = [
+		"#b91d47",
+		"#00aba9",
+		"#2b5797",
+		"#e8c3b9",
+		"#1e7145",
+		"#ff5733",
+		"#ffc300",
+		"#8a2be2",
+		"#ff1493",
+		"#00ff7f",
+		"#0074cc",
+		"#f06c00",
+		"#7c4dff",
+		"#ff6384",
+		"#36a2eb"
+	];
+
+	function randomSort() {
+		return 0.5 - Math.random();
+	}
+
+	barColors.sort(randomSort);
+
+	new Chart("publishersChart", {
+		type: "doughnut",
+		data: {
+			labels: xValues,
+			datasets: [{
+				backgroundColor: barColors,
+				data: yValues
+			}]
+		},
+		options: {
+		}
+	});
+</script>
+
+<script>
+	var xValues = [
+		"Książki papierowe",
+		"Ebooki",
+		"Audiobooki"
+	];
+	var yValues = [
+	@Json.Serialize(Model.PaperBooksCount),
+	@Json.Serialize(Model.EbooksCount),
+	@Json.Serialize(Model.AudiobooksCount)
+		];
+	var barColors = [
+		"#b91d47",
+		"#00aba9",
+		"#2b5797",
+		"#e8c3b9",
+		"#1e7145",
+		"#ff5733",
+		"#ffc300",
+		"#8a2be2",
+		"#ff1493",
+		"#00ff7f",
+		"#0074cc",
+		"#f06c00",
+		"#7c4dff",
+		"#ff6384",
+		"#36a2eb"
+	];
+
+	function randomSort() {
+		return 0.5 - Math.random();
+	}
+
+	barColors.sort(randomSort);
+
+	new Chart("typeCountChart", {
+		type: "doughnut",
+		data: {
+			labels: xValues,
+			datasets: [{
+				backgroundColor: barColors,
+				data: yValues
+			}]
+		},
+		options: {
+			title: {
+				display: true,
+				text: "Rozkład typów książek"
+			}
+		}
+	});
+</script>

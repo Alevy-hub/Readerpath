@@ -1218,7 +1218,7 @@ namespace Readerpath.Controllers
 					.Count(a => a.User == user.Id && a.DateFinished != null && a.DateFinished.Value.Year.ToString() == year);
 
 				model.PrevYearBookCount = context.BookActions
-					.Count(a => a.User == user.Id && a.DateFinished != null && a.DateFinished.Value.Year.ToString() == year);
+					.Count(a => a.User == user.Id && a.DateFinished != null && (a.DateFinished.Value.Year-1).ToString() == year);
 
 				model.YearChallengeCount = (int)(context.YearChallenges
 						.SingleOrDefault(c => c.User == user.Id && c.Year.ToString() == year)?

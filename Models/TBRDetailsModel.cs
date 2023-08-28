@@ -8,5 +8,6 @@ namespace Readerpath.Models
         public string Title { get; set; }
         public int TBRId { get; set; }
         public string Deadline { get; set; }
+        public bool IsFinished { get; set; }
     }
 }

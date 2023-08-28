@@ -2,7 +2,14 @@
 @model TBRDetailsModel
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<script src="https://kit.fontawesome.com/44679a4f01.js" crossorigin="anonymous"></script>
 
+
+@if (Model.IsFinished)
+{
+	<script>startConfetti();</script>
+
+}
 
 <h2 class="text-center">@Model.Title</h2>
 
@@ -12,15 +19,21 @@
 }
 
 <div class="align-content-center justify-content-center d-flex mb-2">
-	<a asp-controller="Authorized" asp-action="EditTBR" asp-route-TBRId="@Model.TBRId" class="btn btn-primary mx-1">Edytuj</a>
+	@if (!Model.IsFinished)
+	{
+		<a asp-controller="Authorized" asp-action="EditTBR" asp-route-TBRId="@Model.TBRId" class="btn btn-primary mx-1">Edytuj</a>
+	}
 	<button onclick="modalRemoveTBR()" class="btn btn-danger mx-1">Usuń</button>
 </div>
 
-<div class="d-flex justify-content-center align-items-center">
-    <button onclick="showAddTBRBookModal()" class="btn btn-primary btn-circle py-3 my-3">
-        <i class="fas fa-plus"></i>
-    </button>
-</div>
+@if (!Model.IsFinished)
+{
+	<div class="d-flex justify-content-center align-items-center">
+		<button onclick="showAddTBRBookModal()" class="btn btn-primary btn-circle py-3 my-3">
+			<i class="fas fa-plus"></i>
+		</button>
+	</div>	
+}
 
 <style>
 	.circle {
@@ -55,7 +68,14 @@
 			<div class="card-body d-flex flex-row">
 				@if (book.IsRead == true)
 				{
-					<div onclick="checkCircle(@book.Id)" class="circle checkmark circle-checked" id="@book.Id"></div>
+					if (Model.IsFinished)
+					{
+						<div class="circle checkmark circle-checked" id="@book.Id"></div>
+					}
+					else
+					{
+						<div onclick="checkCircle(@book.Id)" class="circle checkmark circle-checked" id="@book.Id"></div>						
+					}
 				}
 				else
 				{
@@ -116,6 +136,19 @@
 		<div class="d-flex justify-content-center">
 			<button id="addBook" class="btn btn-primary mx-2 px-5" onclick="confirmRemoveTBR()">Tak</button>
 			<button class="btn btn-primary mx-2 px-5" onclick="closeModal('removeTBR')">Nie</button>
+		</div>
+	</div>
+</div>
+
+<div id="finishTBR" class="modal">
+	<div class="modal-content">
+		<i class="fa-regular fa-circle-check fa-bounce fa-2xl text-center py-3 my-3" style="font-size:50px; color:#c64a16;"></i>
+		<h3 class="text-center">Brawo! Ukończono TBR!</h3>
+		<h4 class="text-center">Czy chcesz go zamknąć?</h4>
+		<p class="text-center">Zamknięcie TBR spowoduje, że nie będzie możliwości jego edycji oraz dodawania nowych książek. <br /> <b>Operacja jest nieodwracalna</b></p>
+		<div class="d-flex justify-content-center">
+			<button id="addBook" class="btn btn-primary mx-2 px-5" onclick="confirmFinishTBR()">Zamykamy!</button>
+			<button class="btn btn-primary mx-2 px-5" onclick="closeModal('finishTBR')">Nie!</button>
 		</div>
 	</div>
 </div>
@@ -223,6 +256,8 @@
 			.then(response => {
 				if (response.ok) {
 					console.log('Zapisano!');
+					console.log('Sprawdzam czy ukończono');
+					checkFinished();
 				} else {
 					console.error('Nie udało się zapisać');
 				}
@@ -239,6 +274,55 @@
 			circle.classList.add("checkmark");
 			circle.classList.add("circle-checked");		
 		}
+	}
+
+	function checkFinished(){
+		const tbrId = @Model.TBRId;
+		fetch(`/Authorized/CheckTBRFinishable?tbrId=${tbrId}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+			.then(response => response.json())
+			.then(data => {
+				if (data === true) {
+					console.log('TBR do zamknięcia');
+					modalFinishTBR();
+				} else {
+					console.log('TBR nie jest do zamknięcia');
+				}
+			})
+			.catch(error => {
+				console.error('Wystąpił błąd podczas wysyłania żądania:', error);
+			});
+	}
+
+	function modalFinishTBR() {
+		var finishTBRModal = document.getElementById("finishTBR");
+		finishTBRModal.style.display = "block";
+	}
+
+	function confirmFinishTBR(){
+		fetch(`/Authorized/FinishTBR`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(@Model.TBRId)
+		})
+			.then(response => {
+				if (response.ok) {
+					console.log('Zapisano!');
+					var tbrId = @Model.TBRId;
+					window.location.href = `/TBRDetails/${tbrId}`;
+				} else {
+					console.error('Nie udało się zapisać');
+				}
+			})
+			.catch(error => {
+				console.error('Wystąpił błąd podczas wysyłania żądania:', error);
+			});
 	}
 
 	function deleteBook(sender, divId){
@@ -288,4 +372,8 @@
 				console.error('Wystąpił błąd podczas wysyłania żądania:', error);
 			});
 	}
+
+	document.addEventListener("DOMContentLoaded", function () {
+		checkFinished();
+	});
 </script>

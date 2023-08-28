@@ -1572,6 +1572,7 @@ namespace Readerpath.Controllers
 				model.Title = tbr.Title;
 				model.Deadline = tbr.Deadline.ToString("dd.MM.yyyy") ?? "0";
 				model.TBRId = TBRId;
+				model.IsFinished = tbr.IsFinished;
 				return View(model);
             }
         }
@@ -1684,6 +1685,40 @@ namespace Readerpath.Controllers
 				var bookToRemove = context.TBRBooks.Where(t => t.TBR == tbr).ToList();
 				context.TBRBooks.RemoveRange(bookToRemove);
 				context.TBRs.Remove(tbr);
+				await context.SaveChangesAsync();
+				return Ok();
+			}
+		}
+
+		[HttpGet]
+		[Route("Authorized/CheckTBRFinishable")]
+		public async Task<IActionResult> CheckTBRFinishable(int TBRId)
+		{
+			using(var context = new ApplicationDbContext(_options))
+			{
+				int CountRead = context.TBRBooks.Where(t => t.TBR.Id == TBRId && t.IsRead).Count();
+				int CountToRead = context.TBRBooks.Where(t => t.TBR.Id == TBRId).Count();
+				bool isFinished = context.TBRs.Find(TBRId).IsFinished;
+				if(CountToRead != 0 && !isFinished && CountToRead == CountRead)
+				{
+					return Json(true);
+				}
+				else
+				{
+					return Json(false);
+				}
+			}
+		}
+
+		[HttpPost]
+		[Route("Authorized/FinishTBR")]
+		public async Task<IActionResult> FinishTBR([FromBody] int TBRId)
+		{
+			using(var context = new ApplicationDbContext(_options))
+			{
+				var tbr = context.TBRs.Find(TBRId);
+				tbr.IsFinished = true;
+				context.TBRs.Update(tbr);
 				await context.SaveChangesAsync();
 				return Ok();
 			}

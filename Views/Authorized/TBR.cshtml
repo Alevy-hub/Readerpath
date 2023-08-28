@@ -19,7 +19,7 @@
 
 </div>
 
-<div class="container mt-5">
+<div class="container mt-3">
     <div class="row">
         @foreach (TBRModel tbr in TbrList)
         {
@@ -27,6 +27,16 @@
             <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-body">
+                        @if (tbr.TBR.IsFinished)
+                        {
+                            <i class="fa-solid fa-check fa-2xl" style="color: #c64a16; position: absolute; top: 40px; right: 20px;"></i>                            
+                        }
+                        
+                        @if (tbr.TBR.IsFinished == false && tbr.CountToRead != 0 && tbr.CountRead == tbr.CountToRead)
+                        {
+                            <i class="fa-regular fa-circle-check fa-beat-fade fa-2xl" style="color: #c64a16; position: absolute; top: 40px; right: 20px;"></i>
+                        }
+
                         <h3 class="card-title">@tbr.TBR.Title</h3>
                         @if(deadline != "01.01.0001")
                         {

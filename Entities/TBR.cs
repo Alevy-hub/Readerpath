@@ -7,6 +7,7 @@
         public string User { get; set; }
         public DateTime Deadline { get; set; }
         public DateTime DateAdded { get; set; }
+        public bool IsFinished { get; set; }
 
         public TBR()
         {

@@ -66,8 +66,21 @@
 	List<string> genresNames = Model.Genres.Select(g => g.Name).ToList();
 	List<int> genresCounts = Model.Genres.Select(g => g.Count).ToList();
 
-	List<string> publishersNames = Model.Publishers.Select(g => g.Name).ToList();
-	List<int> publishersCounts = Model.Publishers.Select(g => g.Count).ToList();
+	List<string> publishersNames = new();
+	List<int> publishersCounts = new();
+
+	if(Model.Publishers.Count > 10)
+	{
+		publishersNames = Model.Publishers.Where(g => g.Count > 1).Select(g => g.Name).ToList();
+		publishersCounts = Model.Publishers.Where(g => g.Count > 1).Select(g => g.Count).ToList();
+		publishersNames.Add("Inne");
+		publishersCounts.Add(Model.Publishers.Where(g => g.Count < 2).Sum(g => g.Count));		
+	}
+	else
+	{
+		publishersNames = Model.Publishers.Select(g => g.Name).ToList();
+		publishersCounts = Model.Publishers.Select(g => g.Count).ToList();
+	}
 
 	List<int> countsOfRatings = new();
 	countsOfRatings.Add(Model.Books.Count(b => Math.Round(b.Rating) == 5));

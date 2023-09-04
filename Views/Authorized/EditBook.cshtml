@@ -1,0 +1,88 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+}
+@model AddNewBookModel
+
+<div class="row form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+	<div class="col-md-4">
+
+		<h3>Edytuj książkę @Model.Title</h3>
+
+		<form action="/Authorized/EditBook" method="post">
+			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" asp-for="Title"><b>Tytuł</b></label>
+				<input class="form-control form-text-input" type="text" asp-for="Title" value="@Model.Title" />
+				<span asp-validation-for="Title" class="text-danger"></span>
+			</div>
+			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" asp-for="Author"><b>Autor</b></label>
+				<datalist id="authors">
+					@foreach(var author in Model.AuthorList)
+					{
+						<option>@author.Name</option>
+					}
+				</datalist>
+				<input id="authorInput" class="form-control form-text-input" autocomplete="on" list="authors" asp-for="Author" name="Author" value="@Model.Author" />
+				<span asp-validation-for="Author" class="text-danger"></span>
+			</div>
+			<div id="authorRadiosDiv" class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column d-none">
+				<input type="radio" class="form-check-input" name="authorRadios" value="changingAuthor" checked>
+				<label class="form-check-label" for="authorRadios">Zmieniam autora tej książki na innego</label>
+				<input type="radio" class="form-check-input" name="authorRadios" value="editingAuthor">
+				<label class="form-check-label" for="authorRadios">Poprawiam dane tego autora (zmieni to dane we wszystkich książkach, które mają przypisanego tego autora)</label>
+			</div>
+			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
+				<label class="control-label control-label-text" asp-for="Genre"><b>Gatunek</b></label>
+				<datalist id="genres">
+					@foreach(var genre in Model.GenreList)
+					{
+						<option>@genre.Name</option>
+					}
+				</datalist>
+				<input id="genreInput" class="form-control form-text-input" autocomplete="on" list="genres" type="text" asp-for="Genre" value="@Model.Genre" />
+				<span asp-validation-for="Genre" class="text-danger"></span>
+			</div>
+			<div id="genreRadiosDiv" class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column d-none">
+				<input type="radio" class="form-check-input" name="genreRadios" value="changingGenre" checked>
+				<label class="form-check-label" for="genreRadios">Zmieniam gatunek tej książki na inny</label>
+				<input type="radio" class="form-check-input" name="genreRadios" value="editingGenre">
+				<label class="form-check-label" for="genreRadios">Poprawiam nazwę tego gatunku (zmieni to nazwę we wszystkich książkach, które mają przypisany ten gatunek)</label>
+			</div>
+
+			<input type="hidden" value="@Model.BookId" name="BookId" />
+			<input type="hidden" value="@Model.Author" name="OldAuthor" />
+			<input type="hidden" value="@Model.Genre" name="OldGenre" />
+
+			<input type="submit" value="Utwórz" class="btn btn-primary" />
+			<a asp-action="BookDetails" asp-route-id="@Model.BookId" class="btn btn-primary">Anuluj</a>
+		</form>
+	</div>
+</div>
+
+
+<script>
+	document.getElementById('authorInput').addEventListener('focus', function () {
+		document.getElementById('authorRadiosDiv').classList.remove('d-none');
+	});
+
+	document.getElementById('authorInput').addEventListener('focusout', function () {
+		var author = @Json.Serialize(Model.Author);
+		if (document.getElementById('authorInput').value === author){
+			document.getElementById('authorRadiosDiv').classList.add('d-none');
+		}
+	});
+
+	document.getElementById('genreInput').addEventListener('focus', function () {
+		document.getElementById('genreRadiosDiv').classList.remove('d-none');
+	});
+
+	document.getElementById('genreInput').addEventListener('focusout', function () {
+		var genre = @Json.Serialize(Model.Genre);
+		if (document.getElementById('genreInput').value === genre){
+			document.getElementById('genreRadiosDiv').classList.add('d-none');
+		}
+	});
+</script>

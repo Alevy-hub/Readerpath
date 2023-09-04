@@ -302,6 +302,84 @@ namespace Readerpath.Controllers
 			}
 		}
 
+		public async Task<IActionResult> EditBook(int id)
+		{
+			AddNewBookModel model = new AddNewBookModel();
+			using(var context = new ApplicationDbContext(_options))
+			{
+				model = await context.Books.Include(b => b.Author).Include(b => b.Genre).Where(b => b.Id == id).Select(b => new AddNewBookModel
+				{
+					BookId = b.Id,
+					Title = b.Title,
+					Author = b.Author.Name,
+					Genre = b.Genre.Name
+				}).FirstOrDefaultAsync();
+				model.AuthorList = await context.Authors.ToListAsync();
+				model.GenreList = await context.Genres.ToListAsync();
+				model.PublisherList = await context.Publishers.ToListAsync();
+
+				return View(model);
+			}
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> EditBook(AddNewBookModel model)
+		{
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+
+			using (var context = new ApplicationDbContext(_options))
+			{
+				Book book = context.Books.Find(model.BookId);
+				Author author = context.Authors.FirstOrDefault(a => a.Name == model.Author);
+				Genre genre = context.Genres.FirstOrDefault(g => g.Name == model.Genre);
+
+				if(model.AuthorRadios == "changingAuthor")
+				{
+					if (author == null)
+					{
+						Author newAuthor = new Author();
+						newAuthor.Name = model.Author;
+						newAuthor.AddedBy = user.Id;
+						context.Add(newAuthor);
+						author = newAuthor;
+					}
+				}
+				else
+				{
+					author = context.Authors.FirstOrDefault(a => a.Name == model.OldAuthor);
+					author.Name = model.Author;
+					context.Authors.Update(author);
+				}
+
+				if(model.GenreRadios == "changingGenre")
+				{
+					if (genre == null)
+					{
+						Genre newGenre = new Genre();
+						newGenre.Name = model.Genre;
+						newGenre.AddedBy = user.Id;
+						context.Add(newGenre);
+						genre = newGenre;
+					}
+				}
+				else
+				{
+					genre = context.Genres.FirstOrDefault(g => g.Name == model.OldGenre);
+					genre.Name = model.Genre;
+					context.Genres.Update(genre);
+				}
+
+				book.Title = model.Title;
+				book.Author = author;
+				book.Genre = genre;
+
+				context.Books.Update(book);
+				context.SaveChanges();
+
+				return RedirectToAction("BookDetails", new { id = model.BookId });
+			}
+		}
+
 		public IActionResult AddNewBook()
 		{
 			AddNewBookModel model = new AddNewBookModel();

@@ -17,6 +17,10 @@ namespace Readerpath.Models
 		public string Type { get; set; }
 		public string? Publisher { get; set; }
 
+		public string GenreRadios { get; set; }
+		public string AuthorRadios { get; set; }
+		public string OldAuthor { get; set; }
+		public string OldGenre { get; set; }
 		
 		public int? Pages { get; set; }
 		public int? Duration { get; set; }

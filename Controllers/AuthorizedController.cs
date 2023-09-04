@@ -1311,7 +1311,7 @@ namespace Readerpath.Controllers
 					})
 					.ToList();
 
-				var yearBooks = context.MonthBooks
+				var yearBooks = context.YearBooks
 					.Include(yb => yb.BestBook.Edition.Book)
 					.Include(yb => yb.WorstBook.Edition.Book)
 					.FirstOrDefault(a => a.User == user.Id && a.Year.ToString() == year && a.Year.ToString() == year);

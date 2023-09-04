@@ -8,6 +8,8 @@ namespace Readerpath.Models
         public string Title { get; set; }
         public string Author { get; set; }
         public string Genre { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanDelete { get; set; }
         public List<EditionModel> Editions { get; set; }
         public List<ActionModel> Actions { get; set; }
     }

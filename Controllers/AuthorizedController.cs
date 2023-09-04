@@ -280,6 +280,24 @@ namespace Readerpath.Controllers
 					})
 					.ToList();
 
+				if(User.IsInRole("Admin") || User.IsInRole("Editor") || context.Books.Find(id).AddedBy == user.Id)
+				{
+					model.CanEdit = true;
+				}
+				else
+				{
+					model.CanEdit = false;
+				}
+
+                if ((User.IsInRole("Admin") || User.IsInRole("Editor")) && !context.BookActions.Where(ba => ba.Edition.Book.Id == id).Any())
+				{
+					model.CanDelete = true;
+				}
+				else
+				{
+					model.CanDelete = false;
+				}
+
 				return View(model);
 			}
 		}

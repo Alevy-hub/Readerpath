@@ -28,7 +28,7 @@ namespace Readerpath.Controllers
 			_options = options;
 		}
 
-		public async Task<IActionResult> LoggedIndex()
+		public async Task<IActionResult> LoggedIndex(bool showBookAlreadyInDbPrompt = false)
 		{
 			int yearChallenge = 0;
 			int booksInChallenge = 0;
@@ -36,6 +36,11 @@ namespace Readerpath.Controllers
 			var user = await _userManager.GetUserAsync(HttpContext.User);
 			LoggedIndexModel model = new LoggedIndexModel();
 			model.UserName = user.UserName;
+
+			if(showBookAlreadyInDbPrompt == true)
+			{
+				model.ShowBookAlreadyInDbPrompt = true;
+			}
 
 			using(var context = new ApplicationDbContext(_options))
 			{
@@ -481,6 +486,11 @@ namespace Readerpath.Controllers
 				}
 
 				context.Add(NewBook);
+
+				if(context.Books.Where(b => b.Title == NewBook.Title && b.Author == NewBook.Author).Any())
+				{
+					return RedirectToAction("LoggedIndex", new {showBookAlreadyInDbPrompt = true});
+				}
 
 				Publisher publisher = context.Publishers.FirstOrDefault(p => p.Name == model.Publisher);
 				if(model.Publisher != null)

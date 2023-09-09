@@ -292,3 +292,39 @@ h1 {
 .border-challenge{
     border: 3px solid;
 }
+
+/*
+    Slider do powiadomienia na logged index
+*/
+
+/* Dodaj animacje wej?cia */
+@keyframes slideIn {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Dodaj animacje wyj?cia */
+@keyframes slideOut {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-100%);
+    }
+}
+
+/* Styl dla powiadomienia */
+#book-exists-notification {
+    display: none;
+    animation: slideIn 0.5s ease-in-out; /* Dodaj animacj? wej?cia */
+}
+
+.notification-hidden {
+    animation: slideOut 0.5s ease-in-out; /* Dodaj animacj? wyj?cia */
+}

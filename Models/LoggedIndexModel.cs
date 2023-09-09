@@ -11,6 +11,7 @@ namespace Readerpath.Models
         public int? YearToClose { get; set; }
         public bool ShowCongrats { get; set; }
         public bool ShowUpdate { get; set; }
+        public bool ShowBookAlreadyInDbPrompt { get; set; }
 
 
 	}

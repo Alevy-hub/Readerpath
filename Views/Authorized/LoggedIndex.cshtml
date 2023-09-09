@@ -7,7 +7,14 @@
 <script src="https://kit.fontawesome.com/af2a249344.js" crossorigin="anonymous"></script>
 
 
-
+<div id="notification-container">
+	@if (Model.ShowBookAlreadyInDbPrompt)
+	{
+		<div id="book-exists-notification" class="alert alert-danger" role="alert">
+			Książka, którą próbujesz dodać znajduje się już w bazie. Użyj narzędzia wyszukiwania.
+		</div>
+	}
+</div>
 
 <h2 class="d-flex justify-content-center align-items-center">Cześć, @Model.UserName!</h2>
 <h3 class="d-flex justify-content-center align-items-center">Tutaj znajdziesz wszystko co najpotrzebniejsze!</h3>
@@ -295,6 +302,22 @@
 		updateModal.style.display = "none";
 	}
 	
+</script>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var notification = document.getElementById('book-exists-notification');
+
+		if (notification) {
+			// Wyświetl powiadomienie
+			notification.style.display = 'block';
+
+			// Ukryj powiadomienie po 5 sekundach
+			setTimeout(function () {
+				notification.style.display = 'none';
+			}, 5000); // 5000 milisekund = 5 sekund
+		}
+	});
 </script>
 
 

@@ -327,6 +327,18 @@ namespace Readerpath.Controllers
 		{
 			var user = await _userManager.GetUserAsync(HttpContext.User);
 
+			if (!ModelState.IsValid)
+			{
+				AddNewBookToViewModel invalidModel = new AddNewBookToViewModel();
+				using (var context = new ApplicationDbContext(_options))
+				{
+					model.AuthorList = context.Authors.ToList();
+					model.GenreList = context.Genres.ToList();
+					model.PublisherList = context.Publishers.ToList();
+					return View(model);
+				}
+			}
+
 			using (var context = new ApplicationDbContext(_options))
 			{
 				Book book = context.Books.Find(model.BookId);
@@ -378,6 +390,26 @@ namespace Readerpath.Controllers
 
 				return RedirectToAction("BookDetails", new { id = model.BookId });
 			}
+		}
+
+		public async Task<IActionResult> DeleteBook(int bookId)
+		{
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+
+			using(var context = new ApplicationDbContext(_options))
+			{
+				if(!context.BookActions.Where(ba => ba.Edition.Book.Id == bookId).Any())
+				{
+					var book = context.Books.Find(bookId);
+					var editions = context.Editions.Where(e => e.Book.Id == bookId).ToList();
+
+					context.Editions.RemoveRange(editions);
+					context.Books.Remove(book);
+					context.SaveChanges();
+				}
+				return RedirectToAction(nameof(LoggedIndex));
+			}
+
 		}
 
 		public IActionResult AddNewBook()

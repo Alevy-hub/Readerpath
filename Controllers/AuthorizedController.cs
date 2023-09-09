@@ -304,10 +304,10 @@ namespace Readerpath.Controllers
 
 		public async Task<IActionResult> EditBook(int id)
 		{
-			AddNewBookModel model = new AddNewBookModel();
+			EditBookModel model = new EditBookModel();
 			using(var context = new ApplicationDbContext(_options))
 			{
-				model = await context.Books.Include(b => b.Author).Include(b => b.Genre).Where(b => b.Id == id).Select(b => new AddNewBookModel
+				model = await context.Books.Include(b => b.Author).Include(b => b.Genre).Where(b => b.Id == id).Select(b => new EditBookModel
 				{
 					BookId = b.Id,
 					Title = b.Title,
@@ -323,7 +323,7 @@ namespace Readerpath.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> EditBook(AddNewBookModel model)
+		public async Task<IActionResult> EditBook(EditBookModel model)
 		{
 			var user = await _userManager.GetUserAsync(HttpContext.User);
 

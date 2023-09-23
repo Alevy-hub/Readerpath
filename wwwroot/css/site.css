@@ -141,6 +141,10 @@ body {
     outline-color: none !important;
     box-shadow: none;
 }
+
+.border-warning {
+    border: 3px solid #ffbf00 !important;
+}
 /* --- End changes in bootstrap --- */
 #spinnerLoader {
     display: flex;
@@ -290,8 +294,10 @@ h1 {
     }
 
 .border-challenge{
-    border: 3px solid;
+    border: 2px solid;
 }
+
+
 
 /*
     Slider do powiadomienia na logged index

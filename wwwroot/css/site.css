@@ -334,3 +334,13 @@ h1 {
 .notification-hidden {
     animation: slideOut 0.5s ease-in-out; /* Dodaj animacj? wyj?cia */
 }
+
+.rainbow-box {
+    background-color: #302244;
+    border: 3px solid transparent;
+    border-image: linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%);
+    border-image-slice: 1;
+    height: 200px;
+    margin: 20px auto;
+    width: 200px;
+}

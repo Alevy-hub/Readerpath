@@ -1870,5 +1870,10 @@ namespace Readerpath.Controllers
 				return Ok();
 			}
 		}
+
+		public async Task<IActionResult> Bingo()
+		{
+			return View();
+		}
 	}
 }

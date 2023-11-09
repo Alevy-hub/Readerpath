@@ -1626,7 +1626,7 @@ namespace Readerpath.Controllers
 				BookAction bookAction = context.BookActions.Find(model.BookActionId);
 
 				bookAction.DateStarted = model.StartDate;
-				if(model.FinishDate != null)
+				if(model.FinishDate != null && model.Status != "czytam")
 				{
 					bookAction.DateFinished = model.FinishDate.Date + DateTime.Now.TimeOfDay;
 				}
@@ -1634,7 +1634,16 @@ namespace Readerpath.Controllers
 				{
 					bookAction.DateFinished = null;
 				}
-				bookAction.Rating = float.Parse(model.Rating, CultureInfo.InvariantCulture);
+
+				if(model.Status == "czytam")
+				{
+					bookAction.Rating = null;
+				}
+				else
+				{
+					bookAction.Rating = float.Parse(model.Rating, CultureInfo.InvariantCulture);
+				}
+
 				if (model.Comment != null)
 				{
 					bookAction.Opinion = model.Comment.Replace("\n", "<br>");

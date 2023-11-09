@@ -7,5 +7,6 @@
 		public DateTime FinishDate { get; set; }
 		public string Rating { get; set; }
 		public string Comment { get; set; }
+		public string Status { get; set; }
 	}
 }

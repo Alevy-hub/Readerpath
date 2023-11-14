@@ -1,0 +1,44 @@
+﻿@model BingoDetailsModel
+
+<div class="bingo-card">
+    @foreach(var field in Model.bingoFields)
+    {
+        <div class="bingo-item">@field.Name</div>
+        if(field.Index == 12)
+        {
+            <div class="bingo-item" style="border:none;"></div>
+        }
+    }
+</div>
+
+
+
+
+
+@*<div class="bingo-card">
+    <div class="bingo-item">Książka zagranicznego autora zagranicznego autora zagranicznego...</div>
+    <div class="bingo-item">Przykładowe zdanie 2</div>
+    <div class="bingo-item">Przykładowe zdanie 3</div>
+    <div class="bingo-item">Przykładowe zdanie 4</div>
+    <div class="bingo-item">Przykładowe zdanie 5</div>
+    <div class="bingo-item">Inne przykładowe zdanie 1</div>
+    <div class="bingo-item">Inne przykładowe zdanie 2</div>
+    <div class="bingo-item">Inne przykładowe zdanie 3</div>
+    <div class="bingo-item">Inne przykładowe zdanie 4</div>
+    <div class="bingo-item">Inne przykładowe zdanie 5</div>
+    <div class="bingo-item">Jeszcze inne zdanie 1</div>
+    <div class="bingo-item">Jeszcze inne zdanie 2</div>
+    <div class="bingo-item">Jeszcze inne zdanie 3</div>
+    <div class="bingo-item">Jeszcze inne zdanie 4</div>
+    <div class="bingo-item">Jeszcze inne zdanie 5</div>
+    <div class="bingo-item">Nowe zdanie 1</div>
+    <div class="bingo-item">Nowe zdanie 2</div>
+    <div class="bingo-item">Nowe zdanie 3</div>
+    <div class="bingo-item">Nowe zdanie 4</div>
+    <div class="bingo-item">Nowe zdanie 5</div>
+    <div class="bingo-item">Nowe zdanie 1</div>
+    <div class="bingo-item">Nowe zdanie 2</div>
+    <div class="bingo-item">Nowe zdanie 3</div>
+    <div class="bingo-item">Nowe zdanie 4</div>
+    <div class="bingo-item">Nowe zdanie 5</div>
+</div>*@

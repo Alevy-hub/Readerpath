@@ -6,5 +6,10 @@
         public string Name { get; set; }
         public string User { get; set; }
         public DateTime DateAdded { get; set; }
-    }
+
+		public Bingo()
+		{
+			DateAdded = DateTime.Now;
+		}
+	}
 }

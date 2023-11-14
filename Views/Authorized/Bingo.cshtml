@@ -1,62 +1,24 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model List<Readerpath.Entities.Bingo>
 
 <h2 class="d-flex justify-content-center align-items-center">Książkowe Bingo</h2>
 <div class="d-flex justify-content-center align-items-center">
     <a class="btn btn-primary btn-lg w-25 py-3 mt-2" asp-action="AddNewBingo">Utwórz nowe książkowe bingo!</a>
 </div>
 
-<style>
-    .bingo-card {
-        display: grid;
-        grid-template-columns: repeat(5, 150px); /* Dwukrotna szerokość */
-        grid-template-rows: repeat(5, 150px); /* Dwukrotna wysokość */
-        gap: 10px;
-        width: 790px; /* Szerokość karty z marginesem */
-        margin: 0 auto;
-    }
 
-    .bingo-item {
-        width: 100%;
-        height: 100%;
-        border: 1px solid #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 11px;
-        word-wrap: break-word;
-        text-align: center; /* Wyśrodkowanie tekstu w poziomie */
-    }
-</style>
-
-<div class="bingo-card">
-    <div class="bingo-item">Książka zagranicznego autora zagranicznego autora zagranicznego...</div>
-    <div class="bingo-item">Przykładowe zdanie 2</div>
-    <div class="bingo-item">Przykładowe zdanie 3</div>
-    <div class="bingo-item">Przykładowe zdanie 4</div>
-    <div class="bingo-item">Przykładowe zdanie 5</div>
-    <div class="bingo-item">Inne przykładowe zdanie 1</div>
-    <div class="bingo-item">Inne przykładowe zdanie 2</div>
-    <div class="bingo-item">Inne przykładowe zdanie 3</div>
-    <div class="bingo-item">Inne przykładowe zdanie 4</div>
-    <div class="bingo-item">Inne przykładowe zdanie 5</div>
-    <div class="bingo-item">Jeszcze inne zdanie 1</div>
-    <div class="bingo-item">Jeszcze inne zdanie 2</div>
-    <div class="bingo-item">Jeszcze inne zdanie 3</div>
-    <div class="bingo-item">Jeszcze inne zdanie 4</div>
-    <div class="bingo-item">Jeszcze inne zdanie 5</div>
-    <div class="bingo-item">Nowe zdanie 1</div>
-    <div class="bingo-item">Nowe zdanie 2</div>
-    <div class="bingo-item">Nowe zdanie 3</div>
-    <div class="bingo-item">Nowe zdanie 4</div>
-    <div class="bingo-item">Nowe zdanie 5</div>
-    <div class="bingo-item">Nowe zdanie 1</div>
-    <div class="bingo-item">Nowe zdanie 2</div>
-    <div class="bingo-item">Nowe zdanie 3</div>
-    <div class="bingo-item">Nowe zdanie 4</div>
-    <div class="bingo-item">Nowe zdanie 5</div>
+<div class="container mt-3">
+    <div class="row">
+        @foreach(Readerpath.Entities.Bingo bingo in Model)
+        {
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">@bingo.Name</h3>
+                        <a asp-controller="Authorized" asp-action="BingoDetails" asp-route-bingoId="@bingo.Id" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+

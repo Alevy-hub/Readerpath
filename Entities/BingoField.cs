@@ -7,5 +7,6 @@
         public Bingo Bingo { get; set; }
         public BookAction? BookAction { get; set; }
         public bool IsChecked { get; set; }
+        public int Index { get; set; }
     }
 }

@@ -344,3 +344,27 @@ h1 {
     margin: 20px auto;
     width: 200px;
 }
+
+/*Bingo*/
+
+.bingo-card {
+    display: grid;
+    grid-template-columns: repeat(5, 150px);
+    grid-template-rows: repeat(5, 150px);
+    gap: 10px;
+    width: 790px;
+    margin: 0 auto;
+}
+
+.bingo-item {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 11px;
+    word-wrap: break-word;
+    text-align: center;
+}

@@ -1,0 +1,127 @@
+﻿@model BingoDetailsModel
+@{
+    int x = 1;
+    int y = 1;
+}
+
+<h1 class="text-center">@Model.Title</h1>
+<div class="bingo-card">
+    @foreach(var field in Model.bingoFields)
+    {
+        if(field.IsChecked == true)
+        {
+            <div id="@field.Id" onclick="clickBingo(@field.Id)" data-checked="true" data-x="@x" data-y="@y" class="bingo-item" style="background-color:#1b4c4b; color:white">@field.Name</div>
+        }
+        else
+        {
+            <div id="@field.Id" onclick="clickBingo(@field.Id)" data-checked="false" data-x="@x" data-y="@y" class="bingo-item">@field.Name</div>
+        }
+
+        x++;
+        if(x == 6)
+        {
+            y++;
+            x = 1;
+        }
+    }
+</div>
+
+<script>
+    async function checkBingo(bingoDetailId) {
+        const url = `/Bingo/CheckBingo/${bingoDetailId}`;
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        try {
+            const response = await fetch(url, options);
+            if (response.ok) {
+                console.log('Bingo field checked successfully.');
+            } else if (response.status === 404) {
+                console.log('Bingo field not found.');
+            } else {
+                console.log('Failed to check bingo field. Status:', response.status);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    function clickBingo(bingoFieldId) {
+        var bingoField = document.getElementById(bingoFieldId);
+        if (!bingoField) {
+            console.error("Element not found:", bingoFieldId);
+            return;
+        }
+
+        if (bingoField.dataset.checked === "true") {
+            bingoField.style.backgroundColor = "transparent";
+            bingoField.style.color = "#1b4c4b";
+            bingoField.dataset.checked = "false";
+        } else {
+            bingoField.style.backgroundColor = "#1b4c4b"; // Niebieski
+            bingoField.style.color = "white";
+            bingoField.dataset.checked = "true";
+        }
+        console.log("X: " + bingoField.dataset.x + " Y: " + bingoField.dataset.y);
+        checkBingo(bingoFieldId);
+        checkRow(bingoField.dataset.x);
+        checkColumn(bingoField.dataset.y);
+    }
+
+    function checkRow(x) {
+        var bingoItemsInRow = document.querySelectorAll('[data-x="' + x + '"]');
+        var allChecked = Array.from(bingoItemsInRow).every(item => item.dataset.checked === "true");
+
+        if (allChecked) {
+            bingoItemsInRow.forEach(function (item) {
+                item.style.backgroundColor = "#c64a16"; // Pomarańczowy
+                item.style.color = "white";
+            });
+        }
+
+        return allChecked;
+    }
+
+    function checkColumn(y) {
+        var bingoItemsInColumn = document.querySelectorAll('[data-y="' + y + '"]');
+        var allChecked = Array.from(bingoItemsInColumn).every(item => item.dataset.checked === "true");
+
+        if (allChecked) {
+            bingoItemsInColumn.forEach(function (item) {
+                item.style.backgroundColor = "#c64a16"; // Pomarańczowy
+                item.style.color = "white";
+            });
+        }
+
+        return allChecked;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var xValues = [];
+        var yValues = [];
+        var bingoItems = document.querySelectorAll('.bingo-item');
+        bingoItems.forEach(function (item) {
+            var x = item.dataset.x;
+            var y = item.dataset.y;
+            if (!xValues.includes(x)) {
+                xValues.push(x);
+            }
+            if (!yValues.includes(y)) {
+                yValues.push(y);
+            }
+        });
+
+        xValues.forEach(function (x) {
+            checkRow(x);
+        });
+        yValues.forEach(function (y) {
+            checkColumn(y);
+        });
+    });
+</script>
+
+

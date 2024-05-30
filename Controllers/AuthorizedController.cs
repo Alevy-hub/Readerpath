@@ -1151,6 +1151,9 @@ namespace Readerpath.Controllers
 					.ToList();
 
 				model.months = months.Select(month => finishedMonths.Contains(month)).ToList();
+
+				model.IsPrevYearAvailable = context.BookActions.Any(a => a.User == user.Id && a.DateFinished.Value.Year == int.Parse(year) - 1);
+				model.IsNextYearAvailable = context.BookActions.Any(a => a.User == user.Id && a.DateFinished.Value.Year == int.Parse(year) + 1);
 			}
 
 			return View("Statistics", model);

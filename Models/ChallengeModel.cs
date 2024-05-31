@@ -7,6 +7,8 @@ namespace Readerpath.Models
         public YearChallenge? YearChallenge { get; set; }
         public List<BookInChallenge>? BooksInChallenge { get; set;}
         public ChallengeColors? ChallengeColors { get; set; }
+        public bool IsPrevYearAvailable { get; set; }
+        public bool IsNextYearAvailable { get; set; }
     }
 
     public class BookInChallenge

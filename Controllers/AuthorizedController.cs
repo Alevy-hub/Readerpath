@@ -1045,6 +1045,9 @@ namespace Readerpath.Controllers
 					.Where(cc => cc.UserId == user.Id)
 					.FirstOrDefault();
 
+				model.IsPrevYearAvailable = context.YearChallenges.Any(yc => yc.User == user.Id && yc.Year == model.YearChallenge.Year - 1);
+                model.IsNextYearAvailable = model.YearChallenge.Year + 1 == DateTime.Now.Year || context.YearChallenges.Any(yc => yc.User == user.Id && yc.Year == model.YearChallenge.Year + 1);
+
 				return View("Challenge", model);
 			}
 		}

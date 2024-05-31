@@ -1560,38 +1560,7 @@ namespace Readerpath.Controllers
 				return RedirectToAction(nameof(LoggedIndex));
 		}
 
-		[Route("FinishYear/{year}")]
-		public async Task<IActionResult> FinishYear(string year)
-		{
-			var user = await _userManager.GetUserAsync(HttpContext.User);
-			var model = new FinishYearModel();
-			model.Year = int.Parse(year);
 
-			using (var context = new ApplicationDbContext(_options))
-			{
-				model.WorstBooks = context.MonthBooks
-					.Where(mb => mb.Year.ToString() == year && mb.User == user.Id)
-					.Select(mb => new WorstBook
-					{
-						BookActionId = mb.WorstBook.Id,
-						BookTitle = mb.WorstBook.Edition.Book.Title,
-						Rating = mb.WorstBook.Rating,
-					})
-					.ToList();
-
-				model.BestBooks = context.MonthBooks
-					.Where(mb => mb.Year.ToString() == year && mb.User == user.Id)
-					.Select(mb => new BestBook
-					{
-						BookActionId = mb.BestBook.Id,
-						BookTitle = mb.BestBook.Edition.Book.Title,
-						Rating = mb.BestBook.Rating,
-					})
-					.ToList();
-			}
-
-			return View(model);
-		}
 
 		public IActionResult UpdateLog()
 		{

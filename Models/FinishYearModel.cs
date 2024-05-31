@@ -13,6 +13,9 @@ namespace Readerpath.Models
 	{
 		public int BookActionId { get; set; }
 		public string BookTitle { get; set; }
+		public string BookAuthor { get; set; }
+		public string BookGenre { get; set; }
+		public DateTime FinishDate { get; set; }
 		public float? Rating { get; set; }
 	}
 

@@ -1,5 +1,8 @@
 ﻿@model List<Readerpath.Entities.Bingo>
 
+<script src="https://kit.fontawesome.com/44679a4f01.js" crossorigin="anonymous"></script>
+
+
 <h2 class="d-flex justify-content-center align-items-center">Książkowe Bingo</h2>
 <div class="d-flex justify-content-center align-items-center">
     <a class="btn btn-primary btn-lg w-25 py-3 mt-2" asp-action="AddNewBingo">Utwórz nowe książkowe bingo!</a>
@@ -8,17 +11,26 @@
 
 <div class="container mt-3">
     <div class="row">
-        @foreach(Readerpath.Entities.Bingo bingo in Model)
+        @foreach (Readerpath.Entities.Bingo bingo in Model)
         {
             <div class="col-12 mb-4">
-                <div class="card">
-                    <div class="card-body">
+                <div class="card position-relative">
+                    <div class="card-body pt-4">
+                        @if (bingo.IsFinished)
+                        {
+                            <i class="fa-solid fa-check fa-2xl" style="color: #c64a16; position: absolute; top: 25px; right: 20px;"></i>
+                        }
+
                         <h3 class="card-title">@bingo.Name</h3>
                         <a asp-controller="Bingo" asp-action="BingoDetails" asp-route-bingoId="@bingo.Id" class="stretched-link"></a>
+                    </div>
+                    <div class="d-flex justify-content-end position-absolute" style="bottom: 10px; right: 10px;">
+                        <p class="mb-0">Utworzono: @bingo.DateAdded.ToShortDateString()</p>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
 

@@ -27,7 +27,10 @@ namespace Readerpath.Controllers
 
             using (var context = new ApplicationDbContext(_options))
             {
-                List<Bingo> model = context.Bingos.Where(b => b.User == user.Id).ToList();
+                List<Bingo> model = context.Bingos
+                    .Where(b => b.User == user.Id)
+                    .OrderByDescending(b => b.DateAdded)
+                    .ToList();
                 return View(model);
             }
         }
@@ -74,6 +77,7 @@ namespace Readerpath.Controllers
             using (var context = new ApplicationDbContext(_options))
             {
                 BingoDetailsModel model = new();
+                model.BingoId = bingoId;
                 model.Title = context.Bingos.Where(b => b.Id == bingoId).Select(b => b.Name).FirstOrDefault();
                 model.bingoFields = context.BingoFields.Where(b => b.Bingo.Id == bingoId).ToList();
 
@@ -100,6 +104,38 @@ namespace Readerpath.Controllers
                     bingoField.IsChecked = true;
                 }
                 context.Update(bingoField);
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+        }
+
+        [HttpPost]
+        [Route("[controller]/FinishBingo/{bingoId}")]
+        public async Task<IActionResult> FinishBingo(int bingoId)
+        {
+            using (var context = new ApplicationDbContext(_options))
+            {
+                Bingo bingo = context.Bingos.Find(bingoId);
+                if (bingo.IsFinished)
+                    return Ok();
+                bingo.IsFinished = true;
+                context.Update(bingo);
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+        }
+
+        [HttpPost]
+        [Route("[controller]/UnFinishBingo/{bingoId}")]
+        public async Task<IActionResult> UnFinishBingo(int bingoId)
+        {
+            using (var context = new ApplicationDbContext(_options))
+            {
+                Bingo bingo = context.Bingos.Find(bingoId);
+                if (!bingo.IsFinished)
+                    return Ok();
+                bingo.IsFinished = false;
+                context.Update(bingo);
                 await context.SaveChangesAsync();
                 return Ok();
             }

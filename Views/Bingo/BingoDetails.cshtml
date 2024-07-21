@@ -50,6 +50,52 @@
         }
     }
 
+    async function finishBingo(bingoId) {
+        const url = `/Bingo/FinishBingo/${bingoId}`;
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        try {
+            const response = await fetch(url, options);
+            if (response.ok) {
+                console.log('Bingo finished');
+            }
+            else {
+                console.log('Failed to finish bingo. Status:', response.status);
+            }
+        }
+        catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function unFinishBingo(bingoId) {
+        const url = `/Bingo/UnFinishBingo/${bingoId}`;
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        try {
+            const response = await fetch(url, options);
+            if (response.ok) {
+                console.log('Bingo unfinished');
+            }
+            else {
+                console.log('Failed to unfinish bingo. Status:', response.status);
+            }
+        }
+        catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     function clickBingo(bingoFieldId) {
         var bingoField = document.getElementById(bingoFieldId);
         if (!bingoField) {
@@ -70,8 +116,12 @@
         checkBingo(bingoFieldId);
         checkRow(bingoField.dataset.x);
         checkColumn(bingoField.dataset.y);
+        if (finishedCount == 0) {
+            unFinishBingo(@Model.BingoId);
+        }
     }
 
+    var finishedCount = 0;
     function checkRow(x) {
         var bingoItemsInRow = document.querySelectorAll('[data-x="' + x + '"]');
         var allChecked = Array.from(bingoItemsInRow).every(item => item.dataset.checked === "true");
@@ -81,6 +131,8 @@
                 item.style.backgroundColor = "#c64a16"; // Pomarańczowy
                 item.style.color = "white";
             });
+            finishBingo(@Model.BingoId);
+            finishedCount++;
         }
 
         return allChecked;
@@ -95,6 +147,8 @@
                 item.style.backgroundColor = "#c64a16"; // Pomarańczowy
                 item.style.color = "white";
             });
+            finishBingo(@Model.BingoId);
+            finishedCount++;
         }
 
         return allChecked;

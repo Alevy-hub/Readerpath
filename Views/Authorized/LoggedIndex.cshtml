@@ -51,7 +51,7 @@
 		</div>
 	}
 
-	@if (Model.YearToClose != null)
+	@if (Model.YearToClose != null && false) // zakończenie roku nie jest zrealizowane
 	{
 		<div class="py-3 mt-1 mx-1">
 			<a class="btn btn-primary btn-lg w-100" asp-controller="FinishYear" asp-action="FinishYear" asp-route-year="@Model.YearToClose.ToString()">Zamknij rok</a>

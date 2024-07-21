@@ -23,6 +23,7 @@ namespace Readerpath.Controllers
 		[Route("FinishYear/{year}")]
 		public async Task<IActionResult> FinishYear(string year)
 		{
+			return Unauthorized();
 			var user = await _userManager.GetUserAsync(HttpContext.User);
 			var model = new FinishYearModel();
 			model.Year = int.Parse(year);

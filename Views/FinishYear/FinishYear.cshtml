@@ -1,19 +1,17 @@
-﻿
-
-@model FinishYearModel
+﻿@model FinishYearModel
 
 <style>
-	.card {
-		border-color: #c64a16;
-	}
+    .card {
+        border-color: #c64a16;
+    }
 
-	.card-body {
-		flex: 0;
-	}
+    .card-body {
+        flex: 0;
+    }
 
-	.list-group-item {
-		border-color: #c64a16;
-	}
+    .list-group-item {
+        border-color: #c64a16;
+    }
 </style>
 
 <div class="text-center mt-3">
@@ -25,162 +23,82 @@
 </div>
 
 <div id="bestBooks" class="d-flex justify-content-center flex-wrap">
-	@foreach (BestBook bestBook in Model.BestBooks)
-	{
-		DateTime finishDate = (DateTime)bestBook.FinishDate;
-		string finishDateString = finishDate.ToString("dd.MM.yyyy");
+    @foreach (BestBook bestBook in Model.BestBooks)
+    {
+        DateTime finishDate = (DateTime)bestBook.FinishDate;
+        string finishDateString = finishDate.ToString("dd.MM.yyyy");
 
-		<div class="card col-md-3 my-3 mx-1" style="max-width: 18rem;">
-			<div class="card-body text-center">
-				<h4 class="card-title">@bestBook.BookTitle</h4>
-				<h6 class="card-subtitle mb-2 text-muted">@bestBook.BookAuthor</h6>
-				<h6 class="card-subtitle mb-2 text-muted">@bestBook.BookGenre</h6>
-			</div>
-			<ul class="list-group list-group-flush">
-				<li class="list-group-item">Data ukończenia: @finishDateString</li>
-				<li class="list-group-item">Ocena: @bestBook.Rating</li>
-			</ul>
-		</div>
-	}
+        <div class="card col-md-3 my-3 mx-1" style="max-width: 18rem;">
+            <div class="card-body text-center">
+                <h4 class="card-title">@bestBook.BookTitle</h4>
+                <h6 class="card-subtitle mb-2 text-muted">@bestBook.BookAuthor</h6>
+                <h6 class="card-subtitle mb-2 text-muted">@bestBook.BookGenre</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Data ukończenia: @finishDateString</li>
+                <li class="list-group-item">Ocena: @bestBook.Rating</li>
+            </ul>
+        </div>
+    }
 </div>
 
 <div id="duel" class="d-none d-flex justify-content-center flex-wrap">
-	<div id="book1" onclick="choose(1)" class="card col-md-3 my-3 mx-1" style="max-width: 18rem;">
-		<div class="card-body text-center">
-			<h4 id="bookTitle1" class="card-title"></h4>
-			<h6 id="bookAuthor1" class="card-subtitle mb-2 text-muted"></h6>
-			<h6 id="bookGenre1" class="card-subtitle mb-2 text-muted"></h6>
-		</div>
-		<ul class="list-group list-group-flush">
-			<li id="finishDate1" class="list-group-item">Data ukończenia: </li>
-			<li id="rating1" class="list-group-item">Ocena: </li>
-		</ul>
-	</div>
-	<div id="book2" onclick="choose(2)" class="card col-md-3 my-3 mx-1" style="max-width: 18rem;">
-		<div class="card-body text-center">
-			<h4 id="bookTitle2" class="card-title"></h4>
-			<h6 id="bookAuthor2" class="card-subtitle mb-2 text-muted"></h6>
-			<h6 id="bookGenre2" class="card-subtitle mb-2 text-muted"></h6>
-		</div>
-		<ul class="list-group list-group-flush">
-			<li id="finishDate2" class="list-group-item">Data ukończenia: </li>
-			<li id="rating2" class="list-group-item">Ocena: </li>
-		</ul>
-	</div>
+    <div id="book1" onclick="choose(1)" class="card col-md-3 my-3 mx-1" style="max-width: 18rem;">
+        <div class="card-body text-center">
+            <h4 id="bookTitle1" class="card-title"></h4>
+            <h6 id="bookAuthor1" class="card-subtitle mb-2 text-muted"></h6>
+            <h6 id="bookGenre1" class="card-subtitle mb-2 text-muted"></h6>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li id="finishDate1" class="list-group-item">Data ukończenia: </li>
+            <li id="rating1" class="list-group-item">Ocena: </li>
+        </ul>
+    </div>
+    <div id="book2" onclick="choose(2)" class="card col-md-3 my-3 mx-1" style="max-width: 18rem;">
+        <div class="card-body text-center">
+            <h4 id="bookTitle2" class="card-title"></h4>
+            <h6 id="bookAuthor2" class="card-subtitle mb-2 text-muted"></h6>
+            <h6 id="bookGenre2" class="card-subtitle mb-2 text-muted"></h6>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li id="finishDate2" class="list-group-item">Data ukończenia: </li>
+            <li id="rating2" class="list-group-item">Ocena: </li>
+        </ul>
+    </div>
+    <div id="book3" onclick="choose(3)" class="d-none card col-md-3 my-3 mx-1" style="max-width: 18rem;">
+        <div class="card-body text-center">
+            <h4 id="bookTitle3" class="card-title"></h4>
+            <h6 id="bookAuthor3" class="card-subtitle mb-2 text-muted"></h6>
+            <h6 id="bookGenre3" class="card-subtitle mb-2 text-muted"></h6>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li id="finishDate3" class="list-group-item">Data ukończenia: </li>
+            <li id="rating3" class="list-group-item">Ocena: </li>
+        </ul>
+    </div>
 </div>
 
 <div class="d-flex justify-content-center align-items-center">
-	<div class="py-3 mt-1 mx-1">
-		<a id="goButton" onclick="go()" class="btn btn-primary btn-lg w-100 pulse">Przejdź dalej</a>
-	</div>
+    <div class="py-3 mt-1 mx-1">
+        <a id="goButton" onclick="go()" class="btn btn-primary btn-lg w-100 pulse">Przejdź dalej</a>
+    </div>
 </div>
 
-
-
-
 <script>
-	var bestBooks = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.BestBooks));
-	var chosedBook;
-	var isBegan = false;
+    var bestBooks = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.BestBooks));
+    var duelStarted = false;
 
-	var book1Div = document.getElementById("book1");
-	var book2Div = document.getElementById("book2");
+    function go() {
+        if (duelStarted == false) {
+            document.getElementById("bestBooks").classList.add("d-none");
+            document.getElementById("duel").classList.remove("d-none");
+            duelStarted = true;
+        }
+        else {
 
-	function getRandomBooks(books) {
-		if (books.length < 2) {
-			throw new Error("Lista musi zawierać co najmniej dwie książki.");
-		}
-
-		let firstIndex = Math.floor(Math.random() * books.length);
-		let secondIndex;
-
-		do {
-			secondIndex = Math.floor(Math.random() * books.length);
-		} while (secondIndex === firstIndex);
-
-		return [books[firstIndex], books[secondIndex]];
-	}
-
-	function formatDate(dateString) {
-		let date = new Date(dateString);
-		let day = ("0" + date.getDate()).slice(-2);
-		let month = ("0" + (date.getMonth() + 1)).slice(-2);
-		let year = date.getFullYear();
-		return `${day}.${month}.${year}`;
-	}
-
-	function go() {
-		if (!isBegan) {
-			isBegan = true;
-			begin();
-		}
-		else {
-			next(chosedBook);
-		}
-	}
-
-	function begin() {
-		var goButton = document.getElementById("goButton");
-		goButton.classList.add("d-none");
-
-		var bestBooksDiv = document.getElementById("bestBooks");
-		bestBooksDiv.classList.add("d-none");
-
-		var headDiv = document.getElementById("head");
-		headDiv.innerHTML = "Wybierz lepszą książkę";
-
-		var duelDiv = document.getElementById("duel");
-		duelDiv.classList.remove("d-none");
-
-		var [book1, book2] = getRandomBooks(bestBooks);
+        }
+    }
 
 
-		var bookTitle1 = document.getElementById("bookTitle1");
-		var bookAuthor1 = document.getElementById("bookAuthor1");
-		var bookGenre1 = document.getElementById("bookGenre1");
-		var finishDate1 = document.getElementById("finishDate1");
-		var rating1 = document.getElementById("rating1");
 
-		var bookTitle2 = document.getElementById("bookTitle2");
-		var bookAuthor2 = document.getElementById("bookAuthor2");
-		var bookGenre2 = document.getElementById("bookGenre2");
-		var finishDate2 = document.getElementById("finishDate2");
-		var rating2 = document.getElementById("rating2");
-
-		bookTitle1.textContent = book1.BookTitle;
-		bookAuthor1.textContent = book1.BookAuthor;
-		bookGenre1.textContent = book1.BookGenre;
-		finishDate1.textContent = "Data ukończenia: " + formatDate(book1.FinishDate);
-		rating1.textContent = "Ocena: " + book1.Rating;
-
-		bookTitle2.textContent = book2.BookTitle;
-		bookAuthor2.textContent = book2.BookAuthor;
-		bookGenre2.textContent = book2.BookGenre;
-		finishDate2.textContent = "Data ukończenia: " + formatDate(book2.FinishDate);
-		rating2.textContent = "Ocena: " + book2.Rating;
-	}
-
-	function choose(book) {
-
-		if (book == 1) {
-			book1Div.classList.add("border-3");
-			book2Div.classList.remove("border-3");
-			goButton.classList.remove("d-none");
-			chosedBook = 1;
-		}
-		else {
-			book2Div.classList.add("border-3");
-			book1Div.classList.remove("border-3");
-			goButton.classList.remove("d-none");
-			chosedBook = 2;
-		}
-	}
-
-	function next(choice) {
-		book1Div.classList.remove("border-3");
-		book2Div.classList.remove("border-3");
-
-		console.log(choice);
-		begin();
-	}
 </script>

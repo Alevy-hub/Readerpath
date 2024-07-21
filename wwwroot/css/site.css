@@ -368,3 +368,32 @@ h1 {
     word-wrap: break-word;
     text-align: center;
 }
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.bingo-message {
+    position: fixed;
+    top: 40%;
+    left: 37%;
+    transform: translate(-50%, -50%);
+    color: #c64a16;
+    font-size: 10rem;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 1000;
+    animation: pulse 1s infinite;
+    text-shadow: -1px -1px 0 #1b4c4b, 8px -1px 0 #1b4c4b, -1px 1px 0 #1b4c4b, 1px 1px 0 #1b4c4b;
+}

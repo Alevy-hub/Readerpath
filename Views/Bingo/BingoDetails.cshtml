@@ -4,6 +4,7 @@
     int y = 1;
 }
 
+
 <h1 class="text-center">@Model.Title</h1>
 <div class="bingo-card">
     @foreach(var field in Model.bingoFields)
@@ -27,6 +28,17 @@
 </div>
 
 <script>
+    function showBingoMessage() {
+        var message = document.createElement("div");
+        message.classList.add("bingo-message");
+        message.textContent = "BINGO!";
+        document.body.appendChild(message);
+
+        setTimeout(function () {
+            document.body.removeChild(message);
+        }, 3000);
+    }
+
     async function checkBingo(bingoDetailId) {
         const url = `/Bingo/CheckBingo/${bingoDetailId}`;
         const options = {
@@ -108,14 +120,15 @@
             bingoField.style.color = "#1b4c4b";
             bingoField.dataset.checked = "false";
         } else {
-            bingoField.style.backgroundColor = "#1b4c4b"; // Niebieski
+            bingoField.style.backgroundColor = "#1b4c4b"; // Dark green
             bingoField.style.color = "white";
             bingoField.dataset.checked = "true";
         }
         console.log("X: " + bingoField.dataset.x + " Y: " + bingoField.dataset.y);
         checkBingo(bingoFieldId);
-        checkRow(bingoField.dataset.x);
-        checkColumn(bingoField.dataset.y);
+        if (checkRow(parseInt(bingoField.dataset.x)) || checkColumn(parseInt(bingoField.dataset.y))) {
+            showBingoMessage();
+        }
         if (finishedCount == 0) {
             unFinishBingo(@Model.BingoId);
         }
@@ -128,14 +141,15 @@
 
         if (allChecked) {
             bingoItemsInRow.forEach(function (item) {
-                item.style.backgroundColor = "#c64a16"; // Pomarańczowy
+                item.style.backgroundColor = "#c64a16"; // Orange
                 item.style.color = "white";
             });
             finishBingo(@Model.BingoId);
             finishedCount++;
+            return true;
         }
 
-        return allChecked;
+        return false;
     }
 
     function checkColumn(y) {
@@ -144,14 +158,15 @@
 
         if (allChecked) {
             bingoItemsInColumn.forEach(function (item) {
-                item.style.backgroundColor = "#c64a16"; // Pomarańczowy
+                item.style.backgroundColor = "#c64a16"; // Orange
                 item.style.color = "white";
             });
             finishBingo(@Model.BingoId);
             finishedCount++;
+            return true;
         }
 
-        return allChecked;
+        return false;
     }
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -170,12 +185,22 @@
         });
 
         xValues.forEach(function (x) {
-            checkRow(x);
+            if (checkRow(parseInt(x))) {
+                showBingoMessage();
+            }
+
         });
         yValues.forEach(function (y) {
-            checkColumn(y);
+            if (checkColumn(parseInt(y))) {
+                showBingoMessage();
+            }
         });
+    console.log("C: " + finishedCount);
+        if(finishedCount == 0) {
+            unFinishBingo(@Model.BingoId);
+        }
     });
+
 </script>
 
 

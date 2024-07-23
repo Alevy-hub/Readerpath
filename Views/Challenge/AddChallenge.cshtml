@@ -7,7 +7,7 @@
 
 		<h3>Ustaw challenge na rok @Model</h3>
 
-		<form class="mt-3" action="/Authorized/AddChallenge" method="post">
+		<form class="mt-3" action="/Challenge/NewChallenge" method="post">
 			<div class="form-group mb-3 d-flex align-items-center justify-content-center align-content-center text-center flex-column">
 				<label class="control-label control-label-text" for="count"><b>Liczba książek</b></label>
 				<input class="form-control form-text-input" type="number" for="count" name="count"/>
@@ -15,7 +15,7 @@
 			<input type="hidden" name="year" value="@Model">
 
 			<input type="submit" value="Utwórz" class="btn btn-primary" />
-			<a asp-controller="Authorized" asp-action="Challenge" asp-route-year="@Model" class="btn btn-primary">Anuluj</a>
+			<a asp-controller="Challenge" asp-action="Challenge" asp-route-year="@Model" class="btn btn-primary">Anuluj</a>
 		</form>
 	</div>
 </div>

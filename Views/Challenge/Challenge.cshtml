@@ -14,27 +14,27 @@
 <div style="display: flex; align-items: center; justify-content: center;">
 	@if (Model.IsPrevYearAvailable)
 	{
-		<a style="margin-right: 10px; color: #c64a16;" asp-controller="Authorized" asp-action="Challenge" asp-route-year="@(Model.YearChallenge.Year-1)"><i class="fa-solid fa-arrow-left fa-xl"></i></a>		
+		<a style="margin-right: 10px; color: #c64a16;" asp-controller="Challenge" asp-action="Challenge" asp-route-year="@(Model.YearChallenge.Year-1)"><i class="fa-solid fa-arrow-left fa-xl"></i></a>
 	}
 	<h1 style="margin: 0;">@Model.YearChallenge.Year</h1>
 	@if (Model.IsNextYearAvailable)
 	{
-		<a style="margin-left: 10px; color: #c64a16;" asp-controller="Authorized" asp-action="Challenge" asp-route-year="@(Model.YearChallenge.Year+1)"><i class="fa-solid fa-arrow-right fa-xl"></i></a>		
+		<a style="margin-left: 10px; color: #c64a16;" asp-controller="Challenge" asp-action="Challenge" asp-route-year="@(Model.YearChallenge.Year+1)"><i class="fa-solid fa-arrow-right fa-xl"></i></a>
 	}
 </div>
 
 @if(Model.YearChallenge.Id == 0)
 {
 	<div class="text-center mt-3">
-		<a class="btn btn-primary btn-lg" asp-controller="Authorized" asp-action="AddChallenge" asp-route-year="@Model.YearChallenge.Year">Ustaw Challenge</a>
+		<a class="btn btn-primary btn-lg" asp-controller="Challenge" asp-action="AddChallenge" asp-route-year="@Model.YearChallenge.Year">Ustaw Challenge</a>
 	</div>
 }
 
 <div class="text-center mt-3">
-	<a class="btn btn-primary" asp-controller="Authorized" asp-action="SetChallengeColors">Zmień kolory</a>
+	<a class="btn btn-primary" asp-controller="Challenge" asp-action="SetChallengeColors">Zmień kolory</a>
 	@if(Model.YearChallenge.Id != 0)
 	{
-		<a asp-controller="Authorized" asp-action="AddChallenge" asp-route-year="@Model.YearChallenge.Year" class="btn btn-primary">Edytuj challenge</a>
+		<a asp-controller="Challenge" asp-action="AddChallenge" asp-route-year="@Model.YearChallenge.Year" class="btn btn-primary">Edytuj challenge</a>
 	}
 </div>
 
